@@ -1,0 +1,342 @@
+{
+  "pid": 851087,
+  "signature": "efb50993780079460b0cbed1363e2166a2de1d9f_1791293947_1686120079",
+  "version": "Hyprland 0.56.2 built from branch v0.56.2 at commit efb50993780079460b0cbed1363e2166a2de1d9f clean ([gha] Nix: update inputs).\nDate: Wed Aug 5 14:13:21 2026\nTag: v0.56.2, commits: 7661\n\nLibraries:\nHyprgraphics: built against 0.5.1, system has 0.5.1\nHyprutils: built against 0.14.1, system has 0.14.1\nHyprcursor: built against 0.1.13, system has 0.1.13\nHyprlang: built against 0.6.8, system has 0.6.8\nAquamarine: built against 0.15.0, system has 0.15.0\n\nVersion ABI string: efb50993780079460b0cbed1363e2166a2de1d9f_aq_0.15_hu_0.14_hg_0.5_hc_0.1_hlg_0.6\nno flags were set\n\n",
+  "plugins": "\nPlugin hyprflow by hyprflow contributors:\n\tHandle: 55abb552eb70\n\tVersion: 0.1.0\n\tDescription: Classic Cover Flow workspace navigation\n\n",
+  "frames": [
+    {
+      "file": "fixture-1.png",
+      "sha256": "3f75f025d147464e20e2c521b48766015557ea90cfd42d1cf822ad775b2a71c5"
+    },
+    {
+      "file": "fixture-2.png",
+      "sha256": "3156d3b800039eae4b86b3eee9615c53ff3e13eb71027e49729e7c7d52be318d"
+    },
+    {
+      "file": "fixture-3.png",
+      "sha256": "7296d76c2447dd635f8d7a0b596ec73ad9a891644cfda9616914d76abd440596"
+    },
+    {
+      "file": "fixture-4.png",
+      "sha256": "069911ba5c196a8c8cb79c93186f4b34d612827c9863754379ede41eb09f2330"
+    },
+    {
+      "file": "fixture-5.png",
+      "sha256": "9251f58ac8dc3c36502c1f2fb99b51282b096f93a6b17a1fb22a3a0b4047f98c"
+    },
+    {
+      "file": "fixture-6.png",
+      "sha256": "b85237ea576b457c2aeb0811346f22057ff6901abf53a6035719375bbddf54aa"
+    },
+    {
+      "file": "fixture-7.png",
+      "sha256": "9566c656a47db5a45a49d62f4f0f0dedea0d10e2ea71ca36d5bfc5e5f396307e"
+    },
+    {
+      "file": "01-workspace.png",
+      "sha256": "069911ba5c196a8c8cb79c93186f4b34d612827c9863754379ede41eb09f2330"
+    },
+    {
+      "file": "02-open-transition.png",
+      "sha256": "8734d4a801579d0dd4f9df5b0de45289eca7e8888dee3a63a7589d8075c0725b"
+    },
+    {
+      "file": "02-open.png",
+      "sha256": "f4b3027a7bc94ad4db6b07c57be4d86083eb0957bd0dbb735279e89287bfe226"
+    },
+    {
+      "file": "03-right-transition.png",
+      "sha256": "aa91e89badd120d2a5667c9e595b9c1f3936cb5c8a9736a8c9c77b8be5675515"
+    },
+    {
+      "file": "03-right.png",
+      "sha256": "8492fc3c9417c49e3603a1b0af04121982cff40c0e930bb7bfb0394eeeb9a7c3"
+    },
+    {
+      "file": "04-left-transition.png",
+      "sha256": "1c90014daedab889cd12a3d8a31faff82ea96be5ad9af845c137f72a0052526d"
+    },
+    {
+      "file": "04-left.png",
+      "sha256": "f4b3027a7bc94ad4db6b07c57be4d86083eb0957bd0dbb735279e89287bfe226"
+    },
+    {
+      "file": "05-jump-seven-transition.png",
+      "sha256": "9144f39d3407a310d86de9de25c26ccf5ae57bcef6909d4455c6e0bab3afb83c"
+    },
+    {
+      "file": "05-jump-seven.png",
+      "sha256": "e4dd38151e1e8085da1f079cbc8d411c55bc592702ac03bc7ef2ac47986abf6c"
+    },
+    {
+      "file": "06-jump-one-transition.png",
+      "sha256": "f00626731680986cc3332d70bc609b011e5f4cd4179b2737fd00dcaf11a6c958"
+    },
+    {
+      "file": "06-jump-one.png",
+      "sha256": "2b7e982832f450a1622c100dbe6bfd3a01569e8df9445d425a25d4a78b64ce87"
+    },
+    {
+      "file": "07-jump-four-transition.png",
+      "sha256": "7fcfda6e4e2d77be85675ee2a016482dab7f763ddb49b3cdf37100128f69d423"
+    },
+    {
+      "file": "07-jump-four.png",
+      "sha256": "f4b3027a7bc94ad4db6b07c57be4d86083eb0957bd0dbb735279e89287bfe226"
+    },
+    {
+      "file": "08-selected-seven-transition.png",
+      "sha256": "dab57053bd1aa98ac700dc391d9b3e74e775cf8259c8204a5397c89bf3d46f59"
+    },
+    {
+      "file": "08-selected-seven.png",
+      "sha256": "e4dd38151e1e8085da1f079cbc8d411c55bc592702ac03bc7ef2ac47986abf6c"
+    },
+    {
+      "file": "09-accepted-transition.png",
+      "sha256": "45b785f55c20da7a5d56f5d377e7c3dc2cfebe5fcc8e5059fe897a393f0b0737"
+    },
+    {
+      "file": "09-accepted.png",
+      "sha256": "9566c656a47db5a45a49d62f4f0f0dedea0d10e2ea71ca36d5bfc5e5f396307e"
+    },
+    {
+      "file": "10-reopened-transition.png",
+      "sha256": "05c50cf52cce5b56590e46f67009666a9955b0152340ff33326d446df4d16f15"
+    },
+    {
+      "file": "10-reopened.png",
+      "sha256": "e4dd38151e1e8085da1f079cbc8d411c55bc592702ac03bc7ef2ac47986abf6c"
+    },
+    {
+      "file": "11-before-cancel-transition.png",
+      "sha256": "0d275d38e72352a06383c4de08a36762a50b69b3078f90a3cb269afcec249d1c"
+    },
+    {
+      "file": "11-before-cancel.png",
+      "sha256": "f4b3027a7bc94ad4db6b07c57be4d86083eb0957bd0dbb735279e89287bfe226"
+    },
+    {
+      "file": "12-cancelled-transition.png",
+      "sha256": "7cd7a0033c01018a926d417504c9f9d33561cf42da6db35f95aa86b8a6f53e9d"
+    }
+  ],
+  "actions": [
+    {
+      "key": "F10",
+      "before": {
+        "open": false
+      },
+      "after": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 1.1571,
+      "workspace": 4
+    },
+    {
+      "key": "Right",
+      "before": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 5,
+        "origin": 4,
+        "position": 4.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 1.1647,
+      "workspace": 4
+    },
+    {
+      "key": "Left",
+      "before": {
+        "open": true,
+        "selected": 5,
+        "origin": 4,
+        "position": 4.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 1.1638,
+      "workspace": 4
+    },
+    {
+      "key": "7",
+      "before": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 7,
+        "origin": 4,
+        "position": 6.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 1.1659,
+      "workspace": 4
+    },
+    {
+      "key": "1",
+      "before": {
+        "open": true,
+        "selected": 7,
+        "origin": 4,
+        "position": 6.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 1,
+        "origin": 4,
+        "position": 0.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 1.1656,
+      "workspace": 4
+    },
+    {
+      "key": "4",
+      "before": {
+        "open": true,
+        "selected": 1,
+        "origin": 4,
+        "position": 0.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 1.1657,
+      "workspace": 4
+    },
+    {
+      "key": "7",
+      "before": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 7,
+        "origin": 4,
+        "position": 6.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 1.1684,
+      "workspace": 4
+    },
+    {
+      "key": "Return",
+      "before": {
+        "open": true,
+        "selected": 7,
+        "origin": 4,
+        "position": 6.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": false
+      },
+      "elapsed_seconds": 1.1625,
+      "workspace": 7
+    },
+    {
+      "key": "F10",
+      "before": {
+        "open": false
+      },
+      "after": {
+        "open": true,
+        "selected": 7,
+        "origin": 7,
+        "position": 6.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 1.1649,
+      "workspace": 7
+    },
+    {
+      "key": "4",
+      "before": {
+        "open": true,
+        "selected": 7,
+        "origin": 7,
+        "position": 6.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 4,
+        "origin": 7,
+        "position": 3.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 1.1663,
+      "workspace": 7
+    },
+    {
+      "key": "Escape",
+      "before": {
+        "open": true,
+        "selected": 4,
+        "origin": 7,
+        "position": 3.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 7,
+        "origin": 7,
+        "position": 6.0,
+        "openness": 0.000499,
+        "closing": true
+      },
+      "elapsed_seconds": 1.1654,
+      "workspace": 7
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "score": 95,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Workspace screenshots retain their native aspect ratio inside square covers. Compared with square album artwork, widescreen content leaves matte bands and a less visible reflection when the source workspace is dark. This is the specified workspace adaptation, not a geometry discrepancy.",
+    "Apple's proprietary timing constants are unknown. This review establishes faithful appearance against the documented references and continuous motion in the recorded cases, not exact equality with every iTunes release."
+  ],
+  "suggestions": [
+    "Keep the current geometry, reflections, side lighting, and adaptive label. The final 960 by 960 calibration measures a 364 by 364 center cover, aspect 1.000; nearest visible side width 202 pixels or 0.555H; nearest outer and inner edge heights 366 and 274 pixels or 1.005H and 0.753H. All meet the design specification's reference tolerances.",
+    "Retain the calibrated reflection proof: the front ends at y565 and its reflection begins at y566 without a black gap. Clean center pixels change from RGB237,238,232 to RGB81,81,79, giving contact multiplier 0.340. The reflection fades smoothly. The selected label occupies y642..660, with its center approximately 0.23H below the cover bottom, consistent with the full-screen reference composition.",
+    "Retain the side-lighting proof: the nearest left cover changes gradually from RGB39,144,116 at its outer edge to RGB34,128,103 near its inner edge. The right cover mirrors the gradient direction, from RGB153,52,81 at its inner edge to RGB172,59,91 at its outer edge. The outside remains brighter and legible without a hard light band.",
+    "Retain the final recordings and manifests for artifact SHA-256 7a14a088eb4ffa7629995cc432117eba4c57d727b8c3ba861adfaac653795332. The artifact hash matches the reviewed build. Navigation image hashes were verified. Accepted and cancelled endpoint PNGs are byte-identical to fixture-7.png. The initial navigation-video cut from workspace 7 to 4 is fixture setup before plugin entry, as confirmed by the capture sequence.",
+    "Use motion-contact.jpg as a compact review aid. Each row contains eight actual video samples spaced 0.05 seconds apart. Rows from top to bottom: navigation 0.50–0.85 seconds (entry), navigation 4.60–4.95 (commit expansion), navigation 7.15–7.50 (cancel expansion), stress 0.30–0.65 (entry reversals), stress 1.05–1.40 (rapid retargeting), and stress 5.55–5.90 (exit reversals). No source frame content was reconstructed.",
+    "Keep the claim bounded to the recorded evidence. Both complete videos were visually inspected at 0.05-second sampling, with selected transition sections retained in the contact sheet. No observable black flash, unrelated-workspace exposure during plugin transitions, abrupt pose teleport, or diagonal texture discontinuity appeared in those samples. A numerical scan of all 482 decoded navigation frames and 394 decoded stress frames found no frame with maximum channel value at or below 25. Container headers report 483 and 395 frames respectively; this review uses decoded counts. Sampling, downscaling, and video compression cannot exclude every sub-frame defect or prove latency on other hardware."
+  ],
+  "reasoning": "The final build reproduces the documented iTunes Cover Flow silhouette, overlap, perspective direction, reflected floor, restrained lighting, and label placement within the measured tolerances. Recorded entry, navigation, commit, cancel, and rapid reversals show continuous visible progression; no further visual tuning is required by this review."
+}

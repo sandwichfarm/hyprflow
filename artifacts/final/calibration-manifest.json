@@ -1,0 +1,24 @@
+{
+  "artifact_sha256": "7a14a088eb4ffa7629995cc432117eba4c57d727b8c3ba861adfaac653795332",
+  "status": {
+    "open": true,
+    "selected": 4,
+    "origin": 4,
+    "position": 3.0,
+    "openness": 1.0,
+    "closing": false
+  },
+  "frame": {
+    "file": "calibration.png",
+    "sha256": "c260dd47d5967680715e03d54586482823ff043cfd609ee04d532a1d7e14628e"
+  },
+  "width": 960,
+  "height": 960,
+  "input_isolation": {
+    "device": "wl_keyboard",
+    "nested_only": true,
+    "present": true,
+    "disabled_during_proof": true,
+    "restored": true
+  }
+}

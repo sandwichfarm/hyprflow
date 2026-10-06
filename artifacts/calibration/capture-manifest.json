@@ -1,0 +1,20 @@
+{
+  "frame": {
+    "file": "current.png",
+    "sha256": "b4e10848aa98a459bf8481c81010800f9d3c0e8bfd29d59697342682a1ab8a90"
+  },
+  "status": {
+    "open": true,
+    "selected": 4,
+    "origin": 4,
+    "position": 3.0,
+    "openness": 1.0,
+    "closing": false
+  },
+  "monitor": {
+    "name": "WAYLAND-1",
+    "width": 960,
+    "height": 960
+  },
+  "runtime_config_sha256": "745c2587f5081c2901676ef581cf691cbfdbcdb601dc96280ed7086337adf4cf"
+}

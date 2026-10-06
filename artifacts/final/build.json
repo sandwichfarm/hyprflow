@@ -1,0 +1,33 @@
+{
+  "artifact_sha256": "7a14a088eb4ffa7629995cc432117eba4c57d727b8c3ba861adfaac653795332",
+  "compiler": "16.2.1",
+  "sources": {
+    "Makefile": "4a9221601f56ee6c13c9c13f182a2a612266c46e047c765eebaa609bd4bde858",
+    "README.md": "512f5eff559d5a275a9dc4214977fee1e8afb9ee270cc24f461b85d467a737c0",
+    ".clang-format": "a80962cb9c83cf6850a78ccb3c2ea75b46ad57b776f3fbf222b6d4fd13bf7b2b",
+    ".gitignore": "95effcc21f6b08c243677820f4bf303c5aed81d70b3a2cf21eaacdc16e5b9ba4",
+    "src/FlowRenderer.cpp": "f2fb1a23992c12ad70ecdcf86efb0edb6895df25ee74b088fd39a3b501c3f9df",
+    "src/Capture.cpp": "99f0cc5e892ad0148815dea22a99fb1dda7aa6eecf4ba5fd79082ed71cdab0f6",
+    "src/Motion.hpp": "a36e20ed3a787f25aab8ee0b302bf8602f1a4425a883afb9523b6269de0b1cb0",
+    "src/main.cpp": "f2e9cd79f8f4e5ee86d6bbe5f582bde1f04aaa0c02a1f6064aaea6e3647f02e6",
+    "src/Capture.hpp": "251cb4a198633d365badfcc002ed0160168ed8d491a82acc9de60d4e0e317b77",
+    "src/Flow.cpp": "64dd6d6d2c72e96d53761e2f27a9299a452d892c1459014e6086af5bd0cdd8fb",
+    "src/Flow.hpp": "19a8e5b736ca1675cf720edb240420c1132d6a429a54ee3fb7f610e0415969d7",
+    "src/FlowRenderer.hpp": "35bba02908247806705d1c469e4c2322673813f74e5e3758ea03a9394122358b",
+    "config/hyprflow.lua": "b1459d965dbddb27d1bfa2b504cfd50e25d6c76800c9232468cab01b499b4826",
+    "config/nested.lua": "ef3dbe987355419932a056a6aab8202ac350ad046beaabf2f17e5344cc325689",
+    "scripts/workspace-fixture.py": "8824497596a41380fc30bf18e834d44453560d49171ce702ebaab4ff40e0e3ea",
+    "scripts/nested-session.py": "c626a2580ab7f9f7e088db30016962ca5142d03c1c273d6a530bf59e9bcf9e80",
+    "scripts/verify-input.py": "68f29f0914ba9a3527e5b5bb069aa32d375bf3b50465f4bba134f73af6c17c8c",
+    "scripts/capture-proof.py": "ee821cdac8911a081ab8a67851dbdd0e1d87ef0e11e862eed51777ce1b2f8074",
+    "scripts/nested-key.py": "b003dac64313f2aa606c29a871d0a0604b6b178c67d9323085099d4320a8ddf3",
+    "scripts/capture-stress.py": "aad34adac6acde1b7926ce60be10cf3e30cd22937c1b437de4426f29316ab5d6",
+    "scripts/input-fixture.py": "be89de59b051b7770280b08566f71105831d7d03340d3d20f92edb33a9ecef6e",
+    "scripts/verify-lifecycle.py": "30de59131f22fba92d31b74db64fbeda808117e574467e61832f4186ea7d19b1",
+    "tests/motion.cpp": "3a20929ecbc5cf729cbbc553edf554736635908e897335d50055675e8e4257df",
+    "docs/verification.md": "f675cb2535aa054b3937e8c2d97639ee684e26750c4e822cb3384d3a61541656",
+    "docs/design-spec.md": "80301d28ad091a418e8786ba6ac7c13b13f18bb977df8a71ef070f5351eb5ef0",
+    "docs/acceptance.md": "3045b7f38992e79eb33464c633db6b14ac04008335a2dc11ab2b8ac21db23458",
+    "docs/reference/SOURCES.md": "b08bdca4fbcb2dd5f250e04329e0ff300de85aca2c567338283e110f95d69f55"
+  }
+}

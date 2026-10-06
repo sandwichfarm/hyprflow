@@ -1,0 +1,4953 @@
+{
+  "passed": true,
+  "pid": 851087,
+  "signature": "efb50993780079460b0cbed1363e2166a2de1d9f_1791293947_1686120079",
+  "artifact_sha256": "7a14a088eb4ffa7629995cc432117eba4c57d727b8c3ba861adfaac653795332",
+  "actions": [
+    {
+      "seconds": 0.312423,
+      "completed_seconds": 0.316026,
+      "action": "toggle",
+      "argument": null,
+      "before": {
+        "open": false
+      },
+      "after": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.403404,
+      "completed_seconds": 0.411664,
+      "action": "toggle",
+      "argument": null,
+      "before": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.520047,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.520047,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 0.503303,
+      "completed_seconds": 0.511648,
+      "action": "toggle",
+      "argument": null,
+      "before": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.295688,
+        "closing": true
+      },
+      "after": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.295688,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.099054,
+      "completed_seconds": 1.102285,
+      "action": "jump",
+      "argument": 1,
+      "before": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.999905,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 1,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.999905,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.186466,
+      "completed_seconds": 1.195343,
+      "action": "jump",
+      "argument": 9,
+      "before": {
+        "open": true,
+        "selected": 1,
+        "origin": 4,
+        "position": 1.217505,
+        "openness": 0.999985,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 9,
+        "origin": 4,
+        "position": 1.217505,
+        "openness": 0.999985,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.286932,
+      "completed_seconds": 1.295656,
+      "action": "jump",
+      "argument": 3,
+      "before": {
+        "open": true,
+        "selected": 9,
+        "origin": 4,
+        "position": 5.034523,
+        "openness": 0.999998,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 5.034523,
+        "openness": 0.999998,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.982707,
+      "completed_seconds": 1.986197,
+      "action": "accept",
+      "argument": null,
+      "before": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000082,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000082,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.866473,
+      "completed_seconds": 2.86996,
+      "action": "toggle",
+      "argument": null,
+      "before": {
+        "open": false
+      },
+      "after": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.477954,
+      "completed_seconds": 3.48199,
+      "action": "jump",
+      "argument": 1,
+      "before": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999919,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 1,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999919,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.569493,
+      "completed_seconds": 3.578474,
+      "action": "jump",
+      "argument": 9,
+      "before": {
+        "open": true,
+        "selected": 1,
+        "origin": 3,
+        "position": 0.814648,
+        "openness": 0.999987,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 9,
+        "origin": 3,
+        "position": 0.814648,
+        "openness": 0.999987,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.669569,
+      "completed_seconds": 3.67863,
+      "action": "cancel",
+      "argument": null,
+      "before": {
+        "open": true,
+        "selected": 9,
+        "origin": 3,
+        "position": 4.937009,
+        "openness": 0.999998,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 4.937009,
+        "openness": 0.999998,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.083149,
+      "completed_seconds": 5.086645,
+      "action": "toggle",
+      "argument": null,
+      "before": {
+        "open": false
+      },
+      "after": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.694931,
+      "completed_seconds": 5.698718,
+      "action": "toggle",
+      "argument": null,
+      "before": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999917,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999917,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.786011,
+      "completed_seconds": 5.795156,
+      "action": "toggle",
+      "argument": null,
+      "before": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.406933,
+        "closing": true
+      },
+      "after": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.406933,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.886394,
+      "completed_seconds": 5.894553,
+      "action": "toggle",
+      "argument": null,
+      "before": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.685579,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.685579,
+        "closing": true
+      }
+    }
+  ],
+  "samples": [
+    {
+      "seconds": 0.010008,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.004011,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.015393,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.027105,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.039103,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.050514,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.062204,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.073538,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.084893,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.096696,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.108056,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.119409,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.130876,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.142394,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.153949,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.16567,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.177138,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.188846,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.200329,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.211963,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.223472,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.235083,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.246541,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.257961,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.269695,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.28107,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.292508,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.30429,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.329455,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.019565,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.345723,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.062477,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.362622,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.170205,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.378197,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.287844,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.395318,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.409999,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.416156,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.520047,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 0.428174,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.569388,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 0.444871,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.550478,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 0.461628,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.49624,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 0.478336,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.428812,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 0.495219,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.36028,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 0.516249,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.295688,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.528088,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.28334,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.545087,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.33451,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.561601,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.415123,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.578531,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.502621,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.594864,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.588253,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.611486,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.664989,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.628428,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.731386,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.644865,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.786832,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.661706,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.832262,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.678013,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.869199,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.695055,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.898714,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.711396,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.921988,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.728414,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.94021,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.744896,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.954597,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.761369,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.965327,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.778122,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.97373,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.795005,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.980167,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.811458,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.98504,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.828131,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.988768,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.844989,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.991573,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.86154,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.99369,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.878159,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.995283,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.894992,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.996505,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.911388,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.997382,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.928185,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.998056,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.945111,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.998556,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.962264,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.998933,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.978351,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.999208,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 0.994983,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.999414,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.011583,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.999566,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.02826,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.999679,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.044916,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.999763,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.061567,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.999825,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.078616,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.999872,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.094817,
+      "status": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.999905,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.111487,
+      "status": {
+        "open": true,
+        "selected": 1,
+        "origin": 4,
+        "position": 2.865249,
+        "openness": 0.99993,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.12823,
+      "status": {
+        "open": true,
+        "selected": 1,
+        "origin": 4,
+        "position": 2.566126,
+        "openness": 0.999949,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.145219,
+      "status": {
+        "open": true,
+        "selected": 1,
+        "origin": 4,
+        "position": 2.206471,
+        "openness": 0.999962,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.161544,
+      "status": {
+        "open": true,
+        "selected": 1,
+        "origin": 4,
+        "position": 1.839109,
+        "openness": 0.999972,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.178336,
+      "status": {
+        "open": true,
+        "selected": 1,
+        "origin": 4,
+        "position": 1.510204,
+        "openness": 0.99998,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.200138,
+      "status": {
+        "open": true,
+        "selected": 9,
+        "origin": 4,
+        "position": 1.217505,
+        "openness": 0.999985,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.212758,
+      "status": {
+        "open": true,
+        "selected": 9,
+        "origin": 4,
+        "position": 1.326244,
+        "openness": 0.999989,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.229355,
+      "status": {
+        "open": true,
+        "selected": 9,
+        "origin": 4,
+        "position": 1.935479,
+        "openness": 0.999992,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.245825,
+      "status": {
+        "open": true,
+        "selected": 9,
+        "origin": 4,
+        "position": 2.717777,
+        "openness": 0.999994,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.261929,
+      "status": {
+        "open": true,
+        "selected": 9,
+        "origin": 4,
+        "position": 3.550992,
+        "openness": 0.999996,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.278816,
+      "status": {
+        "open": true,
+        "selected": 9,
+        "origin": 4,
+        "position": 4.347056,
+        "openness": 0.999997,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.300293,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 5.034523,
+        "openness": 0.999998,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.312714,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 5.362189,
+        "openness": 0.999998,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.328294,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 5.262991,
+        "openness": 0.999999,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.344989,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 4.942097,
+        "openness": 0.999999,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.361775,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 4.553763,
+        "openness": 0.999999,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.378823,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 4.143674,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.395314,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 3.757243,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.411831,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 3.421799,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.428751,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 3.130616,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.444826,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.893735,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.461492,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.701713,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.478684,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.543881,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.49554,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.419711,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.511658,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.322672,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.528252,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.246822,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.545055,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.188048,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.561608,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.142948,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.578751,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.108163,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.594924,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.081343,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.612125,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.061411,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.628289,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.045815,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.64524,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.03458,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.661654,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.025889,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.678423,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.019286,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.694995,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.01434,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.712059,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.010709,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.728381,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.007955,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.745363,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.005881,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.761635,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.004388,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.778042,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.003255,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.794867,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0024,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.811661,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.001779,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.828202,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.001314,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.844967,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000961,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.862018,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000714,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.878359,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000525,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.895281,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000387,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.911621,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000285,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.928165,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000209,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.944963,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000154,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.96183,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000112,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.97875,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000082,
+        "openness": 1.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 1.995309,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.00006,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.011561,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000044,
+        "openness": 0.955584,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.028243,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000033,
+        "openness": 0.857104,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.044886,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000024,
+        "openness": 0.735986,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.061508,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000017,
+        "openness": 0.616473,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.078084,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000013,
+        "openness": 0.504838,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.094874,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000009,
+        "openness": 0.406617,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.111715,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000007,
+        "openness": 0.324036,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.12821,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000005,
+        "openness": 0.255708,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.144899,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000004,
+        "openness": 0.199798,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.161547,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000003,
+        "openness": 0.155051,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.178373,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000002,
+        "openness": 0.119643,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.195077,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000001,
+        "openness": 0.09184,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.212059,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000001,
+        "openness": 0.070224,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.228364,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000001,
+        "openness": 0.053388,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.245459,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.000001,
+        "openness": 0.040583,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.261639,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.030537,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.27871,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.023076,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.29505,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.017391,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.312147,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.013068,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.328509,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.009752,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.345594,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.007292,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.361796,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.005423,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.378442,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.004059,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.395295,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.00302,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.411579,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.002251,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.428197,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.001672,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.445013,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.001239,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.461602,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.000917,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.478671,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.000672,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.495336,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.000501,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.511651,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.00037,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.528247,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.000273,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.544908,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.000201,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.561642,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.000148,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.578277,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 0.000109,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.595299,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 8e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.611552,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 5.9e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.628459,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 4.3e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.64517,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 3.2e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.661938,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 2.3e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.678272,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 1.7e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.694854,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 4,
+        "position": 2.0,
+        "openness": 1.2e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 2.711193,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 2.719203,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 2.730937,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 2.74271,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 2.754276,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 2.766347,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 2.777772,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 2.789229,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 2.800668,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 2.812097,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 2.823511,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 2.835014,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 2.846558,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 2.858399,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 2.88279,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.015532,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 2.895378,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.041023,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 2.911426,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.136887,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 2.928162,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.255904,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 2.94502,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.38036,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 2.961714,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.489159,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 2.978176,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.587964,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 2.994714,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.671213,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.011322,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.740823,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.02802,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.798154,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.044815,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.842497,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.061427,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.878401,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.078061,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.906629,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.094649,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.928653,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.111339,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.946002,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.12797,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.958781,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.144739,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.968795,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.161308,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.976575,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.178281,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.982289,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.194606,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.986712,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.211257,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.990037,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.227974,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.992617,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.244654,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.994453,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.261314,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.995875,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.27847,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.996924,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.294628,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.997718,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.311297,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.998304,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.328013,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.998744,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.345207,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999069,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.361723,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999315,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.378446,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999491,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.394733,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999625,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.411712,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999723,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.428342,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999796,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.444642,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999849,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.461379,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999889,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.477937,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999919,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.485681,
+      "status": {
+        "open": true,
+        "selected": 1,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999919,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.497805,
+      "status": {
+        "open": true,
+        "selected": 1,
+        "origin": 3,
+        "position": 1.912825,
+        "openness": 0.99994,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.511293,
+      "status": {
+        "open": true,
+        "selected": 1,
+        "origin": 3,
+        "position": 1.715169,
+        "openness": 0.999956,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.528308,
+      "status": {
+        "open": true,
+        "selected": 1,
+        "origin": 3,
+        "position": 1.474687,
+        "openness": 0.999968,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.544698,
+      "status": {
+        "open": true,
+        "selected": 1,
+        "origin": 3,
+        "position": 1.234194,
+        "openness": 0.999976,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.561435,
+      "status": {
+        "open": true,
+        "selected": 1,
+        "origin": 3,
+        "position": 1.008609,
+        "openness": 0.999983,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.583127,
+      "status": {
+        "open": true,
+        "selected": 9,
+        "origin": 3,
+        "position": 0.814648,
+        "openness": 0.999987,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.594808,
+      "status": {
+        "open": true,
+        "selected": 9,
+        "origin": 3,
+        "position": 1.004001,
+        "openness": 0.999991,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.612012,
+      "status": {
+        "open": true,
+        "selected": 9,
+        "origin": 3,
+        "position": 1.664769,
+        "openness": 0.999993,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.628472,
+      "status": {
+        "open": true,
+        "selected": 9,
+        "origin": 3,
+        "position": 2.51734,
+        "openness": 0.999995,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.645073,
+      "status": {
+        "open": true,
+        "selected": 9,
+        "origin": 3,
+        "position": 3.414806,
+        "openness": 0.999996,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.66149,
+      "status": {
+        "open": true,
+        "selected": 9,
+        "origin": 3,
+        "position": 4.208302,
+        "openness": 0.999997,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 3.682986,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 4.937009,
+        "openness": 0.999998,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.694863,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 5.287768,
+        "openness": 0.999999,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.711317,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 5.204601,
+        "openness": 0.999999,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.728202,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 4.901396,
+        "openness": 0.999999,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.74476,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 4.521684,
+        "openness": 0.999999,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.761754,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 4.111829,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.77805,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 3.740834,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.79533,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 3.405833,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.811354,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 3.12266,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.828093,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.887292,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.844701,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.694776,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.861424,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.539857,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.878223,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.416461,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.895322,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.320745,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.911355,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.244384,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.928282,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.186708,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.944608,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.142092,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.9613,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.107532,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.978545,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.08125,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 3.994553,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.061138,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.011257,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.045807,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.028283,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.034443,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.04464,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.025782,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.061291,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.019209,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.078224,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.014329,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.094636,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.010679,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.111353,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.007927,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.127832,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.005891,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.14456,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.004351,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.161338,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.00322,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.178402,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.00238,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.194942,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.001763,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.211329,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.001302,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.227973,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.00096,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.244625,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000707,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.262538,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000522,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.277988,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000384,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.294608,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000283,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.306241,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000283,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.317797,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000202,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.330278,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000153,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.344532,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000112,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.361535,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000082,
+        "openness": 1.0,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.377947,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.00006,
+        "openness": 0.954631,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.394576,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000044,
+        "openness": 0.855028,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.411284,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000032,
+        "openness": 0.73643,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.427962,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000024,
+        "openness": 0.61474,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.444853,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000017,
+        "openness": 0.504186,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.461249,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000013,
+        "openness": 0.406373,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.477993,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000009,
+        "openness": 0.323711,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.494866,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000007,
+        "openness": 0.254924,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.511637,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000005,
+        "openness": 0.198812,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.528158,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000004,
+        "openness": 0.154753,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.545481,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000003,
+        "openness": 0.119343,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.561977,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000002,
+        "openness": 0.091356,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.578618,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000001,
+        "openness": 0.069781,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.595116,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000001,
+        "openness": 0.05335,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.611783,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000001,
+        "openness": 0.040483,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.628624,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.000001,
+        "openness": 0.030327,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.644764,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.022992,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.66142,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.017307,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.678177,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.012991,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.694881,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.009713,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.711518,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.007297,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.728101,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.005447,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.745055,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.004061,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.761481,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.003018,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.77852,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.002245,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.794836,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.001663,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.811501,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.001235,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.828612,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.000905,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.844976,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.000675,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.861493,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.0005,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.87812,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.000369,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.894788,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.000272,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.911439,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.000201,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.928328,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.000148,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.944982,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.000109,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.962047,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 7.9e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.978683,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 5.9e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 4.994825,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 4.3e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.011465,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 3.2e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.028179,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 2.3e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.044878,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 1.7e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.061913,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 1.2e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.07791,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 5.098803,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.0,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.11134,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.034378,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.128338,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.129296,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.144683,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.24793,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.16142,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.370786,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.178014,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.482306,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.194744,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.581427,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.21128,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.66652,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.227778,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.736677,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.244973,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.793833,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.261349,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.840455,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.278092,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.876299,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.294572,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.905275,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.311205,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.927317,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.328131,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.94466,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.344601,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.958067,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.361585,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.968226,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.37808,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.976025,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.394434,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.981945,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.411253,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.986462,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.427762,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.989851,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.444541,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.992417,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.46134,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.994331,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.477841,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.995773,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.494498,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.996855,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.511575,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.997662,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.527778,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.998264,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.544552,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.998714,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.561529,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999047,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.578027,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999298,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.594569,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999479,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.611297,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999616,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.627866,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999716,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.644627,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999791,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.661491,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999846,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.678266,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999887,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.694915,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999917,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.702605,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.999917,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.714914,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.95659,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.727814,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.857569,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.744579,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.737267,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.761558,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.616631,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.777929,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.505232,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.799791,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.406933,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.81208,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.368627,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.828016,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.400404,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.844857,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.464081,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.861649,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.539616,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.878319,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.615958,
+        "closing": false
+      }
+    },
+    {
+      "seconds": 5.900129,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.685579,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.912156,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.702073,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.927833,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.653677,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.944654,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.577028,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.961237,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.491072,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.978365,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.407402,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 5.994966,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.331436,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.011346,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.266363,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.028113,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.210166,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.045134,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.165872,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.061812,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.129452,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.078056,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.100261,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.094708,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.077222,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.11137,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.059121,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.128038,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.044985,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.14523,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.034324,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.16156,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.026034,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.178346,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.01966,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.194753,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.014831,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.211411,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.01114,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.22834,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.008364,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.244787,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.006256,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.261526,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.004665,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.278144,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.003487,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.294793,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.002599,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.31172,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.001933,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.328193,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.001433,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.345058,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.001063,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.361397,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.000789,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.378674,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.000584,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.394771,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.00043,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.411483,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.000319,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.428287,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.000235,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.444837,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.000174,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.4614,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 0.000128,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.478176,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 9.4e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.495107,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 6.9e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.511439,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 5.1e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.528099,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 3.7e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.545123,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 2.7e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.561511,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 2e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.578098,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 1.5e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.595059,
+      "status": {
+        "open": true,
+        "selected": 3,
+        "origin": 3,
+        "position": 2.0,
+        "openness": 1.1e-05,
+        "closing": true
+      }
+    },
+    {
+      "seconds": 6.611505,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.619669,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.6311,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.64254,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.653941,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.665283,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.676655,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.68793,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.699709,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.710934,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.72229,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.73363,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.744948,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.756244,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.767537,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.779179,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.790409,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.801464,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.812538,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.823722,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.83488,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.846037,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.857669,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.868903,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.879985,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.890991,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.901986,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.913153,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 6.924277,
+      "status": {
+        "open": false
+      }
+    }
+  ],
+  "checks": [
+    {
+      "entry_toggle_reversal": true
+    },
+    {
+      "rapid_retarget": [
+        1,
+        9,
+        3
+      ],
+      "selected": 3
+    },
+    {
+      "stable_close_monotonic": true,
+      "samples": 44,
+      "workspace": 3,
+      "seconds": 2.715433
+    },
+    {
+      "stable_close_monotonic": true,
+      "samples": 86,
+      "workspace": 3,
+      "seconds": 5.082552
+    },
+    {
+      "cancel_during_long_jump": true,
+      "origin": 3
+    },
+    {
+      "stable_close_monotonic": true,
+      "samples": 38,
+      "workspace": 3,
+      "seconds": 6.615719
+    },
+    {
+      "exit_toggle_reversal": true
+    }
+  ],
+  "input_isolation": {
+    "device": "wl_keyboard",
+    "nested_only": true,
+    "present": true,
+    "disabled_during_proof": true,
+    "restored": true
+  },
+  "version": "Hyprland 0.56.2 built from branch v0.56.2 at commit efb50993780079460b0cbed1363e2166a2de1d9f clean ([gha] Nix: update inputs).\nDate: Wed Aug 5 14:13:21 2026\nTag: v0.56.2, commits: 7661\n\nLibraries:\nHyprgraphics: built against 0.5.1, system has 0.5.1\nHyprutils: built against 0.14.1, system has 0.14.1\nHyprcursor: built against 0.1.13, system has 0.1.13\nHyprlang: built against 0.6.8, system has 0.6.8\nAquamarine: built against 0.15.0, system has 0.15.0\n\nVersion ABI string: efb50993780079460b0cbed1363e2166a2de1d9f_aq_0.15_hu_0.14_hg_0.5_hc_0.1_hlg_0.6\nno flags were set\n\n",
+  "mapped_artifact": [
+    "7f67f25a3000-7f67f25b2000 r--p 00000000 fd:00 5649507                    /home/sandwich/Develop/hyprflow/build/hyprflow.so",
+    "7f67f25b2000-7f67f25e9000 r-xp 0000f000 fd:00 5649507                    /home/sandwich/Develop/hyprflow/build/hyprflow.so",
+    "7f67f25e9000-7f67f25f6000 r--p 00046000 fd:00 5649507                    /home/sandwich/Develop/hyprflow/build/hyprflow.so",
+    "7f67f25f6000-7f67f25f7000 r--p 00052000 fd:00 5649507                    /home/sandwich/Develop/hyprflow/build/hyprflow.so",
+    "7f67f25f7000-7f67f25f8000 rw-p 00053000 fd:00 5649507                    /home/sandwich/Develop/hyprflow/build/hyprflow.so"
+  ],
+  "monitors": [
+    {
+      "id": 0,
+      "name": "WAYLAND-1",
+      "description": "",
+      "make": "",
+      "model": "",
+      "serial": "",
+      "width": 1280,
+      "height": 720,
+      "physicalWidth": 0,
+      "physicalHeight": 0,
+      "refreshRate": 60.0,
+      "x": 0,
+      "y": 0,
+      "activeWorkspace": {
+        "id": 4,
+        "name": "4"
+      },
+      "specialWorkspace": {
+        "id": 0,
+        "name": ""
+      },
+      "reserved": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "scale": 1,
+      "transform": 0,
+      "focused": true,
+      "dpmsStatus": true,
+      "vrr": false,
+      "solitary": "0",
+      "solitaryBlockedBy": [
+        "WINDOWED",
+        "CANDIDATE"
+      ],
+      "activelyTearing": false,
+      "tearingBlockedBy": [
+        "NOT_TORN",
+        "USER",
+        "SUPPORT",
+        "CANDIDATE"
+      ],
+      "directScanoutTo": "0",
+      "directScanoutBlockedBy": [
+        "USER",
+        "SW",
+        "CANDIDATE"
+      ],
+      "disabled": false,
+      "currentFormat": "XRGB8888",
+      "mirrorOf": "none",
+      "availableModes": [],
+      "colorManagementPreset": "srgb",
+      "sdrBrightness": 1,
+      "sdrSaturation": 1,
+      "sdrMinLuminance": 0.2,
+      "sdrMaxLuminance": 80,
+      "hardwareCursorsInUse": false
+    }
+  ],
+  "final_status": {
+    "open": false
+  },
+  "final_workspace": 3,
+  "configerrors": "",
+  "video": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "width": 1280,
+        "height": 720,
+        "avg_frame_rate": "11850/197",
+        "nb_frames": "395"
+      }
+    ],
+    "format": {
+      "duration": "6.566667"
+    }
+  }
+}

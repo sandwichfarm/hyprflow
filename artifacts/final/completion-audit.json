@@ -1,0 +1,23 @@
+{
+  "status": "complete",
+  "verified_at": "2026-10-06T14:48:51.468849+00:00",
+  "artifact_sha256": "7a14a088eb4ffa7629995cc432117eba4c57d727b8c3ba861adfaac653795332",
+  "requirements": {
+    "design_before_implementation": "docs/design-spec.md",
+    "native_plugin": "build/hyprflow.so",
+    "faithful_animation": "artifacts/final/visual-verdict.json",
+    "smooth_entry_exit_reversal": "artifacts/final/stress/manifest.json",
+    "assignable_left_right_and_workspace_jumps": "artifacts/final/navigation/manifest.json",
+    "nested_development": "artifacts/final/runtime.json",
+    "screenshots": "artifacts/final/navigation/02-open.png",
+    "readme_wizard": "README.md",
+    "default_configuration": "artifacts/final/default-config.json",
+    "lifecycle": "artifacts/lifecycle/manifest.json",
+    "input_isolation": "artifacts/final/input/input-manifest.json",
+    "build_and_static_checks": "artifacts/final/checks.json"
+  },
+  "nested_processes_exited": [
+    851087,
+    957142
+  ]
+}

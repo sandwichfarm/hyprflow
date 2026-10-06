@@ -1,0 +1,8 @@
+{
+  "passed": false,
+  "source": "parent-observed run before recorder cleanup repair",
+  "failure": "Initial virtual F10 did not open flow",
+  "diagnosis": "Persistent nested wl_keyboard retained Super_L; disabling that nested device made the same F10 open flow",
+  "missing_manifest": "Old cleanup finally raised recorder TimeoutExpired before saving manifest",
+  "artifact_sha256": "11756fcefa519938bb148796c8a8eedaf8ee6393a85374a9677ed1ae300155f1"
+}

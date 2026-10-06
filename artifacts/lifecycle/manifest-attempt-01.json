@@ -1,0 +1,39 @@
+{
+  "passed": false,
+  "pid": 851087,
+  "start_time": "57851957",
+  "signature": "efb50993780079460b0cbed1363e2166a2de1d9f_1791293947_1686120079",
+  "artifact": "/home/sandwich/Develop/hyprflow/build/hyprflow.so",
+  "artifact_sha256": "71cbf26a211ae5e23ab08981703ac41982f552c86c05870c95781bbf9e2d4b1f",
+  "checks": [],
+  "samples": [
+    {
+      "seconds": 0.003512,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.318845,
+      "status": {
+        "open": false
+      }
+    },
+    {
+      "seconds": 0.395674,
+      "status": {
+        "open": false
+      }
+    }
+  ],
+  "error": "Actual keyboard input did not return to the client",
+  "final_status": {
+    "open": false
+  },
+  "final_workspace": 4,
+  "final_submap": "default",
+  "configerrors": "",
+  "runtime_alive": true,
+  "final_artifact_sha256": "71cbf26a211ae5e23ab08981703ac41982f552c86c05870c95781bbf9e2d4b1f",
+  "duration_seconds": 0.411
+}

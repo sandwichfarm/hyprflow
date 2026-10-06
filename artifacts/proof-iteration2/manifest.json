@@ -1,0 +1,265 @@
+{
+  "pid": 851087,
+  "signature": "efb50993780079460b0cbed1363e2166a2de1d9f_1791293947_1686120079",
+  "version": "Hyprland 0.56.2 built from branch v0.56.2 at commit efb50993780079460b0cbed1363e2166a2de1d9f clean ([gha] Nix: update inputs).\nDate: Wed Aug 5 14:13:21 2026\nTag: v0.56.2, commits: 7661\n\nLibraries:\nHyprgraphics: built against 0.5.1, system has 0.5.1\nHyprutils: built against 0.14.1, system has 0.14.1\nHyprcursor: built against 0.1.13, system has 0.1.13\nHyprlang: built against 0.6.8, system has 0.6.8\nAquamarine: built against 0.15.0, system has 0.15.0\n\nVersion ABI string: efb50993780079460b0cbed1363e2166a2de1d9f_aq_0.15_hu_0.14_hg_0.5_hc_0.1_hlg_0.6\nno flags were set\n\n",
+  "plugins": "\nPlugin hyprflow by hyprflow contributors:\n\tHandle: 55abb552eb70\n\tVersion: 0.1.0\n\tDescription: Classic Cover Flow workspace navigation\n\n",
+  "frames": [
+    {
+      "file": "fixture-1.png",
+      "sha256": "6ab2fda7347587c49d469a6606707cee5b3c911026a5490faad029a03b1e9ff1"
+    },
+    {
+      "file": "fixture-2.png",
+      "sha256": "f3245c74475d191b52d7bf41060291d216e32346534c5702f45543f4f2fbf99e"
+    },
+    {
+      "file": "fixture-3.png",
+      "sha256": "9314e45dce97039d54e8eaeea1a1f81565efe0b63eb2c36fe6a783e7ff611c00"
+    },
+    {
+      "file": "fixture-4.png",
+      "sha256": "2d656abe6c19d2bc1a6ddfbde59c4949ba1d1548443aa9b032947280a2b9a838"
+    },
+    {
+      "file": "fixture-5.png",
+      "sha256": "a408a570ac08ffb7501685975a0a69e2fa7c54c72ee7312b6f7095cf5ce4e5ba"
+    },
+    {
+      "file": "fixture-6.png",
+      "sha256": "26f99b6d7dc07cff6290ec2423b69dfb38e0f908d49cd9e3be2afc2a5e51976a"
+    },
+    {
+      "file": "fixture-7.png",
+      "sha256": "0f7be2d5ffcd425b1be775bd801406be01a0aea4ca7d754dde5e62b14e856e21"
+    },
+    {
+      "file": "01-workspace.png",
+      "sha256": "2d656abe6c19d2bc1a6ddfbde59c4949ba1d1548443aa9b032947280a2b9a838"
+    },
+    {
+      "file": "02-open-transition.png",
+      "sha256": "6d100110377d6fc70a97f1d0f51c89ac7f0b6bcc97d908b4ef233288fbfabd59"
+    },
+    {
+      "file": "02-open.png",
+      "sha256": "f4b3027a7bc94ad4db6b07c57be4d86083eb0957bd0dbb735279e89287bfe226"
+    },
+    {
+      "file": "03-right-transition.png",
+      "sha256": "b1613906d09690afa270c6c1f12c1aba595507a1c018065f2ef7711ac9eb3203"
+    },
+    {
+      "file": "03-right.png",
+      "sha256": "8492fc3c9417c49e3603a1b0af04121982cff40c0e930bb7bfb0394eeeb9a7c3"
+    },
+    {
+      "file": "04-left-transition.png",
+      "sha256": "828c9c6738e68b0c97b3b26df10d52b2ea443adbf993a71758a9fde7c535b329"
+    },
+    {
+      "file": "04-left.png",
+      "sha256": "f4b3027a7bc94ad4db6b07c57be4d86083eb0957bd0dbb735279e89287bfe226"
+    },
+    {
+      "file": "05-jump-seven-transition.png",
+      "sha256": "a937072ab833b5c9a9c0a7f3948cea2d4b6c1d84022c7fc330a2a9a7d3920fad"
+    },
+    {
+      "file": "05-jump-seven.png",
+      "sha256": "e4dd38151e1e8085da1f079cbc8d411c55bc592702ac03bc7ef2ac47986abf6c"
+    },
+    {
+      "file": "06-jump-one-transition.png",
+      "sha256": "27407aa9af9af0c9aa4b93b7bf14d118ee636616d6226bbead084228c4f2d17d"
+    },
+    {
+      "file": "06-jump-one.png",
+      "sha256": "2b7e982832f450a1622c100dbe6bfd3a01569e8df9445d425a25d4a78b64ce87"
+    },
+    {
+      "file": "07-jump-four-transition.png",
+      "sha256": "2d7512fbe68f2b0e511b8aafbc75c951151ceb84a2d064dcc87a7b1810e41c91"
+    },
+    {
+      "file": "07-jump-four.png",
+      "sha256": "f4b3027a7bc94ad4db6b07c57be4d86083eb0957bd0dbb735279e89287bfe226"
+    },
+    {
+      "file": "08-selected-seven-transition.png",
+      "sha256": "a854c946dfe235e2a595fe11974f776ff490ad043dbc4cf91b15b858949cc6cd"
+    },
+    {
+      "file": "08-selected-seven.png",
+      "sha256": "e4dd38151e1e8085da1f079cbc8d411c55bc592702ac03bc7ef2ac47986abf6c"
+    },
+    {
+      "file": "09-accepted-transition.png",
+      "sha256": "e4dd38151e1e8085da1f079cbc8d411c55bc592702ac03bc7ef2ac47986abf6c"
+    }
+  ],
+  "actions": [
+    {
+      "key": "F10",
+      "before": {
+        "open": false
+      },
+      "after": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 1.1794,
+      "workspace": 4
+    },
+    {
+      "key": "Right",
+      "before": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 5,
+        "origin": 4,
+        "position": 4.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 1.1037,
+      "workspace": 4
+    },
+    {
+      "key": "Left",
+      "before": {
+        "open": true,
+        "selected": 5,
+        "origin": 4,
+        "position": 4.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 1.1622,
+      "workspace": 4
+    },
+    {
+      "key": "7",
+      "before": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 7,
+        "origin": 4,
+        "position": 6.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 1.1663,
+      "workspace": 4
+    },
+    {
+      "key": "1",
+      "before": {
+        "open": true,
+        "selected": 7,
+        "origin": 4,
+        "position": 6.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 1,
+        "origin": 4,
+        "position": 0.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 1.1789,
+      "workspace": 4
+    },
+    {
+      "key": "4",
+      "before": {
+        "open": true,
+        "selected": 1,
+        "origin": 4,
+        "position": 0.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 1.1043,
+      "workspace": 4
+    },
+    {
+      "key": "7",
+      "before": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 7,
+        "origin": 4,
+        "position": 6.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 1.1626,
+      "workspace": 4
+    },
+    {
+      "key": "Return",
+      "before": {
+        "open": true,
+        "selected": 7,
+        "origin": 4,
+        "position": 6.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 7,
+        "origin": 4,
+        "position": 6.0,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 1.1598,
+      "workspace": 4
+    }
+  ]
+}

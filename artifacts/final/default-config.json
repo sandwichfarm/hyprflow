@@ -1,0 +1,11 @@
+{
+  "pid": 957142,
+  "signature": "efb50993780079460b0cbed1363e2166a2de1d9f_1791298026_945831578",
+  "configuration_sha256": "b1459d965dbddb27d1bfa2b504cfd50e25d6c76800c9232468cab01b499b4826",
+  "passed": true,
+  "reply": "ok",
+  "configerrors": "",
+  "repeatable_arrow_bindings": 6,
+  "workspace_jump_bindings": 9,
+  "nested_stopped": true
+}

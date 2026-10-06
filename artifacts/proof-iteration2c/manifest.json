@@ -1,0 +1,1963 @@
+{
+  "pid": 851087,
+  "signature": "efb50993780079460b0cbed1363e2166a2de1d9f_1791293947_1686120079",
+  "version": "Hyprland 0.56.2 built from branch v0.56.2 at commit efb50993780079460b0cbed1363e2166a2de1d9f clean ([gha] Nix: update inputs).\nDate: Wed Aug 5 14:13:21 2026\nTag: v0.56.2, commits: 7661\n\nLibraries:\nHyprgraphics: built against 0.5.1, system has 0.5.1\nHyprutils: built against 0.14.1, system has 0.14.1\nHyprcursor: built against 0.1.13, system has 0.1.13\nHyprlang: built against 0.6.8, system has 0.6.8\nAquamarine: built against 0.15.0, system has 0.15.0\n\nVersion ABI string: efb50993780079460b0cbed1363e2166a2de1d9f_aq_0.15_hu_0.14_hg_0.5_hc_0.1_hlg_0.6\nno flags were set\n\n",
+  "plugins": "\nPlugin hyprflow by hyprflow contributors:\n\tHandle: 55abb552eb70\n\tVersion: 0.1.0\n\tDescription: Classic Cover Flow workspace navigation\n\n",
+  "frames": [
+    {
+      "file": "fixture-1.png",
+      "sha256": "3f75f025d147464e20e2c521b48766015557ea90cfd42d1cf822ad775b2a71c5"
+    },
+    {
+      "file": "fixture-2.png",
+      "sha256": "3156d3b800039eae4b86b3eee9615c53ff3e13eb71027e49729e7c7d52be318d"
+    },
+    {
+      "file": "fixture-3.png",
+      "sha256": "7296d76c2447dd635f8d7a0b596ec73ad9a891644cfda9616914d76abd440596"
+    },
+    {
+      "file": "fixture-4.png",
+      "sha256": "069911ba5c196a8c8cb79c93186f4b34d612827c9863754379ede41eb09f2330"
+    },
+    {
+      "file": "fixture-5.png",
+      "sha256": "9251f58ac8dc3c36502c1f2fb99b51282b096f93a6b17a1fb22a3a0b4047f98c"
+    },
+    {
+      "file": "fixture-6.png",
+      "sha256": "b85237ea576b457c2aeb0811346f22057ff6901abf53a6035719375bbddf54aa"
+    },
+    {
+      "file": "fixture-7.png",
+      "sha256": "9566c656a47db5a45a49d62f4f0f0dedea0d10e2ea71ca36d5bfc5e5f396307e"
+    },
+    {
+      "file": "01-workspace.png",
+      "sha256": "069911ba5c196a8c8cb79c93186f4b34d612827c9863754379ede41eb09f2330"
+    },
+    {
+      "file": "02-open-transition.png",
+      "sha256": "53b72d707bcdaa4464257f18afbaca5fb400feb4902141c61cc08184cf6cf563"
+    },
+    {
+      "file": "02-open.png",
+      "sha256": "dc9830a42123ea8cb907a3e9a9365f2b3a124263fd388c9c6ccea6fb4098b074"
+    },
+    {
+      "file": "03-right-transition.png",
+      "sha256": "f74c2e10b25855b286cc920405eaf57aae4a2b9b7d4d03975ef84da492146658"
+    },
+    {
+      "file": "03-right.png",
+      "sha256": "01437f460df716495883d0df97150ed168a41cc5add2587ae62f5b6f9c46d4ed"
+    },
+    {
+      "file": "04-left-transition.png",
+      "sha256": "024ed6e9200ec1c222019ea0af236fc688a09383d15c2774d2cdc3faecea9bc4"
+    },
+    {
+      "file": "04-left.png",
+      "sha256": "6dd6cc51455c95316bf9f3a6c492b9019ff0505b2b60cc43155c885ad4447853"
+    },
+    {
+      "file": "05-jump-seven-transition.png",
+      "sha256": "cdffc4150ca04d791c262acf957e14feee06bc57605e242003689dd3c3d19373"
+    },
+    {
+      "file": "05-jump-seven.png",
+      "sha256": "068a6657829ed0d43cbc41d1ce69b728f7aa5e2dd14138d2bf49773c03c6af2d"
+    },
+    {
+      "file": "06-jump-one-transition.png",
+      "sha256": "30c41af2fae6cbbe1a35e23938a05ba6ce17823d969d1acc0efaa2194421626e"
+    },
+    {
+      "file": "06-jump-one.png",
+      "sha256": "35a047e38bf7d3928653d6baeb3a3d8ac2096fb061605ff1f5e023e451ccfa41"
+    },
+    {
+      "file": "07-jump-four-transition.png",
+      "sha256": "c7109c73fea4f17270a1bb516ecea7d2c46745bd3bc3c96a1b677cbd3a741f4b"
+    },
+    {
+      "file": "07-jump-four.png",
+      "sha256": "2eaee340133a9c3d49f7ff68b00ac7a622cc1ea959b50726dd3261e733121d4f"
+    },
+    {
+      "file": "08-selected-seven-transition.png",
+      "sha256": "9a6ecdde44c580c237040f4f66b68dfa942e2be0c27d0bcd7714d1197d1be505"
+    },
+    {
+      "file": "08-selected-seven.png",
+      "sha256": "068a6657829ed0d43cbc41d1ce69b728f7aa5e2dd14138d2bf49773c03c6af2d"
+    },
+    {
+      "file": "09-accepted-transition.png",
+      "sha256": "80f9e431c83b24ee0b7113a920ad25ed1d95fa589e52f63b3318949173b5b3c0"
+    },
+    {
+      "file": "09-accepted.png",
+      "sha256": "70557349ac27119d8f8c7f9eadb42f3b21f30d727ac4327c75ba14fe00315ceb"
+    },
+    {
+      "file": "10-reopened-transition.png",
+      "sha256": "d025a25623f1de306c9614bddb4a7529cf8cbc945e7f4b4d16da4e7d6335bbe7"
+    },
+    {
+      "file": "10-reopened.png",
+      "sha256": "e5c4466eb8f734228e3c4064c1ea5e025e3856dffb508792dcb76de91443eb63"
+    },
+    {
+      "file": "11-before-cancel-transition.png",
+      "sha256": "16a64795c685b7e52e9f6794964aa7bda5ba6baa8979ec075302baf109002700"
+    },
+    {
+      "file": "11-before-cancel.png",
+      "sha256": "d24abef4ed2b01089c8ab556158054ab9d824ac23f144142f4da92ec1e9c92d1"
+    },
+    {
+      "file": "12-cancelled-transition.png",
+      "sha256": "cda29d16449081509c5d00be0b64843b3d906f08e67cace1f8de14d69280467a"
+    },
+    {
+      "file": "12-cancelled.png",
+      "sha256": "86a1a889b89ae275b56dc9a67a24242c18adafc539120d4fbc57037f4d7e2953"
+    }
+  ],
+  "actions": [
+    {
+      "key": "F10",
+      "before": {
+        "open": false
+      },
+      "after": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.999257,
+        "closing": false
+      },
+      "elapsed_seconds": 0.4948,
+      "workspace": 4,
+      "samples": [
+        {
+          "time": 0.2581,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 3.0,
+            "openness": 0.955672,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.2913,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 3.0,
+            "openness": 0.974686,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3248,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 3.0,
+            "openness": 0.985682,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3579,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 3.0,
+            "openness": 0.991941,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3914,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 3.0,
+            "openness": 0.995524,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.425,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 3.0,
+            "openness": 0.997529,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4581,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 3.0,
+            "openness": 0.998642,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4914,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 3.0,
+            "openness": 0.999257,
+            "closing": false
+          }
+        }
+      ]
+    },
+    {
+      "key": "Right",
+      "before": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.0,
+        "openness": 0.999912,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 5,
+        "origin": 4,
+        "position": 3.999315,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 0.4993,
+      "workspace": 4,
+      "samples": [
+        {
+          "time": 0.2613,
+          "status": {
+            "open": true,
+            "selected": 5,
+            "origin": 4,
+            "position": 3.959052,
+            "openness": 0.999999,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.2948,
+          "status": {
+            "open": true,
+            "selected": 5,
+            "origin": 4,
+            "position": 3.976641,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.328,
+          "status": {
+            "open": true,
+            "selected": 5,
+            "origin": 4,
+            "position": 3.986869,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3617,
+          "status": {
+            "open": true,
+            "selected": 5,
+            "origin": 4,
+            "position": 3.992654,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3944,
+          "status": {
+            "open": true,
+            "selected": 5,
+            "origin": 4,
+            "position": 3.995895,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4282,
+          "status": {
+            "open": true,
+            "selected": 5,
+            "origin": 4,
+            "position": 3.99774,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4613,
+          "status": {
+            "open": true,
+            "selected": 5,
+            "origin": 4,
+            "position": 3.998754,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4944,
+          "status": {
+            "open": true,
+            "selected": 5,
+            "origin": 4,
+            "position": 3.999315,
+            "openness": 1.0,
+            "closing": false
+          }
+        }
+      ]
+    },
+    {
+      "key": "Left",
+      "before": {
+        "open": true,
+        "selected": 5,
+        "origin": 4,
+        "position": 3.999919,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.000728,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 0.4985,
+      "workspace": 4,
+      "samples": [
+        {
+          "time": 0.2585,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 3.043226,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.2892,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 3.024694,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3183,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 3.018313,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.347,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 3.010485,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3765,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 3.005852,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4057,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 3.00323,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4396,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 3.001788,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4678,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 3.001329,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4958,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 3.000728,
+            "openness": 1.0,
+            "closing": false
+          }
+        }
+      ]
+    },
+    {
+      "key": "7",
+      "before": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 3.000085,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 7,
+        "origin": 4,
+        "position": 5.9994,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 0.5582,
+      "workspace": 4,
+      "samples": [
+        {
+          "time": 0.2061,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.725305,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.2345,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.789967,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.2632,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.878738,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.292,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.93075,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3208,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.961014,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3491,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.970748,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3776,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.983718,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4071,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.991034,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4394,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.995006,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4676,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.996294,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.496,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.997974,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.5255,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.998898,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.5543,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.9994,
+            "openness": 1.0,
+            "closing": false
+          }
+        }
+      ]
+    },
+    {
+      "key": "1",
+      "before": {
+        "open": true,
+        "selected": 7,
+        "origin": 4,
+        "position": 5.999824,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 1,
+        "origin": 4,
+        "position": 0.000889,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 0.5687,
+      "workspace": 4,
+      "samples": [
+        {
+          "time": 0.2114,
+          "status": {
+            "open": true,
+            "selected": 1,
+            "origin": 4,
+            "position": 0.420858,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.2397,
+          "status": {
+            "open": true,
+            "selected": 1,
+            "origin": 4,
+            "position": 0.320282,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.2683,
+          "status": {
+            "open": true,
+            "selected": 1,
+            "origin": 4,
+            "position": 0.183851,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.2977,
+          "status": {
+            "open": true,
+            "selected": 1,
+            "origin": 4,
+            "position": 0.104367,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3282,
+          "status": {
+            "open": true,
+            "selected": 1,
+            "origin": 4,
+            "position": 0.058635,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3565,
+          "status": {
+            "open": true,
+            "selected": 1,
+            "origin": 4,
+            "position": 0.043782,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3847,
+          "status": {
+            "open": true,
+            "selected": 1,
+            "origin": 4,
+            "position": 0.024387,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4147,
+          "status": {
+            "open": true,
+            "selected": 1,
+            "origin": 4,
+            "position": 0.013456,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4446,
+          "status": {
+            "open": true,
+            "selected": 1,
+            "origin": 4,
+            "position": 0.007398,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4743,
+          "status": {
+            "open": true,
+            "selected": 1,
+            "origin": 4,
+            "position": 0.005463,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.5051,
+          "status": {
+            "open": true,
+            "selected": 1,
+            "origin": 4,
+            "position": 0.002998,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.5346,
+          "status": {
+            "open": true,
+            "selected": 1,
+            "origin": 4,
+            "position": 0.001635,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.5645,
+          "status": {
+            "open": true,
+            "selected": 1,
+            "origin": 4,
+            "position": 0.000889,
+            "openness": 1.0,
+            "closing": false
+          }
+        }
+      ]
+    },
+    {
+      "key": "4",
+      "before": {
+        "open": true,
+        "selected": 1,
+        "origin": 4,
+        "position": 0.000259,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 2.999149,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 0.558,
+      "workspace": 4,
+      "samples": [
+        {
+          "time": 0.2633,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 2.873886,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.2922,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 2.928025,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.321,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 2.945896,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3496,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 2.969539,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3792,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 2.983023,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4083,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 2.990566,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4368,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 2.993006,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4653,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 2.996142,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4949,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 2.997891,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.5247,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 2.998847,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.5531,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 4,
+            "position": 2.999149,
+            "openness": 1.0,
+            "closing": false
+          }
+        }
+      ]
+    },
+    {
+      "key": "7",
+      "before": {
+        "open": true,
+        "selected": 4,
+        "origin": 4,
+        "position": 2.999927,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 7,
+        "origin": 4,
+        "position": 5.999397,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 0.5579,
+      "workspace": 4,
+      "samples": [
+        {
+          "time": 0.256,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.879882,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.2866,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.93088,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3171,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.960978,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3487,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.978196,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3812,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.987847,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4112,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.99099,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.441,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.995029,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4697,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.997269,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4982,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.9985,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.5264,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.998891,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.5547,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.999397,
+            "openness": 1.0,
+            "closing": false
+          }
+        }
+      ]
+    },
+    {
+      "key": "Return",
+      "before": {
+        "open": true,
+        "selected": 7,
+        "origin": 4,
+        "position": 5.999824,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": false
+      },
+      "elapsed_seconds": 0.7497,
+      "workspace": 7,
+      "samples": [
+        {
+          "time": 0.2556,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.999999,
+            "openness": 0.053385,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.2838,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 5.999999,
+            "openness": 0.040535,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.3123,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 6.0,
+            "openness": 0.023132,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.3412,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 6.0,
+            "openness": 0.013062,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.3695,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 6.0,
+            "openness": 0.009787,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.3985,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 6.0,
+            "openness": 0.005465,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.4281,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 6.0,
+            "openness": 0.00303,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.4571,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 6.0,
+            "openness": 0.00167,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.4861,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 6.0,
+            "openness": 0.001237,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.5144,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 6.0,
+            "openness": 0.000674,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.544,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 6.0,
+            "openness": 0.00037,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.5732,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 6.0,
+            "openness": 0.000201,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.6017,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 6.0,
+            "openness": 0.000148,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.6304,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 6.0,
+            "openness": 8e-05,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.6593,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 6.0,
+            "openness": 4.3e-05,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.6893,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 6.0,
+            "openness": 2.3e-05,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.718,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 4,
+            "position": 6.0,
+            "openness": 1.7e-05,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.7468,
+          "status": {
+            "open": false
+          }
+        }
+      ]
+    },
+    {
+      "key": "F10",
+      "before": {
+        "open": false
+      },
+      "after": {
+        "open": true,
+        "selected": 7,
+        "origin": 7,
+        "position": 6.0,
+        "openness": 0.999257,
+        "closing": false
+      },
+      "elapsed_seconds": 0.4964,
+      "workspace": 7,
+      "samples": [
+        {
+          "time": 0.2575,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 0.955784,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.2908,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 0.974724,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3242,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 0.985734,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3574,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 0.992053,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3908,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 0.995516,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4241,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 0.997523,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4576,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 0.99864,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4919,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 0.999257,
+            "closing": false
+          }
+        }
+      ]
+    },
+    {
+      "key": "4",
+      "before": {
+        "open": true,
+        "selected": 7,
+        "origin": 7,
+        "position": 6.0,
+        "openness": 0.999778,
+        "closing": false
+      },
+      "after": {
+        "open": true,
+        "selected": 4,
+        "origin": 7,
+        "position": 3.00061,
+        "openness": 1.0,
+        "closing": false
+      },
+      "elapsed_seconds": 0.5655,
+      "workspace": 7,
+      "samples": [
+        {
+          "time": 0.2612,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 7,
+            "position": 3.123161,
+            "openness": 0.999998,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.2943,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 7,
+            "position": 3.070283,
+            "openness": 0.999999,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.328,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 7,
+            "position": 3.0397,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3609,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 7,
+            "position": 3.022057,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.3943,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 7,
+            "position": 3.012366,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4275,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 7,
+            "position": 3.006839,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.462,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 7,
+            "position": 3.003747,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.4952,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 7,
+            "position": 3.002058,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.5285,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 7,
+            "position": 3.001125,
+            "openness": 1.0,
+            "closing": false
+          }
+        },
+        {
+          "time": 0.5618,
+          "status": {
+            "open": true,
+            "selected": 4,
+            "origin": 7,
+            "position": 3.00061,
+            "openness": 1.0,
+            "closing": false
+          }
+        }
+      ]
+    },
+    {
+      "key": "Escape",
+      "before": {
+        "open": true,
+        "selected": 4,
+        "origin": 7,
+        "position": 3.000071,
+        "openness": 1.0,
+        "closing": false
+      },
+      "after": {
+        "open": false
+      },
+      "elapsed_seconds": 1.3923,
+      "workspace": 7,
+      "samples": [
+        {
+          "time": 0.2619,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.877687,
+            "openness": 1.0,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.2914,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.929993,
+            "openness": 1.0,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.3248,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.960419,
+            "openness": 1.0,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.353,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.970327,
+            "openness": 1.0,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.3856,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.983526,
+            "openness": 1.0,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.414,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.990811,
+            "openness": 1.0,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.4457,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.995001,
+            "openness": 1.0,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.4778,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.9973,
+            "openness": 1.0,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.5107,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.998509,
+            "openness": 1.0,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.5434,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.999198,
+            "openness": 1.0,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.5767,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.999567,
+            "openness": 1.0,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.6049,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.99967,
+            "openness": 1.0,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.633,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.999822,
+            "openness": 1.0,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.6619,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.999904,
+            "openness": 1.0,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.6925,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.999949,
+            "openness": 0.85195,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.7207,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.999962,
+            "openness": 0.734653,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.7488,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.99998,
+            "openness": 0.503175,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.7779,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.999989,
+            "openness": 0.322824,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.8082,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.999994,
+            "openness": 0.198725,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.8365,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.999996,
+            "openness": 0.154349,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.8697,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.999998,
+            "openness": 0.091085,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.9038,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.999999,
+            "openness": 0.052157,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.9363,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 5.999999,
+            "openness": 0.030605,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.9651,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 0.017333,
+            "closing": true
+          }
+        },
+        {
+          "time": 0.9978,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 0.009607,
+            "closing": true
+          }
+        },
+        {
+          "time": 1.0284,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 0.005384,
+            "closing": true
+          }
+        },
+        {
+          "time": 1.061,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 0.002931,
+            "closing": true
+          }
+        },
+        {
+          "time": 1.0992,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 0.001601,
+            "closing": true
+          }
+        },
+        {
+          "time": 1.1311,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 0.00089,
+            "closing": true
+          }
+        },
+        {
+          "time": 1.1604,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 0.0005,
+            "closing": true
+          }
+        },
+        {
+          "time": 1.1923,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 0.000267,
+            "closing": true
+          }
+        },
+        {
+          "time": 1.2284,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 0.000144,
+            "closing": true
+          }
+        },
+        {
+          "time": 1.2706,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 7.8e-05,
+            "closing": true
+          }
+        },
+        {
+          "time": 1.2988,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 4.3e-05,
+            "closing": true
+          }
+        },
+        {
+          "time": 1.3275,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 2.3e-05,
+            "closing": true
+          }
+        },
+        {
+          "time": 1.3577,
+          "status": {
+            "open": true,
+            "selected": 7,
+            "origin": 7,
+            "position": 6.0,
+            "openness": 1.2e-05,
+            "closing": true
+          }
+        },
+        {
+          "time": 1.3895,
+          "status": {
+            "open": false
+          }
+        }
+      ]
+    }
+  ],
+  "configerrors": "",
+  "final_status": {
+    "open": false
+  }
+}

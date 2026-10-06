@@ -1,0 +1,28 @@
+{
+  "pid": 851087,
+  "checks": [
+    {
+      "baseline": "z"
+    },
+    {
+      "exit_key": "Return",
+      "unbound_blocked": true,
+      "exit_key_blocked": true,
+      "focus_restored": true
+    },
+    {
+      "exit_key": "Escape",
+      "unbound_blocked": true,
+      "exit_key_blocked": true,
+      "focus_restored": true
+    }
+  ],
+  "input_isolation": {
+    "device": "wl_keyboard",
+    "nested_only": true,
+    "present": true,
+    "disabled_during_proof": true,
+    "restored": true
+  },
+  "passed": true
+}

@@ -1,0 +1,65 @@
+[
+  {
+    "command": [
+      "make",
+      "check",
+      "format-check"
+    ],
+    "exit_code": 0,
+    "stdout": "./build/motion-tests\nPASS: geometry landmarks, 12001 symmetry/order/depth samples, timing, reversal, frame-rate independence\npython3 -m py_compile scripts/*.py\ncppcheck --enable=warning,performance,portability --error-exitcode=1 --std=c++23 --suppress=missingIncludeSystem src tests\nChecking src/Capture.cpp ...\n1/5 files checked 26% done\nChecking src/Flow.cpp ...\n2/5 files checked 53% done\nChecking src/FlowRenderer.cpp ...\n3/5 files checked 70% done\nChecking src/main.cpp ...\n4/5 files checked 91% done\nChecking tests/motion.cpp ...\n5/5 files checked 100% done\nclang-format --dry-run --Werror src/*.cpp src/*.hpp tests/*.cpp\n",
+    "stderr": "",
+    "expected_exit": 0
+  },
+  {
+    "command": [
+      "./build/motion-sanitized"
+    ],
+    "exit_code": 0,
+    "stdout": "PASS: geometry landmarks, 12001 symmetry/order/depth samples, timing, reversal, frame-rate independence\n",
+    "stderr": "",
+    "expected_exit": 0
+  },
+  {
+    "command": [
+      "c++",
+      "-std=c++23",
+      "-O2",
+      "-I/tmp/hyprflow-mutation-n7qx4kng",
+      "tests/motion.cpp",
+      "-o",
+      "/tmp/hyprflow-mutation-n7qx4kng/test"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "",
+    "expected_exit": 0
+  },
+  {
+    "command": [
+      "/tmp/hyprflow-mutation-n7qx4kng/test"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "FAIL: outside edges face forward\n",
+    "expected_exit": 1
+  },
+  {
+    "check": "local_markdown_links",
+    "passed": true
+  },
+  {
+    "command": [
+      "make",
+      "check",
+      "format-check"
+    ],
+    "exit_code": 0,
+    "stdout": "./build/motion-tests\nPASS: geometry landmarks, 12001 symmetry/order/depth samples, timing, reversal, frame-rate independence\npython3 -m py_compile scripts/*.py\ncppcheck --enable=warning,performance,portability --error-exitcode=1 --std=c++23 --suppress=missingIncludeSystem src tests\nChecking src/Capture.cpp ...\n1/5 files checked 26% done\nChecking src/Flow.cpp ...\n2/5 files checked 53% done\nChecking src/FlowRenderer.cpp ...\n3/5 files checked 70% done\nChecking src/main.cpp ...\n4/5 files checked 91% done\nChecking tests/motion.cpp ...\n5/5 files checked 100% done\nclang-format --dry-run --Werror src/*.cpp src/*.hpp tests/*.cpp\n",
+    "stderr": ""
+  },
+  {
+    "check": "GitHub_flavored_Markdown_render",
+    "passed": true,
+    "renderer": "cmark-gfm"
+  }
+]
