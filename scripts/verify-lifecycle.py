@@ -178,15 +178,19 @@ class LifecycleProof:
         self.focus_probe()
 
     def continuous_action(self, name, argument=None):
-        before = self.status()
+        value = "" if argument is None else json.dumps(argument)
+        # Observe the action inside one callback: separate IPC requests can
+        # straddle a render frame and confuse normal spring motion with a jump.
+        expression = ("local before = hl.plugin.hyprflow.status(); "
+                      f"hl.plugin.hyprflow.{name}({value}); "
+                      "return before .. '\\n' .. hl.plugin.hyprflow.status()")
         started = time.monotonic()
-        self.action(name, argument)
-        after = self.status()
+        before, after = map(json.loads, self.control("repl", expression).stdout.splitlines())
         elapsed = time.monotonic() - started
         require(before["open"] and after["open"], "Retarget unexpectedly removed the flow")
-        require(abs(after["position"] - before["position"]) <= 80 * elapsed + .02, "Focus teleported during retarget")
-        require(abs(after["openness"] - before["openness"]) <= 8 * elapsed + .02, "Opening progress reset during retarget")
-        return {"before": before, "after": after, "observation_seconds": round(elapsed, 6)}
+        require(after["position"] == before["position"], "Focus teleported during retarget")
+        require(after["openness"] == before["openness"], "Opening progress reset during retarget")
+        return {"before": before, "after": after, "observation_seconds": round(elapsed, 6), "sampling": "atomic_lua_callback"}
 
     def reversals(self):
         self.action("toggle")

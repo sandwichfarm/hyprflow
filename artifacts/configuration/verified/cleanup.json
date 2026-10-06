@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "runtime_identity_sha256": "901535790b82f46843f4f968aab0becfa196e407abf1db6ad2cf0cc3cc7bffcf",
+  "owned_compositor_exited": true,
+  "owned_host_window_restored_before_exit": true,
+  "host_config_or_plugins_modified": false,
+  "owned_fixture_processes_exited": true
+}

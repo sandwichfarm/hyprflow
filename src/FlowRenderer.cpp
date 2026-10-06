@@ -11,11 +11,26 @@ layout(location=1) in vec2 texcoord;
 out vec2 uv;
 void main() { gl_Position = position; uv = texcoord; }
 )";
-const char *fragmentSource = R"(#version 300 es
+const std::string nativeGradient{
+#include <hyprland/src/render/shaders/gradient.glsl.inc>
+};
+
+// Reuse the compositor's Oklab interpolation and angular convention on our projective quads.
+const std::string fragmentSource = std::string(R"(#version 300 es
 precision highp float;
+#define ALLOW_INCLUDES
+#define CM_TRANSFER_FUNCTION_GAMMA22 2
+vec3 fromLinearRGB(vec3 color, int transferFunction) {
+    return pow(max(color, vec3(0.0)), vec3(1.0 / 2.2));
+}
+)") + nativeGradient + R"(
 uniform sampler2D image;
 uniform vec4 appearance;
 uniform vec2 fraction;
+uniform vec4 borderColors[10];
+uniform int borderColorCount;
+uniform float borderAngle;
+uniform vec2 borderThickness;
 in vec2 uv;
 out vec4 color;
 void main() {
@@ -23,6 +38,14 @@ void main() {
     vec4 texel = vec4(0.015, 0.015, 0.015, 1.0);
     if (all(greaterThanEqual(sampleUV, vec2(0))) && all(lessThanEqual(sampleUV, vec2(1))))
         texel = texture(image, sampleUV);
+    if (borderColorCount > 0 && all(greaterThan(borderThickness, vec2(0)))) {
+        vec2 distanceToEdge = min(uv, 1.0 - uv);
+        vec2 antialias = max(fwidth(uv) * .5, vec2(.000001));
+        vec2 stroke = 1.0 - smoothstep(borderThickness - antialias, borderThickness + antialias, distanceToEdge);
+        vec4 border = okLabAToSrgb(getOkColorForCoordArray1(uv, borderColorCount, borderColors, borderAngle));
+        float coverage = max(stroke.x, stroke.y);
+        texel = vec4(border.rgb * border.a, border.a) * coverage + texel * (1.0 - border.a * coverage);
+    }
     float alpha = appearance.x;
     if (appearance.z > .5)
         alpha *= .34 * pow(smoothstep(.55, 1.0, uv.y), 1.5);
@@ -96,7 +119,7 @@ void FlowRenderer::initialize() {
         return;
     GLuint vertex = compile(GL_VERTEX_SHADER, vertexSource), fragment = 0;
     try {
-        fragment = compile(GL_FRAGMENT_SHADER, fragmentSource);
+        fragment = compile(GL_FRAGMENT_SHADER, fragmentSource.c_str());
     } catch (...) {
         glDeleteShader(vertex);
         throw;
@@ -164,6 +187,11 @@ void FlowRenderer::draw(const std::vector<Quad> &quads, int width, int height) {
         glBindTexture(GL_TEXTURE_2D, quad.texture->m_texID);
         glUniform4f(glGetUniformLocation(program, "appearance"), quad.opacity, quad.shade, quad.reflection, quad.lightDirection);
         glUniform2f(glGetUniformLocation(program, "fraction"), quad.imageWidth, quad.imageHeight);
+        glUniform1i(glGetUniformLocation(program, "borderColorCount"), quad.borderColorCount);
+        glUniform2fv(glGetUniformLocation(program, "borderThickness"), 1, quad.borderThickness.data());
+        glUniform1f(glGetUniformLocation(program, "borderAngle"), quad.borderAngle);
+        if (quad.borderColorCount > 0)
+            glUniform4fv(glGetUniformLocation(program, "borderColors"), quad.borderColorCount, quad.borderColors.data());
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices.data(), GL_STREAM_DRAW);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }

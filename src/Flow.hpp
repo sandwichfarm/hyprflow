@@ -6,6 +6,7 @@
 #include <string>
 
 namespace Hyprflow {
+struct FlowAppearance;
 struct Card {
     WORKSPACEID id;
     std::string name;
@@ -18,7 +19,7 @@ class Flow {
     explicit Flow(PHLMONITOR monitor, int workspaceCount);
     ~Flow();
     void preRender();
-    void render();
+    void render(const FlowAppearance &appearance);
     void move(int direction);
     bool jump(const std::string &workspace);
     void close(bool commit);
@@ -42,6 +43,7 @@ class Flow {
     size_t labelIndex = static_cast<size_t>(-1);
     void refresh();
     void finish();
-    Quad cardQuad(size_t index, bool reflection) const;
+    Quad cardQuad(size_t index, bool reflection, const FlowAppearance &appearance) const;
+    void decorateBorder(Quad &quad, size_t index, const FlowAppearance &appearance, const Vector2D &extent, double progress) const;
 };
 } // namespace Hyprflow
