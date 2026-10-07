@@ -42,7 +42,7 @@ The full build cleans `dist/`, builds the landing page, then builds VitePress in
 
 ## Prepare Bunny
 
-1. Create a dedicated Bunny Storage Zone and connect a Pull Zone to it. Use the storage zone's **primary region** hostname from its Access tab.
+1. Create a dedicated Bunny Storage Zone and connect a Pull Zone to it. Setup will detect its upload endpoint automatically.
 2. Leave **Block Root Path Access** disabled on the Pull Zone. The build supplies `index.html` at the root and `docs/index.html` for the documentation directory. Do not enable SPA fallback or HTML minification; the docs deliberately use `.html` page links.
 3. Attach your hostname and enable HTTPS, or use the Pull Zone's HTTPS `b-cdn.net` hostname.
 4. Note the storage zone name, storage password, Pull Zone numeric ID, and account API key. The storage password uploads files; the account key purges the CDN. These are separate credentials.
@@ -58,20 +58,24 @@ gh auth login
 npm run setup:bunny -- --repo sandwichfarm/hyprflow
 ```
 
-Each prompt explains what the value does, where to find it, and an example. Values are checked immediately: an invalid entry repeats only that prompt. The Storage API hostname is prompted too, with Frankfurt's endpoint as the default; use your zone's actual primary-region hostname.
+Each prompt explains what the value does, where to find it, and an example. Values are checked immediately: an invalid entry repeats only that prompt. You are not asked for an upload hostname: setup reads it from Bunny using your Storage Zone name and account API key, including when replication is enabled.
 
 The helper checks GitHub authentication before asking for credentials. It creates the `production` GitHub environment if needed, preserves existing protection rules, and saves these values:
 
 | Kind | Name | What to enter and where to find it |
 | --- | --- | --- |
 | Variable | `BUNNY_STORAGE_ZONE` | Zone name, not ID. **Storage → your zone**; also the username under **Access / FTP & API Access**. |
-| Variable | `BUNNY_STORAGE_HOST` | Upload hostname from **Storage → your zone → Access / FTP & API Access**. For example, `storage.bunnycdn.com` or `ny.storage.bunnycdn.com`. No scheme or path. |
+| Variable | `BUNNY_STORAGE_HOST` | Detected automatically from the Storage Zone API and saved for the deploy workflow. An explicit HTTP upload hostname can still be supplied through the environment. |
 | Variable | `BUNNY_PULL_ZONE_ID` | Numeric ID of the connected CDN Pull Zone. Open **CDN → your Pull Zone** and copy its numeric ID from the dashboard URL, not the Storage Zone ID. |
 | Variable | `BUNNY_PUBLIC_URL` | The website address visitors will open. Under **CDN → your Pull Zone → General → Hostnames**, use the default `your-zone.b-cdn.net` hostname or an HTTPS custom domain you connected. |
 | Secret | `BUNNY_STORAGE_PASSWORD` | Writable Storage Zone password under **Storage → your zone → Access / FTP & API Access**. Do not use the read-only password, login password, or account API key. |
-| Secret | `BUNNY_API_KEY` | Account API key from **[Account → API Key](https://dash.bunny.net/account/api-key)**, used to purge the CDN cache. |
+| Secret | `BUNNY_API_KEY` | Account API key from **[Account → API Key](https://dash.bunny.net/account/api-key)**, used to look up the upload endpoint and purge the CDN cache. |
 
 **`BUNNY_PUBLIC_URL` is our variable name, not a Bunny setting.** For example, enter `https://hyprflow-site.b-cdn.net` or your connected custom domain, such as `https://hyprflow.com`. It only sets the clickable website link on the GitHub deployment. It does not configure DNS or select the upload destination. A bare hostname is accepted interactively and gets `https://` added; omit `/docs` and other paths.
+
+For replicated storage, keep using your `*.b-cdn.net` delivery address for the public website. Bunny's [replication documentation](https://docs.bunny.net/storage/replication) describes uploads going to the primary region before replication. Setup reads that region from the account API; it does not alter replication. If a `*.b-cdn.net` address was exported as `BUNNY_STORAGE_HOST`, setup treats it as the public URL (unless you already supplied one), then detects the upload endpoint. It never sends your storage password to the delivery hostname.
+
+Endpoint detection is read-only and has a 30-second timeout. If the zone cannot be found or the API lookup fails, setup exits before changing any GitHub variables or secrets. A supplied `BUNNY_STORAGE_HOST` that already names a valid HTTP upload endpoint bypasses detection.
 
 Secret prompts remain visible while typing is hidden. Paste the secret and press Enter; `Received (hidden).` confirms it was read. Ctrl+C or end-of-input cancels without changing GitHub settings during the prompt phase. Once saving starts, progress names each operation, and every GitHub command has a 30-second timeout. If saving fails partway through, previously saved values remain; rerun the helper to finish.
 
@@ -81,7 +85,7 @@ Read all prompt explanations without entering values or contacting GitHub:
 npm run setup:bunny -- --help
 ```
 
-All values can instead be supplied as exported environment variables for noninteractive use. Secrets go to `gh` over stdin and are never printed or written to disk. The helper does not source `.env` files. Use `--environment NAME` only with a corresponding workflow environment change.
+Values can instead be supplied as exported environment variables for noninteractive use. The setup helper detects `BUNNY_STORAGE_HOST` when omitted; the deployment workflow receives the resolved hostname. Secrets go to `gh` over stdin and are never printed or written to disk. The helper does not source `.env` files. Use `--environment NAME` only with a corresponding workflow environment change.
 
 Preview the setup without changing GitHub:
 

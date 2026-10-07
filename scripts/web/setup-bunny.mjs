@@ -2,6 +2,7 @@ import { spawnSync } from "node:child_process";
 import { createInterface } from "node:readline/promises";
 import { pathToFileURL } from "node:url";
 import { Writable } from "node:stream";
+import { setupInputs, resolveSetupConfig } from "./bunny-storage.mjs";
 import { configFromEnv, variableNames, secretNames } from "./config.mjs";
 
 export function parseArgs(args) {
@@ -56,13 +57,12 @@ export const setupFields = [
   },
   {
     name: "BUNNY_STORAGE_HOST",
-    label: "Storage API hostname",
-    purpose: "The upload server for your Storage Zone's primary region.",
+    label: "Upload endpoint (automatic)",
+    purpose:
+      "Setup looks up the write endpoint from your Storage Zone name and account API key. You do not need to choose a regional hostname. Replication remains managed by Bunny.",
     where:
-      "Bunny dashboard → Storage → your zone → Access / FTP & API Access → Hostname. Copy only the hostname, without https:// or a path.",
-    example:
-      "storage.bunnycdn.com (Frankfurt), ny.storage.bunnycdn.com (New York)",
-    defaultValue: "storage.bunnycdn.com",
+      "Read automatically from Bunny's Storage Zone API. Your *.b-cdn.net delivery hostname belongs under Public website address below. An explicit BUNNY_STORAGE_HOST upload endpoint can still be supplied through the environment.",
+    automatic: true,
   },
   {
     name: "BUNNY_PULL_ZONE_ID",
@@ -96,7 +96,7 @@ export const setupFields = [
     name: "BUNNY_API_KEY",
     label: "Bunny account API key",
     purpose:
-      "Authorizes clearing the Pull Zone cache after deployment. This is separate from the Storage Zone password.",
+      "Reads your Storage Zone settings to detect the upload endpoint and authorizes clearing the Pull Zone cache after deployment. This is separate from the Storage Zone password.",
     where:
       "Bunny dashboard → Account → API Key: https://dash.bunny.net/account/api-key. Copy the account API key.",
     secret: true,
@@ -112,9 +112,9 @@ function explainField(field, output) {
 
 export async function promptConfig(
   env,
-  { input = process.stdin, output = process.stdout } = {},
+  { input = process.stdin, output = process.stdout, discover } = {},
 ) {
-  const values = { ...env };
+  const values = setupInputs(env);
   let muted = false;
   // Intercept readline's actual output rather than overriding its private methods.
   const promptOutput = new Writable({
@@ -145,12 +145,19 @@ export async function promptConfig(
           );
           continue;
         } catch {
-          output.write(
-            `${field.name} from the environment is invalid; enter a replacement below.\n`,
-          );
+          if (field.automatic) {
+            delete values[field.name];
+            output.write(
+              `${field.name} is not an upload endpoint; setup will detect it automatically.\n`,
+            );
+          } else
+            output.write(
+              `${field.name} from the environment is invalid; enter a replacement below.\n`,
+            );
         }
       }
       explainField(field, output);
+      if (field.automatic) continue;
       if (field.secret)
         output.write(
           "Input is hidden: paste the value, then press Enter. Ctrl+C cancels.\n",
@@ -189,7 +196,12 @@ export async function promptConfig(
         }
       }
     }
-    return configFromEnv(values);
+    // Release the terminal before the network lookup; Ctrl+C can interrupt it normally.
+    rl.close();
+    return resolveSetupConfig(values, {
+      discover,
+      log: (message) => output.write(`${message}\n`),
+    });
   } catch (error) {
     if (controller.signal.aborted)
       throw new Error("Setup cancelled. No GitHub settings were changed.");
@@ -259,7 +271,7 @@ export function applyConfig(config, options, run = gh, log = console.log) {
 async function main() {
   if (process.argv.slice(2).includes("--help")) {
     console.log(
-      "Usage: npm run setup:bunny -- [--repo OWNER/REPO] [--environment production] [--dry-run]\n\nSets GitHub variables and secrets for an existing Bunny Storage + Pull Zone.\nInteractive setup explains and validates each value. Secrets stay hidden.\n--dry-run shows planned settings without prompts or GitHub writes.",
+      "Usage: npm run setup:bunny -- [--repo OWNER/REPO] [--environment production] [--dry-run]\n\nSets GitHub variables and secrets for an existing Bunny Storage + Pull Zone.\nInteractive setup explains and validates each value. Secrets stay hidden. The upload endpoint is detected automatically using a read-only Bunny API request.\n--dry-run shows planned settings without prompts or GitHub writes.",
     );
     for (const field of setupFields) explainField(field, process.stdout);
     return;
@@ -275,7 +287,11 @@ async function main() {
   const config =
     !options.dryRun && process.stdin.isTTY
       ? await promptConfig(process.env)
-      : configFromEnv(process.env, { dryRun: options.dryRun });
+      : options.dryRun
+        ? configFromEnv(setupInputs(process.env), { dryRun: true })
+        : await resolveSetupConfig(process.env);
+  if (options.dryRun && !setupInputs(process.env).BUNNY_STORAGE_HOST?.trim())
+    config.BUNNY_STORAGE_HOST = "(detected automatically during setup)";
   applyConfig(config, options);
 }
 if (import.meta.url === pathToFileURL(process.argv[1] || "").href)

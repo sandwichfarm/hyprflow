@@ -35,13 +35,12 @@ async function waitFor(term, text) {
 
 test("interactive setup explains each field, validates immediately, and hides secret keystrokes", async () => {
   const term = terminal();
-  const result = promptConfig({}, term);
+  const result = promptConfig(
+    {},
+    { ...term, discover: async () => "ny.storage.bunnycdn.com" },
+  );
   for (const [prompt, value] of [
     ["Storage zone name: ", "example-site"],
-    [
-      "Storage API hostname [storage.bunnycdn.com]: ",
-      "ny.storage.bunnycdn.com",
-    ],
     ["Pull Zone ID: ", "not-an-id"],
     ["Try again.", "12345"],
     ["Public website address: ", "https://example-site.b-cdn.net/docs"],
@@ -69,6 +68,11 @@ test("interactive setup explains each field, validates immediately, and hides se
   assert.match(term.transcript, /\x1b\[0JBunny account API key: /);
   assert.match(term.transcript, /Input is hidden/);
   assert.match(term.transcript, /Received \(hidden\)/);
+  assert.ok(!term.transcript.includes("Storage API hostname ["));
+  assert.match(
+    term.transcript,
+    /Detected upload endpoint: ny.storage.bunnycdn.com/,
+  );
 });
 
 test("an invalid exported value can be corrected without re-entering valid settings", async () => {
@@ -101,7 +105,10 @@ for (const [name, end] of [
 ]) {
   test(`${name} exits a pending prompt instead of waiting forever`, async () => {
     const term = terminal();
-    const result = promptConfig({}, term);
+    const result = promptConfig(
+      {},
+      { ...term, discover: async () => "ny.storage.bunnycdn.com" },
+    );
     const rejection = assert.rejects(
       result,
       /Setup cancelled. No GitHub settings were changed/,

@@ -17,7 +17,7 @@ export function configFromEnv(env, { dryRun = false } = {}) {
     !/^(?:[a-z]{2,3}\.)?storage\.bunnycdn\.com$/.test(config.BUNNY_STORAGE_HOST)
   )
     throw new Error(
-      "BUNNY_STORAGE_HOST must be a Bunny regional storage hostname (no scheme or path).",
+      "BUNNY_STORAGE_HOST is the HTTP upload hostname, e.g. storage.bunnycdn.com. Run setup:bunny to detect it automatically; *.b-cdn.net delivery hostnames belong in BUNNY_PUBLIC_URL.",
     );
   if (
     config.BUNNY_STORAGE_ZONE &&
