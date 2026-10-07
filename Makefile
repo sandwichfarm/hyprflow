@@ -3,7 +3,7 @@ PKGS = hyprland lua5.4 egl glesv2 pangocairo
 CPPFLAGS += $(shell pkg-config --cflags $(PKGS))
 CXXFLAGS += -std=c++23 -O2 -g -fPIC -fno-gnu-unique -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
 LDLIBS += $(shell pkg-config --libs $(PKGS))
-SOURCES = src/main.cpp src/Flow.cpp src/FlowRenderer.cpp src/Capture.cpp
+SOURCES = src/main.cpp src/Flow.cpp src/FlowRenderer.cpp src/Capture.cpp src/Config.cpp
 OBJECTS = $(SOURCES:src/%.cpp=build/%.o)
 
 .PHONY: all test check format-check

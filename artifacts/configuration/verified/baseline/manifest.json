@@ -1,0 +1,98 @@
+{
+  "passed": true,
+  "phase": "baseline",
+  "artifact_sha256": "7a14a088eb4ffa7629995cc432117eba4c57d727b8c3ba861adfaac653795332",
+  "runtime_identity_sha256": "901535790b82f46843f4f968aab0becfa196e407abf1db6ad2cf0cc3cc7bffcf",
+  "checks": [
+    {
+      "name": "default_cancel_restores_workspace",
+      "passed": true
+    },
+    {
+      "name": "new_configuration_contract_red_on_baseline",
+      "passed": true,
+      "missing_options": {
+        "workspace_scale": {
+          "getoption": "no such option",
+          "configuration_error": "return hl.config({plugin={hyprflow={workspace_scale=1.0}}}):1: unknown config key 'plugin.hyprflow.workspace_scale'"
+        },
+        "workspace_spread": {
+          "getoption": "no such option",
+          "configuration_error": "return hl.config({plugin={hyprflow={workspace_spread=0.18}}}):1: unknown config key 'plugin.hyprflow.workspace_spread'"
+        },
+        "border_width": {
+          "getoption": "no such option",
+          "configuration_error": "return hl.config({plugin={hyprflow={border_width=0}}}):1: unknown config key 'plugin.hyprflow.border_width'"
+        },
+        "border_color": {
+          "getoption": "no such option",
+          "configuration_error": "return hl.config({plugin={hyprflow={border_color=\"rgba(ffffffff)\"}}}):1: unknown config key 'plugin.hyprflow.border_color'"
+        },
+        "border_color_current": {
+          "getoption": "no such option",
+          "configuration_error": "return hl.config({plugin={hyprflow={border_color_current=\"\"}}}):1: unknown config key 'plugin.hyprflow.border_color_current'"
+        },
+        "border_color_focus": {
+          "getoption": "no such option",
+          "configuration_error": "return hl.config({plugin={hyprflow={border_color_focus=\"\"}}}):1: unknown config key 'plugin.hyprflow.border_color_focus'"
+        }
+      }
+    }
+  ],
+  "frames": [
+    {
+      "file": "default-closed.png",
+      "sha256": "41e1b005e0a118ce3a40c57ae981b049c358039e31b9a95330dd3b31afcbe078",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "default-4.png",
+      "sha256": "d0d02c101ff6569ba930b22ccc6cb2be9f25b60cc37708bba603a20c1435c78f",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "default-1.png",
+      "sha256": "e151bf8eba8722a66ac183e62039edb6a01f535c6e521312c7f8fa65549fed76",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "default-7.png",
+      "sha256": "7b7b0a4597c58f89a90b4afe023126fac4aa4b8efc87e25f3f752001561e9ba9",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "default-cancelled.png",
+      "sha256": "41e1b005e0a118ce3a40c57ae981b049c358039e31b9a95330dd3b31afcbe078",
+      "size": [
+        1280,
+        720
+      ]
+    }
+  ],
+  "artifact_mapping_verified": true,
+  "input_isolation": {
+    "device": "wl_keyboard",
+    "nested_only": true,
+    "present": true,
+    "disabled_during_proof": true,
+    "restored": true
+  },
+  "duration_seconds": 8.34,
+  "final_status": {
+    "open": false
+  },
+  "final_workspace": 4,
+  "configerrors": ""
+}

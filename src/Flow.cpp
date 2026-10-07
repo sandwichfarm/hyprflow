@@ -1,4 +1,5 @@
 #include "Flow.hpp"
+#include "Config.hpp"
 #include "Capture.hpp"
 #include <hyprland/src/render/Renderer.hpp>
 #include <hyprland/src/desktop/Workspace.hpp>
@@ -168,11 +169,28 @@ void Flow::preRender() {
         finish();
 }
 
-Quad Flow::cardQuad(size_t index, bool reflection) const {
+void Flow::decorateBorder(Quad &quad, size_t index, const FlowAppearance &appearance, const Vector2D &extent, double progress) const {
+    if (appearance.borderWidth <= 0)
+        return;
+    const auto &borders = appearance.borders;
+    size_t role = 0;
+    if (index == origin && !borders[1].m_colors.empty())
+        role = 1;
+    if (index == static_cast<size_t>(focus.target) && !borders[2].m_colors.empty())
+        role = 2;
+    const auto &border = borders[role];
+    quad.borderColorCount = std::min<size_t>(border.m_colors.size(), 10);
+    std::copy_n(border.m_colorsOkLabA.begin(), quad.borderColorCount * 4, quad.borderColors.begin());
+    quad.borderAngle = border.m_angle;
+    const double thickness = appearance.borderWidth * monitor->m_scale * smooth(progress);
+    quad.borderThickness = {static_cast<float>(thickness / extent.x), static_cast<float>(thickness / extent.y)};
+}
+
+Quad Flow::cardQuad(size_t index, bool reflection, const FlowAppearance &appearance) const {
     const double width = monitor->m_transformedSize.x, height = monitor->m_transformedSize.y;
-    const double side = std::min(.58 * height, .38 * width), cx = .5 * width, cy = .4 * height;
+    const double side = cardSide(width, height, appearance.workspaceScale), cx = .5 * width, cy = .4 * height;
     const double p = std::clamp(openness.value, 0.0, 1.0);
-    const auto state = pose(static_cast<double>(index) - focus.value);
+    const auto state = pose(static_cast<double>(index) - focus.value, appearance.workspaceSpread);
     const bool anchored = index == anchor && !reflection;
     Quad quad;
     quad.texture = cards[index].framebuffer->getTexture();
@@ -186,12 +204,15 @@ Quad Flow::cardQuad(size_t index, bool reflection) const {
     const double aspect = width / height;
     quad.imageWidth = std::min(1.0, aspect);
     quad.imageHeight = std::min(1.0, 1 / aspect);
+    Vector2D extent{side, side};
     if (anchored) {
         const double w = std::lerp(width, side, p), h = std::lerp(height, side, p);
+        extent = {w, h};
         const double fit = std::min(w / width, h / height);
         quad.imageWidth = width * fit / w;
         quad.imageHeight = height * fit / h;
     }
+    decorateBorder(quad, index, appearance, extent, p);
     for (size_t i = 0; i < 4; ++i) {
         const double u = (i % 2) - .5, v = (i / 2) - .5;
         auto point = project(state, u, reflection ? 1 - v : v);
@@ -204,7 +225,7 @@ Quad Flow::cardQuad(size_t index, bool reflection) const {
     return quad;
 }
 
-void Flow::render() {
+void Flow::render(const FlowAppearance &appearance) {
     std::vector<size_t> order(cards.size());
     std::iota(order.begin(), order.end(), 0);
     std::stable_sort(order.begin(), order.end(), [&](size_t a, size_t b) {
@@ -214,7 +235,7 @@ void Flow::render() {
     for (bool reflection : {true, false}) {
         for (auto i : order) {
             if (cards[i].framebuffer)
-                quads.push_back(cardQuad(i, reflection));
+                quads.push_back(cardQuad(i, reflection, appearance));
         }
     }
     const size_t current = std::clamp(std::lround(focus.value), 0L, static_cast<long>(cards.size() - 1));
@@ -229,8 +250,9 @@ void Flow::render() {
         caption.texture = label;
         caption.opacity = smooth(openness.value);
         const double x = (monitor->m_transformedSize.x - label->m_size.x) / 2;
-        const double side = std::min(.58 * monitor->m_transformedSize.y, .38 * monitor->m_transformedSize.x);
-        const double y = monitor->m_transformedSize.y * .4 + side * .70;
+        const double side = cardSide(monitor->m_transformedSize.x, monitor->m_transformedSize.y, appearance.workspaceScale);
+        const double y =
+            std::min(monitor->m_transformedSize.y * .4 + side * .70, monitor->m_transformedSize.y - label->m_size.y - 8 * monitor->m_scale);
         caption.points = {{{x, y, 1}, {x + label->m_size.x, y, 1}, {x, y + label->m_size.y, 1}, {x + label->m_size.x, y + label->m_size.y, 1}}};
         quads.push_back(caption);
     }

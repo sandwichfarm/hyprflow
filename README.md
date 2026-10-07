@@ -99,6 +99,23 @@ one. Existing workspaces on the focused monitor are included, including named
 workspaces. Workspaces on other monitors and special workspaces are excluded
 from navigation. The active special overlay is included in the original card.
 
+Size, spacing, and borders update while the flow is open. Their defaults preserve
+the original appearance:
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `workspace_scale` | `1.0` | Size multiplier, 0.1–2.0; applied to the original `min(0.58 × height, 0.38 × width)` card size |
+| `workspace_spread` | `0.18` | Inactive-card spacing in card widths, 0–1; preserves the nearest cover’s position |
+| `border_width` | `0` | Inset border width in logical pixels, 0–32; zero disables borders |
+| `border_color` | `rgba(ffffffff)` | Default solid color or multicolor gradient |
+| `border_color_current` | empty | Override for the workspace active when the flow opened |
+| `border_color_focus` | empty | Override for the selected destination; takes precedence over current |
+
+Like Hyprexpo’s modern border settings, one color selects a solid border and
+multiple colors select a gradient. There is no ignored legacy `border_style`
+switch. See [configuration and examples](docs/configuration.md) for syntax,
+inheritance, validation, and test commands.
+
 Selection is separate from activation. A jump travels through intermediate
 cards and leaves the flow open. Invalid targets return an error. Navigation
 clamps at the ends. The previous submap and client focus are restored on exit.
@@ -134,7 +151,7 @@ nested compositor’s parent keyboard, preventing held host modifiers from
 contaminating virtual key events; they restore that device and the exact nested
 configuration afterward.
 
-The final artifact passed 11 bound-key actions, 15 stress actions, input isolation,
+The initial release artifact passed 11 bound-key actions, 15 stress actions, input isolation,
 and 20 lifecycle checks, including ten unload/reload cycles. Both accepted and
 canceled endpoint screenshots match the corresponding native workspace pixel
 for pixel. See the [verification report](docs/verification.md) for exact artifact
@@ -147,6 +164,7 @@ identity, receipts, and limits.
 | [Acceptance gates](docs/acceptance.md) | Required behavior and evidence |
 | [Verification report](docs/verification.md) | Build, runtime, screenshot, and lifecycle evidence |
 | [Default configuration](config/hyprflow.lua) | Assignable bindings and options |
+| [Appearance settings](docs/configuration.md) | Size, inactive spacing, and Hyprexpo-style borders |
 
 Exact Apple easing constants and pixel equivalence to every iTunes release are
 unknown. This implementation reconstructs the documented appearance and motion;

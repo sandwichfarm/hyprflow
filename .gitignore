@@ -14,3 +14,5 @@ __pycache__/
 /.playwright-mcp/
 /docs/public/
 /website/public/media/
+/artifacts/configuration/*
+!/artifacts/configuration/verified/
