@@ -1,0 +1,10 @@
+:root {
+  --hf-bg: #100e0d;
+  --hf-panel: #191614;
+  --hf-text: #f3eee8;
+  --hf-muted: #b4aaa0;
+  --hf-copper: #f5ad7e;
+  --hf-mint: #90d6b5;
+  --hf-border: #36302a;
+  --hf-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
