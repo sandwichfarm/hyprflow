@@ -2,3 +2,5 @@
 /.omx/
 /.firecrawl/
 __pycache__/
+/artifacts/configuration/*
+!/artifacts/configuration/verified/

@@ -30,11 +30,16 @@ struct Pose {
     double x, z, yaw, shade;
 };
 
+// Preserve the original aspect-aware size cap; scale applies equally to either monitor shape.
+inline double cardSide(double width, double height, double scale = 1.0) {
+    return std::min(.58 * height, .38 * width) * scale;
+}
+
 // Distances are in card heights; yaw sign puts the outside edges toward the viewer.
-inline Pose pose(double distance) {
+inline Pose pose(double distance, double spread = .18) {
     const double a = std::abs(distance), t = std::min(1.0, a);
     const double s = smooth(t), sign = distance < 0 ? -1.0 : 1.0;
-    const double x = a <= 1 ? 0.84 * s + 1.5 * (t * t * t - 2 * t * t + t) + 0.18 * (t * t * t - t * t) : 0.84 + 0.18 * (a - 1);
+    const double x = a <= 1 ? 0.84 * s + 1.5 * (t * t * t - 2 * t * t + t) + spread * (t * t * t - t * t) : 0.84 + spread * (a - 1);
     return {sign * x, -0.45 * s, -sign * 65 * std::numbers::pi / 180 * s, 1 - 0.23 * s};
 }
 

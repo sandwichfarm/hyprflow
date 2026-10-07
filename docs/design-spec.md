@@ -2,6 +2,8 @@
 
 Status: implementation contract, 2026-10-06. Target: the desktop iTunes 7–10 Cover Flow visual language, with iTunes 7 and 7.1 screenshots as the reproducible reference set.
 
+The measured targets describe the default appearance. Optional [appearance settings](configuration.md) change size, inactive spacing, and borders; their defaults preserve this reference design.
+
 ## Evidence and fidelity boundary
 
 Apple introduced Cover Flow in iTunes 7 on September 12, 2006. Its [release announcement](https://www.apple.com/ca/newsroom/2006/09/12Apple-Announces-iTunes-7-with-Amazing-New-Features/) establishes the product and date. The visual specification below comes from inspection of original application captures, not another developer’s carousel implementation.

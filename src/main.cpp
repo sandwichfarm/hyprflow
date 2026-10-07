@@ -1,4 +1,5 @@
 #include "Flow.hpp"
+#include "Config.hpp"
 #include <hyprland/src/plugins/PluginAPI.hpp>
 #include <hyprland/src/render/Renderer.hpp>
 #include <hyprland/src/render/pass/PassElement.hpp>
@@ -14,6 +15,7 @@ namespace {
 HANDLE handle;
 std::unique_ptr<Hyprflow::Flow> flow;
 SP<Config::Values::CIntValue> workspaceCount;
+std::unique_ptr<Hyprflow::FlowConfig> appearanceConfig;
 std::vector<CHyprSignalListener> listeners;
 uint64_t generation = 0;
 
@@ -32,7 +34,7 @@ class FlowPass : public IPassElement {
     std::vector<UP<IPassElement>> draw() override {
         if (flow && serial == generation && !g_pSessionLockManager->isSessionLocked()) {
             try {
-                flow->render();
+                flow->render(appearanceConfig->read());
             } catch (const std::exception &error) {
                 Log::logger->log(Log::ERR, "[hyprflow] {}", error.what());
                 flow->failed = true;
@@ -152,6 +154,7 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE pluginHandle) {
     workspaceCount = makeShared<Config::Values::CIntValue>("plugin:hyprflow:workspace_count", "Number of default numeric workspace cards", 9,
                                                            Config::Values::SIntValueOptions{.min = 1, .max = 32});
     HyprlandAPI::addConfigValueV2(handle, workspaceCount);
+    appearanceConfig = std::make_unique<Hyprflow::FlowConfig>(handle);
     const char *names[] = {"toggle", "left", "right", "jump", "accept", "cancel", "status"};
     PLUGIN_LUA_FN callbacks[] = {luaAction<0>, luaAction<1>, luaAction<2>, luaAction<3>, luaAction<4>, luaAction<5>, luaAction<6>};
     for (size_t i = 0; i < std::size(names); ++i) {
@@ -188,6 +191,7 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE pluginHandle) {
             reset();
     }));
     listeners.push_back(g_pSessionLockManager->m_events.lock.listen([]() { reset(); }));
+    listeners.push_back(Event::bus()->m_events.config.reloaded.listen([]() { appearanceConfig->read(); }));
     registerInput();
     return {"hyprflow", "Classic Cover Flow workspace navigation", "hyprflow contributors", "0.1.0"};
 }
@@ -195,5 +199,6 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE pluginHandle) {
 APICALL EXPORT void PLUGIN_EXIT() {
     listeners.clear();
     reset();
+    appearanceConfig.reset();
     workspaceCount.reset();
 }

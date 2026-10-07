@@ -1,0 +1,827 @@
+{
+  "passed": true,
+  "phase": "candidate",
+  "artifact_sha256": "2f90f1dbbcbcb107e421c05ad1b4cfc4b4c82d9081a9f7a0d05694279491f07e",
+  "runtime_identity_sha256": "901535790b82f46843f4f968aab0becfa196e407abf1db6ad2cf0cc3cc7bffcf",
+  "checks": [
+    {
+      "name": "invalid_configuration_rejected_at_application_boundary",
+      "passed": true,
+      "cases": [
+        {
+          "key": "workspace_scale",
+          "value": 0.09,
+          "host_raw_option": "float: 0.090000\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected workspace_scale: must be finite and between 0.1 and 2; retaining the previous value",
+          "diagnostics_once_per_rejected_episode": [
+            1,
+            2
+          ]
+        },
+        {
+          "key": "workspace_scale",
+          "value": 2.01,
+          "host_raw_option": "float: 2.010000\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected workspace_scale: must be finite and between 0.1 and 2; retaining the previous value"
+        },
+        {
+          "key": "workspace_scale",
+          "value": "bad",
+          "native_error": "return hl.config({plugin={hyprflow={workspace_scale=\"bad\"}}}):1: error setting 'plugin.hyprflow.workspace_scale': float type requires a number",
+          "retained_last_good": true
+        },
+        {
+          "key": "workspace_spread",
+          "value": -0.01,
+          "host_raw_option": "float: -0.010000\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected workspace_spread: must be finite and between 0 and 1; retaining the previous value"
+        },
+        {
+          "key": "workspace_spread",
+          "value": 1.01,
+          "host_raw_option": "float: 1.010000\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected workspace_spread: must be finite and between 0 and 1; retaining the previous value"
+        },
+        {
+          "key": "workspace_spread",
+          "value": "bad",
+          "native_error": "return hl.config({plugin={hyprflow={workspace_spread=\"bad\"}}}):1: error setting 'plugin.hyprflow.workspace_spread': float type requires a number",
+          "retained_last_good": true
+        },
+        {
+          "key": "border_width",
+          "value": -1,
+          "host_raw_option": "int: -1\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected border_width: must be between 0 and 32; retaining the previous value"
+        },
+        {
+          "key": "border_width",
+          "value": 33,
+          "host_raw_option": "int: 33\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected border_width: must be between 0 and 32; retaining the previous value"
+        },
+        {
+          "key": "border_width",
+          "value": "bad",
+          "native_error": "return hl.config({plugin={hyprflow={border_width=\"bad\"}}}):1: error setting 'plugin.hyprflow.border_width': integer type requires a bool or an integer",
+          "retained_last_good": true
+        },
+        {
+          "key": "border_color",
+          "value": "not-a-color",
+          "host_raw_option": "str: not-a-color\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected border_color: border colors require rgb(RRGGBB), rgba(RRGGBBAA), or 0xAARRGGBB; retaining the previous value",
+          "diagnostics_once_per_rejected_episode": [
+            1,
+            2
+          ]
+        },
+        {
+          "key": "border_color",
+          "value": "rgba(ff0000ff) nope",
+          "host_raw_option": "str: rgba(ff0000ff) nope\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected border_color: border colors require rgb(RRGGBB), rgba(RRGGBBAA), or 0xAARRGGBB; retaining the previous value"
+        },
+        {
+          "key": "border_color",
+          "value": "rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) ",
+          "host_raw_option": "str: rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) \nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected border_color: border requires one to ten colors; retaining the previous value"
+        },
+        {
+          "key": "border_color",
+          "value": "rgba(ff0000gg)",
+          "host_raw_option": "str: rgba(ff0000gg)\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected border_color: border color contains invalid hexadecimal digits; retaining the previous value"
+        },
+        {
+          "key": "border_color",
+          "value": "rgba(ff0000ff",
+          "host_raw_option": "str: rgba(ff0000ff\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected border_color: border colors require rgb(RRGGBB), rgba(RRGGBBAA), or 0xAARRGGBB; retaining the previous value"
+        },
+        {
+          "key": "border_color",
+          "value": "rgba(ff0000ff) 45deg junk",
+          "host_raw_option": "str: rgba(ff0000ff) 45deg junk\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected border_color: border colors require rgb(RRGGBB), rgba(RRGGBBAA), or 0xAARRGGBB; retaining the previous value"
+        },
+        {
+          "key": "border_color",
+          "value": "rgba(ff0000ff) nandeg",
+          "host_raw_option": "str: rgba(ff0000ff) nandeg\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected border_color: border angle must be a finite number followed by deg; retaining the previous value"
+        },
+        {
+          "key": "border_color",
+          "value": "rgba(ff0000ff) infdeg",
+          "host_raw_option": "str: rgba(ff0000ff) infdeg\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected border_color: border angle must be a finite number followed by deg; retaining the previous value"
+        },
+        {
+          "key": "border_color",
+          "value": "45deg",
+          "host_raw_option": "str: 45deg\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected border_color: border requires one to ten colors; retaining the previous value"
+        },
+        {
+          "key": "border_color_current",
+          "value": "not-a-color",
+          "host_raw_option": "str: not-a-color\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected border_color_current: border colors require rgb(RRGGBB), rgba(RRGGBBAA), or 0xAARRGGBB; retaining the previous value"
+        },
+        {
+          "key": "border_color_focus",
+          "value": "not-a-color",
+          "host_raw_option": "str: not-a-color\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected border_color_focus: border colors require rgb(RRGGBB), rgba(RRGGBBAA), or 0xAARRGGBB; retaining the previous value"
+        },
+        {
+          "key": "workspace_scale",
+          "value": "0/0",
+          "host_raw_option": "float: -nan\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected workspace_scale: must be finite and between 0.1 and 2; retaining the previous value"
+        },
+        {
+          "key": "workspace_scale",
+          "value": "math.huge",
+          "host_raw_option": "float: inf\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected workspace_scale: must be finite and between 0.1 and 2; retaining the previous value"
+        },
+        {
+          "key": "workspace_scale",
+          "value": "-math.huge",
+          "host_raw_option": "float: -inf\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected workspace_scale: must be finite and between 0.1 and 2; retaining the previous value"
+        },
+        {
+          "key": "workspace_spread",
+          "value": "0/0",
+          "host_raw_option": "float: -nan\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected workspace_spread: must be finite and between 0 and 1; retaining the previous value"
+        },
+        {
+          "key": "workspace_spread",
+          "value": "math.huge",
+          "host_raw_option": "float: inf\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected workspace_spread: must be finite and between 0 and 1; retaining the previous value"
+        },
+        {
+          "key": "workspace_spread",
+          "value": "-math.huge",
+          "host_raw_option": "float: -inf\nset: true",
+          "retained_last_good_rendering": true,
+          "diagnostic": "[hyprflow] rejected workspace_spread: must be finite and between 0 and 1; retaining the previous value"
+        }
+      ],
+      "host_lua_limitation": "Raw getoption may show rejected values; plugin retains last good appearance and emits diagnostics"
+    },
+    {
+      "name": "invalid_configuration_reload_while_closed",
+      "passed": true,
+      "diagnosed_options": [
+        "workspace_scale",
+        "border_color"
+      ],
+      "flow_open": false
+    },
+    {
+      "name": "documented_lua_configuration_loads",
+      "passed": true,
+      "file": "config/hyprflow.lua",
+      "sha256": "2ad59bee19c20f88d7c7ff9c8955b43eb0ed2b92048670ff3675b7216c389a02",
+      "options": {
+        "workspace_scale": "float: 1.000000\nset: true",
+        "workspace_spread": "float: 0.180000\nset: true",
+        "border_width": "int: 0\nset: true",
+        "border_color": "str: rgba(ffffffff)\nset: true",
+        "border_color_current": "str: \nset: true",
+        "border_color_focus": "str: \nset: true"
+      }
+    }
+  ],
+  "frames": [
+    {
+      "file": "invalid-00-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-00-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-01-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-01-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-02-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-03-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-03-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-04-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-04-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-05-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-06-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-06-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-07-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-07-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-08-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-09-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-09-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-10-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-10-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-11-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-11-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-12-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-12-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-13-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-13-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-14-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-14-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-15-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-15-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-16-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-16-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-17-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-17-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-18-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-18-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-19-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-19-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-20-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-20-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-21-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-21-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-22-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-22-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-23-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-23-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-24-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-24-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-25-last-good.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "invalid-25-retained.png",
+      "sha256": "2a4bfbcdf5b743fa66953db7b99d06dc235f6d800cab02d59177fdde7669c39e",
+      "size": [
+        1280,
+        720
+      ]
+    }
+  ],
+  "artifact_mapping_verified": true,
+  "scope": "Targeted re-verification of rolling-log diagnostic transport and documented configuration; aggregate with candidate-verified-2 on identical artifact/runtime",
+  "full_suite_manifest": "candidate-verified-2/manifest.json",
+  "input_isolation": {
+    "device": "wl_keyboard",
+    "nested_only": true,
+    "present": true,
+    "disabled_during_proof": true,
+    "restored": true
+  },
+  "cursor_isolation": "Owned nested config; restored on exit",
+  "duration_seconds": 32.403,
+  "invalid_configuration_cases": [
+    {
+      "key": "workspace_scale",
+      "value": 0.09,
+      "host_raw_option": "float: 0.090000\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected workspace_scale: must be finite and between 0.1 and 2; retaining the previous value",
+      "diagnostics_once_per_rejected_episode": [
+        1,
+        2
+      ]
+    },
+    {
+      "key": "workspace_scale",
+      "value": 2.01,
+      "host_raw_option": "float: 2.010000\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected workspace_scale: must be finite and between 0.1 and 2; retaining the previous value"
+    },
+    {
+      "key": "workspace_scale",
+      "value": "bad",
+      "native_error": "return hl.config({plugin={hyprflow={workspace_scale=\"bad\"}}}):1: error setting 'plugin.hyprflow.workspace_scale': float type requires a number",
+      "retained_last_good": true
+    },
+    {
+      "key": "workspace_spread",
+      "value": -0.01,
+      "host_raw_option": "float: -0.010000\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected workspace_spread: must be finite and between 0 and 1; retaining the previous value"
+    },
+    {
+      "key": "workspace_spread",
+      "value": 1.01,
+      "host_raw_option": "float: 1.010000\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected workspace_spread: must be finite and between 0 and 1; retaining the previous value"
+    },
+    {
+      "key": "workspace_spread",
+      "value": "bad",
+      "native_error": "return hl.config({plugin={hyprflow={workspace_spread=\"bad\"}}}):1: error setting 'plugin.hyprflow.workspace_spread': float type requires a number",
+      "retained_last_good": true
+    },
+    {
+      "key": "border_width",
+      "value": -1,
+      "host_raw_option": "int: -1\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected border_width: must be between 0 and 32; retaining the previous value"
+    },
+    {
+      "key": "border_width",
+      "value": 33,
+      "host_raw_option": "int: 33\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected border_width: must be between 0 and 32; retaining the previous value"
+    },
+    {
+      "key": "border_width",
+      "value": "bad",
+      "native_error": "return hl.config({plugin={hyprflow={border_width=\"bad\"}}}):1: error setting 'plugin.hyprflow.border_width': integer type requires a bool or an integer",
+      "retained_last_good": true
+    },
+    {
+      "key": "border_color",
+      "value": "not-a-color",
+      "host_raw_option": "str: not-a-color\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected border_color: border colors require rgb(RRGGBB), rgba(RRGGBBAA), or 0xAARRGGBB; retaining the previous value",
+      "diagnostics_once_per_rejected_episode": [
+        1,
+        2
+      ]
+    },
+    {
+      "key": "border_color",
+      "value": "rgba(ff0000ff) nope",
+      "host_raw_option": "str: rgba(ff0000ff) nope\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected border_color: border colors require rgb(RRGGBB), rgba(RRGGBBAA), or 0xAARRGGBB; retaining the previous value"
+    },
+    {
+      "key": "border_color",
+      "value": "rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) ",
+      "host_raw_option": "str: rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) rgba(ff0000ff) \nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected border_color: border requires one to ten colors; retaining the previous value"
+    },
+    {
+      "key": "border_color",
+      "value": "rgba(ff0000gg)",
+      "host_raw_option": "str: rgba(ff0000gg)\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected border_color: border color contains invalid hexadecimal digits; retaining the previous value"
+    },
+    {
+      "key": "border_color",
+      "value": "rgba(ff0000ff",
+      "host_raw_option": "str: rgba(ff0000ff\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected border_color: border colors require rgb(RRGGBB), rgba(RRGGBBAA), or 0xAARRGGBB; retaining the previous value"
+    },
+    {
+      "key": "border_color",
+      "value": "rgba(ff0000ff) 45deg junk",
+      "host_raw_option": "str: rgba(ff0000ff) 45deg junk\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected border_color: border colors require rgb(RRGGBB), rgba(RRGGBBAA), or 0xAARRGGBB; retaining the previous value"
+    },
+    {
+      "key": "border_color",
+      "value": "rgba(ff0000ff) nandeg",
+      "host_raw_option": "str: rgba(ff0000ff) nandeg\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected border_color: border angle must be a finite number followed by deg; retaining the previous value"
+    },
+    {
+      "key": "border_color",
+      "value": "rgba(ff0000ff) infdeg",
+      "host_raw_option": "str: rgba(ff0000ff) infdeg\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected border_color: border angle must be a finite number followed by deg; retaining the previous value"
+    },
+    {
+      "key": "border_color",
+      "value": "45deg",
+      "host_raw_option": "str: 45deg\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected border_color: border requires one to ten colors; retaining the previous value"
+    },
+    {
+      "key": "border_color_current",
+      "value": "not-a-color",
+      "host_raw_option": "str: not-a-color\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected border_color_current: border colors require rgb(RRGGBB), rgba(RRGGBBAA), or 0xAARRGGBB; retaining the previous value"
+    },
+    {
+      "key": "border_color_focus",
+      "value": "not-a-color",
+      "host_raw_option": "str: not-a-color\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected border_color_focus: border colors require rgb(RRGGBB), rgba(RRGGBBAA), or 0xAARRGGBB; retaining the previous value"
+    },
+    {
+      "key": "workspace_scale",
+      "value": "0/0",
+      "host_raw_option": "float: -nan\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected workspace_scale: must be finite and between 0.1 and 2; retaining the previous value"
+    },
+    {
+      "key": "workspace_scale",
+      "value": "math.huge",
+      "host_raw_option": "float: inf\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected workspace_scale: must be finite and between 0.1 and 2; retaining the previous value"
+    },
+    {
+      "key": "workspace_scale",
+      "value": "-math.huge",
+      "host_raw_option": "float: -inf\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected workspace_scale: must be finite and between 0.1 and 2; retaining the previous value"
+    },
+    {
+      "key": "workspace_spread",
+      "value": "0/0",
+      "host_raw_option": "float: -nan\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected workspace_spread: must be finite and between 0 and 1; retaining the previous value"
+    },
+    {
+      "key": "workspace_spread",
+      "value": "math.huge",
+      "host_raw_option": "float: inf\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected workspace_spread: must be finite and between 0 and 1; retaining the previous value"
+    },
+    {
+      "key": "workspace_spread",
+      "value": "-math.huge",
+      "host_raw_option": "float: -inf\nset: true",
+      "retained_last_good_rendering": true,
+      "diagnostic": "[hyprflow] rejected workspace_spread: must be finite and between 0 and 1; retaining the previous value"
+    }
+  ],
+  "diagnostic_source": "Line-buffered hyprctl rollinglog --follow from the owned compositor",
+  "final_status": {
+    "open": false
+  },
+  "final_workspace": 4,
+  "configerrors": "",
+  "owned_config_restored": true
+}

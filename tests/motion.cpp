@@ -12,7 +12,30 @@ void require(bool value, const char *message) {
 bool near(double a, double b, double e = 1e-8) {
     return std::abs(a - b) < e;
 }
+void configurableSpacing() {
+    for (const double spread : {0.0, .05, .18, .35, 1.0}) {
+        for (const double boundary : {-1.0, 0.0, 1.0}) {
+            const double h = .00001;
+            const double left = (pose(boundary, spread).x - pose(boundary - h, spread).x) / h;
+            const double right = (pose(boundary + h, spread).x - pose(boundary, spread).x) / h;
+            require(near(left, right, .001), "custom spread keeps velocity continuous through selection");
+        }
+        for (int i = -4000; i <= 4000; ++i) {
+            const double distance = i / 1000.;
+            const auto p = pose(distance, spread), mirror = pose(-distance, spread);
+            require(near(p.x, -mirror.x), "custom spread stays symmetric");
+            require(pose(distance + .0001, spread).x >= p.x, "custom spread never reverses the card order");
+            require(near(p.yaw, pose(distance).yaw) && near(p.z, pose(distance).z), "spread preserves perspective");
+        }
+    }
+}
 int main() {
+    require(near(cardSide(1280, 720, 1.0), 417.6), "default workspace size preserves landscape geometry");
+    require(near(cardSide(960, 960, 1.0), 364.8), "default workspace size preserves square geometry");
+    require(near(cardSide(1280, 720, .75), 313.2), "workspace scale resizes the card");
+    require(near(pose(1, .35).x, .84), "spread preserves the nearest cover position");
+    require(near(pose(3, .35).x, 1.54), "spread changes the distance between inactive covers");
+    configurableSpacing();
     auto center = pose(0);
     require(near(center.x, 0) && near(center.yaw, 0), "selected cover flat and centered");
     auto left = pose(-1), right = pose(1);

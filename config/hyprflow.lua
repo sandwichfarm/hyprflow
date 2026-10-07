@@ -1,6 +1,14 @@
 -- Load build/hyprflow.so with hyprctl before sourcing this file.
 -- Hyprland 0.56.2 Lua configuration. Change these bindings to taste.
-hl.config({ plugin = { hyprflow = { workspace_count = 9 } } })
+hl.config({ plugin = { hyprflow = {
+    workspace_count = 9,
+    workspace_scale = 1.0,
+    workspace_spread = 0.18,
+    border_width = 0,
+    border_color = "rgba(ffffffff)",
+    border_color_current = "",
+    border_color_focus = "",
+} } })
 
 hl.bind("SUPER + Tab", function() hl.plugin.hyprflow.toggle() end)
 hl.bind("SUPER + ALT + Left", function() hl.plugin.hyprflow.left() end, { repeating = true })
