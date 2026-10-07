@@ -151,3 +151,25 @@ identity, receipts, and limits.
 Exact Apple easing constants and pixel equivalence to every iTunes release are
 unknown. This implementation reconstructs the documented appearance and motion;
 the desktop entry and exit are Hyprflow-specific adaptations.
+
+## Website and documentation
+
+The static landing page and VitePress documentation share a copper and mint
+palette. The combined build serves the docs at `/docs/`.
+
+```sh
+npm ci
+npm run dev       # http://127.0.0.1:5173 and /docs/; hot reload for both
+npm run build     # combined output in dist/
+npm run preview   # http://127.0.0.1:4173 and /docs/
+```
+
+Requires Node.js 22.12+ (CI uses Node 24). Run `npm test` for deployment-script
+tests. GitHub Actions builds PRs and deploys `main` to Bunny after configuration:
+
+```sh
+npm run setup:bunny -- --repo sandwichfarm/hyprflow
+```
+
+See [website development and deployment](docs/website.md) for Bunny provisioning,
+GitHub variables and secrets, dry runs, and rollback instructions.

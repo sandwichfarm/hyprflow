@@ -1,0 +1,34 @@
+{
+  "name": "hyprflow-web",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "node scripts/web/dev.mjs",
+    "dev:site": "vite --config website/vite.config.mjs",
+    "dev:docs": "vitepress dev docs --host 127.0.0.1 --port 5174 --strictPort",
+    "build": "npm run build:site && npm run build:docs && node scripts/web/check-build.mjs",
+    "build:site": "vite build --config website/vite.config.mjs",
+    "build:docs": "vitepress build docs",
+    "preview": "vite preview --config website/vite.config.mjs --host 127.0.0.1 --port 4173 --strictPort",
+    "test": "node --test scripts/web/*.test.mjs",
+    "deploy:dry-run": "node scripts/web/deploy-bunny.mjs --dry-run",
+    "deploy": "node scripts/web/deploy-bunny.mjs",
+    "setup:bunny": "node scripts/web/setup-bunny.mjs",
+    "predev:docs": "node scripts/web/prepare-docs.mjs",
+    "prebuild:docs": "node scripts/web/prepare-docs.mjs",
+    "prebuild:site": "node scripts/web/prepare-site.mjs",
+    "predev:site": "node scripts/web/prepare-site.mjs"
+  },
+  "devDependencies": {
+    "vite": "8.3.3",
+    "vitepress": "1.6.4"
+  },
+  "overrides": {
+    "vitepress": {
+      "vite": "6.4.4"
+    }
+  }
+}

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#100e0d" />
+    <meta
+      name="description"
+      content="Classic Cover Flow for Hyprland workspaces. Explore your desktop in a perspective stack, with smooth motion and fading reflections."
+    />
+    <meta property="og:title" content="hyprflow — Cover Flow for Hyprland" />
+    <meta
+      property="og:description"
+      content="Your workspaces, in a different perspective."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>hyprflow — Cover Flow for Hyprland</title>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <main id="main">
+      <header class="hero">
+        <p class="eyebrow">a little nostalgia for your desktop</p>
+        <h1>hyprflow</h1>
+        <p class="tagline">classic Cover Flow for Hyprland workspaces</p>
+      </header>
+      <figure class="demo">
+        <div class="demo-frame">
+          <video
+            controls
+            muted
+            playsinline
+            loop
+            preload="none"
+            poster="/media/poster.png"
+            aria-label="Hyprflow workspace navigation recording"
+          >
+            <source
+              src="/media/navigation.mp4"
+              type="video/mp4"
+            />
+            <a
+              href="https://github.com/sandwichfarm/hyprflow/blob/main/artifacts/final/navigation/navigation.mp4"
+              >Download the workspace navigation recording</a
+            >
+          </video>
+        </div>
+        <figcaption>
+          Real workspace captures. Familiar perspective.
+          <span>A new way to move.</span>
+        </figcaption>
+      </figure>
+      <section class="install" aria-label="Build from source">
+        <div class="command">
+          <span aria-hidden="true">$</span
+          ><code id="command"
+            >git clone https://github.com/sandwichfarm/hyprflow.git</code
+          ><button id="copy" type="button" aria-label="Copy clone command">
+            Copy
+          </button>
+        </div>
+        <p id="copy-status" role="status">
+          Build from source ·
+          <a href="/docs/getting-started.html">Installation guide ↗</a>
+        </p>
+      </section>
+      <nav class="links" aria-label="Project links">
+        <a href="https://github.com/sandwichfarm/hyprflow">↗ github</a
+        ><a href="/docs/">▤ documentation</a
+        ><a href="/docs/design-spec.html">◇ the design</a>
+      </nav>
+      <section class="compatibility" aria-labelledby="compatibility-title">
+        <h2 id="compatibility-title">Built for Hyprland</h2>
+        <div class="compat-grid">
+          <div>
+            <span class="status">Verified target</span
+            ><strong>Hyprland 0.56.2</strong>
+          </div>
+          <div><span class="status">Renderer</span><strong>OpenGL</strong></div>
+          <div>
+            <span class="status">Configuration</span><strong>Lua + IPC</strong>
+          </div>
+        </div>
+        <p class="fine">
+          Build against the headers matching your compositor.
+          <a href="/docs/getting-started.html#requirements"
+            >Compatibility notes ↗</a
+          >
+        </p>
+      </section>
+      <section class="features" aria-labelledby="features-title">
+        <h2 id="features-title">A familiar feeling. A different desktop.</h2>
+        <div class="feature-grid">
+          <article>
+            <span class="icon" aria-hidden="true">▱</span>
+            <h3>Classic perspective</h3>
+            <p>
+              A front-facing selection, dense side stacks, and reflections that
+              fade into the floor.
+            </p>
+          </article>
+          <article>
+            <span class="icon" aria-hidden="true">↔</span>
+            <h3>Continuous motion</h3>
+            <p>
+              A critically damped spring carries every move. Change direction
+              without restarting the animation.
+            </p>
+          </article>
+          <article>
+            <span class="icon" aria-hidden="true">▣</span>
+            <h3>Your real workspaces</h3>
+            <p>
+              Complete workspace snapshots fit inside each cover, with no
+              stretching or cropping.
+            </p>
+          </article>
+          <article>
+            <span class="icon" aria-hidden="true">⌘</span>
+            <h3>Keyboard first</h3>
+            <p>
+              Move left or right, jump by number, and press Return to enter.
+              Escape takes you back.
+            </p>
+          </article>
+          <article>
+            <span class="icon" aria-hidden="true">↗</span>
+            <h3>Desktop to cover</h3>
+            <p>
+              Your desktop contracts into the stack. The selected workspace
+              expands back to fill the screen.
+            </p>
+          </article>
+          <article>
+            <span class="icon" aria-hidden="true">{ }</span>
+            <h3>Make it your own</h3>
+            <p>
+              Assign each action independently with Lua bindings or dispatchers.
+              Keep your own workflow.
+            </p>
+          </article>
+        </div>
+      </section>
+      <section class="start">
+        <h2>Find your flow.</h2>
+        <p><kbd>Super</kbd> + <kbd>Tab</kbd> opens a different perspective.</p>
+        <a class="button" href="/docs/getting-started.html"
+          >Get started <span aria-hidden="true">→</span></a
+        >
+      </section>
+      <footer>
+        <span
+          >hyprflow · by
+          <a href="https://github.com/sandwichfarm">sandwichfarm</a></span
+        ><a href="https://hyprlax.com">also try hyprlax ↗</a>
+      </footer>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

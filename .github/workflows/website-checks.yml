@@ -1,0 +1,44 @@
+name: Website checks
+on:
+  pull_request:
+    paths:
+      [
+        "website/**",
+        "docs/**",
+        "scripts/web/**",
+        "package*.json",
+        ".github/workflows/*website*",
+        "artifacts/final/navigation/**",
+      ]
+  push:
+    branches: [main]
+    paths:
+      [
+        "website/**",
+        "docs/**",
+        "scripts/web/**",
+        "package*.json",
+        ".github/workflows/*website*",
+        "artifacts/final/navigation/**",
+      ]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: npm run deploy:dry-run
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hyprflow-website
+          path: dist/
+          if-no-files-found: error

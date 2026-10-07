@@ -1,0 +1,54 @@
+:root {
+  --vp-c-brand-1: #9a4b22;
+  --vp-c-brand-2: #ac582b;
+  --vp-c-brand-3: #ba6534;
+  --vp-c-brand-soft: #f5ad7e22;
+  --vp-font-family-base: var(--hf-mono);
+  --vp-font-family-mono: var(--hf-mono);
+  --vp-button-brand-bg: #f5ad7e;
+  --vp-button-brand-text: #24170e;
+  --vp-button-brand-hover-bg: #ffc7a1;
+  --vp-button-brand-hover-text: #24170e;
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(115deg, #f5ad7e, #90d6b5);
+}
+.dark {
+  --vp-c-bg: var(--hf-bg);
+  --vp-c-bg-alt: #141210;
+  --vp-c-bg-elv: var(--hf-panel);
+  --vp-c-bg-soft: #201c18;
+  --vp-c-text-1: var(--hf-text);
+  --vp-c-text-2: var(--hf-muted);
+  --vp-c-text-3: #938a80;
+  --vp-c-divider: var(--hf-border);
+  --vp-c-brand-1: var(--hf-copper);
+  --vp-c-brand-2: #ffc7a1;
+  --vp-c-brand-3: #d58959;
+  --vp-c-tip-1: var(--hf-mint);
+  --vp-c-tip-soft: #90d6b515;
+  --vp-code-block-bg: #191614;
+}
+.VPNavBarTitle .title {
+  color: var(--vp-c-brand-1);
+}
+.vp-doc {
+  font-size: 14px;
+}
+.vp-doc h1 {
+  letter-spacing: -0.04em;
+}
+.vp-doc a {
+  font-weight: 500;
+}
+.website-link {
+  font-size: 12px;
+  margin-left: 20px;
+  color: var(--vp-c-brand-1);
+  white-space: nowrap;
+}
+@media (max-width: 400px) {
+  .website-link {
+    margin-left: 8px;
+    font-size: 10px;
+  }
+}
