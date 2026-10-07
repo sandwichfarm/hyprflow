@@ -58,16 +58,28 @@ gh auth login
 npm run setup:bunny -- --repo sandwichfarm/hyprflow
 ```
 
-It prompts for missing settings, hides passwords, creates or updates the `production` GitHub environment, and writes these values:
+Each prompt explains what the value does, where to find it, and an example. Values are checked immediately: an invalid entry repeats only that prompt. The Storage API hostname is prompted too, with Frankfurt's endpoint as the default; use your zone's actual primary-region hostname.
 
-| Kind | Name | Value |
+The helper checks GitHub authentication before asking for credentials. It creates the `production` GitHub environment if needed, preserves existing protection rules, and saves these values:
+
+| Kind | Name | What to enter and where to find it |
 | --- | --- | --- |
-| Variable | `BUNNY_STORAGE_ZONE` | Dedicated storage zone name |
-| Variable | `BUNNY_STORAGE_HOST` | e.g. `storage.bunnycdn.com` or `ny.storage.bunnycdn.com` |
-| Variable | `BUNNY_PULL_ZONE_ID` | Numeric Pull Zone ID |
-| Variable | `BUNNY_PUBLIC_URL` | HTTPS origin, e.g. `https://your-zone.b-cdn.net` |
-| Secret | `BUNNY_STORAGE_PASSWORD` | Storage Zone password with write access |
-| Secret | `BUNNY_API_KEY` | Account API key for CDN purge |
+| Variable | `BUNNY_STORAGE_ZONE` | Zone name, not ID. **Storage → your zone**; also the username under **Access / FTP & API Access**. |
+| Variable | `BUNNY_STORAGE_HOST` | Upload hostname from **Storage → your zone → Access / FTP & API Access**. For example, `storage.bunnycdn.com` or `ny.storage.bunnycdn.com`. No scheme or path. |
+| Variable | `BUNNY_PULL_ZONE_ID` | Numeric ID of the connected CDN Pull Zone. Open **CDN → your Pull Zone** and copy its numeric ID from the dashboard URL, not the Storage Zone ID. |
+| Variable | `BUNNY_PUBLIC_URL` | The website address visitors will open. Under **CDN → your Pull Zone → General → Hostnames**, use the default `your-zone.b-cdn.net` hostname or an HTTPS custom domain you connected. |
+| Secret | `BUNNY_STORAGE_PASSWORD` | Writable Storage Zone password under **Storage → your zone → Access / FTP & API Access**. Do not use the read-only password, login password, or account API key. |
+| Secret | `BUNNY_API_KEY` | Account API key from **[Account → API Key](https://dash.bunny.net/account/api-key)**, used to purge the CDN cache. |
+
+**`BUNNY_PUBLIC_URL` is our variable name, not a Bunny setting.** For example, enter `https://hyprflow-site.b-cdn.net` or your connected custom domain, such as `https://hyprflow.com`. It only sets the clickable website link on the GitHub deployment. It does not configure DNS or select the upload destination. A bare hostname is accepted interactively and gets `https://` added; omit `/docs` and other paths.
+
+Secret prompts remain visible while typing is hidden. Paste the secret and press Enter; `Received (hidden).` confirms it was read. Ctrl+C or end-of-input cancels without changing GitHub settings during the prompt phase. Once saving starts, progress names each operation, and every GitHub command has a 30-second timeout. If saving fails partway through, previously saved values remain; rerun the helper to finish.
+
+Read all prompt explanations without entering values or contacting GitHub:
+
+```sh
+npm run setup:bunny -- --help
+```
 
 All values can instead be supplied as exported environment variables for noninteractive use. Secrets go to `gh` over stdin and are never printed or written to disk. The helper does not source `.env` files. Use `--environment NAME` only with a corresponding workflow environment change.
 
@@ -84,7 +96,7 @@ No credentials are needed for this dry run. Missing values are shown as unconfig
 - **Website checks** runs tests, a combined build, and a deployment dry run on pull requests and pushes to `main`. It saves `dist/` as an artifact.
 - **Deploy website to Bunny** builds and verifies the same output, then uploads it after relevant pushes to `main` or a manual dispatch on `main`. It reads the `production` environment and allows one deployment at a time without canceling an active upload.
 
-Pull requests never receive deployment secrets. Merge the website PR after configuring the environment to enable the first deployment, or use **Actions → Deploy website to Bunny → Run workflow** on `main`.
+Pull requests never receive deployment secrets. After configuring the environment, use **Actions → Deploy website to Bunny → Run workflow** on `main` for the first deployment. Later relevant pushes to `main` deploy automatically.
 
 ## Manual deployment and rollback
 

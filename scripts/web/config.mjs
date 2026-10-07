@@ -30,17 +30,27 @@ export function configFromEnv(env, { dryRun = false } = {}) {
   )
     throw new Error("BUNNY_PULL_ZONE_ID must be a positive integer.");
   if (config.BUNNY_PUBLIC_URL) {
-    const url = new URL(config.BUNNY_PUBLIC_URL);
+    let url;
+    try {
+      url = new URL(config.BUNNY_PUBLIC_URL);
+    } catch {
+      throw new Error(
+        "BUNNY_PUBLIC_URL is the public website address, e.g. https://your-zone.b-cdn.net (not a Bunny dashboard URL).",
+      );
+    }
     if (
       url.protocol !== "https:" ||
       url.username ||
       url.password ||
+      url.hostname === "dash.bunny.net" ||
+      url.hostname === "api.bunny.net" ||
+      /(^|\.)storage\.bunnycdn\.com$/.test(url.hostname) ||
       url.pathname !== "/" ||
       url.search ||
       url.hash
     )
       throw new Error(
-        "BUNNY_PUBLIC_URL must be an HTTPS origin without credentials or a path.",
+        "BUNNY_PUBLIC_URL must be the public website HTTPS origin, e.g. https://your-zone.b-cdn.net, without /docs, credentials, or a path. Do not use a dashboard, API, or storage upload address.",
       );
     config.BUNNY_PUBLIC_URL = url.origin;
   }
