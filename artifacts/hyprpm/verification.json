@@ -1,0 +1,95 @@
+{
+  "checks": {
+    "super_tab_opens": {
+      "open": true,
+      "selected": 1,
+      "origin": 1,
+      "position": 0.0,
+      "openness": 1.0,
+      "closing": false
+    },
+    "right_selects_workspace_2": {
+      "open": true,
+      "selected": 2,
+      "origin": 1,
+      "position": 0.999996,
+      "openness": 1.0,
+      "closing": false
+    },
+    "left_selects_workspace_1": {
+      "open": true,
+      "selected": 1,
+      "origin": 1,
+      "position": 3e-06,
+      "openness": 1.0,
+      "closing": false
+    },
+    "number_selects_workspace_4": {
+      "open": true,
+      "selected": 4,
+      "origin": 1,
+      "position": 2.999989,
+      "openness": 1.0,
+      "closing": false
+    },
+    "return_closes": {
+      "open": false
+    },
+    "return_activates_workspace_4": true,
+    "escape_closes": {
+      "open": false
+    },
+    "escape_preserves_workspace_4": true,
+    "configerrors_empty": true
+  },
+  "version": "Hyprland 0.56.2 built from branch v0.56.2 at commit efb50993780079460b0cbed1363e2166a2de1d9f clean ([gha] Nix: update inputs).\nDate: Wed Aug 5 14:13:21 2026\nTag: v0.56.2, commits: 7661\n\nLibraries:\nHyprgraphics: built against 0.5.1, system has 0.5.1\nHyprutils: built against 0.14.2, system has 0.14.2\nHyprcursor: built against 0.1.13, system has 0.1.13\nHyprlang: built against 0.6.8, system has 0.6.8\nAquamarine: built against 0.15.1, system has 0.15.1\n\nVersion ABI string: efb50993780079460b0cbed1363e2166a2de1d9f_aq_0.15_hu_0.14_hg_0.5_hc_0.1_hlg_0.6\nno flags were set",
+  "passed": true,
+  "date": "2026-10-09",
+  "source_commit": "a83dbd0ef053b7aa9cbf086615af62e0fb6cc738",
+  "manager_state": {
+    "hyprflow": {
+      "enabled": true,
+      "failed": false,
+      "filename": "hyprflow.so"
+    },
+    "repository": {
+      "author": "sandwichfarm",
+      "hash": "a83dbd0ef053b7aa9cbf086615af62e0fb6cc738",
+      "name": "hyprflow",
+      "rev": "origin/feat/hyprpm-install",
+      "url": "https://github.com/sandwichfarm/hyprflow"
+    }
+  },
+  "environment": {
+    "host": "macOS with OrbStack",
+    "guest": "Arch Linux x86_64 in QEMU on an OrbStack Ubuntu ARM64 host",
+    "hyprland": "0.56.2",
+    "renderer": "OpenGL ES 3.2 Mesa 26.2.4, virgl backed by llvmpipe",
+    "output": "1280x720, scale 1"
+  },
+  "artifact": {
+    "managed_path": "/var/cache/hyprpm/sandwich/hyprflow/hyprflow.so",
+    "sha256": "ce18ea45ce2681cbac415e4337b51e6ea971af94af779a8996a50caf22b3ff84",
+    "loaded_inode_matches": true
+  },
+  "commands": [
+    "hyprpm update",
+    "hyprpm add https://github.com/sandwichfarm/hyprflow origin/feat/hyprpm-install",
+    "hyprpm enable hyprflow",
+    "hyprpm reload"
+  ],
+  "additional_checks": {
+    "startup_callback_loaded_plugin_after_compositor_restart": true,
+    "full_config_with_plugin_unloaded_has_no_errors": true,
+    "full_config_reapplied_after_managed_enable": true,
+    "full_config_workspace_count": 9,
+    "full_config_modal_catchall": true,
+    "managed_disable_unloads_plugin": true,
+    "managed_reload_loads_plugin": true
+  },
+  "limits": [
+    "PR branch tested because main did not yet contain the manifest.",
+    "Virtual GPU installation and controls test; no performance qualification.",
+    "The first header setup exhausted the guest runtime tmpfs; rerun passed after placing hyprpm temporary storage on the guest disk."
+  ]
+}

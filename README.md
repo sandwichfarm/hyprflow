@@ -20,7 +20,29 @@ The reconstruction follows original iTunes 7 and 7.1 captures. Geometry,
 reconstructed timing, and the workspace-specific transitions are documented in
 the [animation specification](docs/design-spec.md).
 
-## Build
+## Install with hyprpm
+
+The supported target is **Hyprland 0.56.2 with the OpenGL renderer**. Install
+using Hyprland's plugin manager from a terminal in your Hyprland session:
+
+```sh
+hyprpm update
+hyprpm add https://github.com/sandwichfarm/hyprflow
+hyprpm enable hyprflow
+hyprpm reload
+```
+
+Hyprpm downloads the source, builds against its matching Hyprland headers, and
+manages the installed library. Run it as your normal user. A C++23 compiler,
+Make, and the development dependencies are still required; you do not need a
+manual clone or a prebuilt binary.
+
+Next, add the [quick-start bindings](docs/getting-started.md#set-up-controls)
+to your Hyprland Lua configuration. **Super + Tab** opens the flow;
+**Left / Right** browse, **Return** activates, and **Escape** cancels.
+The guide also covers startup loading, updating, and removing the plugin.
+
+## Build from source (development)
 
 Build against the headers matching the compositor that will load the plugin.
 Hyprland plugins do not have a stable binary ABI. Hyprflow checks the full API

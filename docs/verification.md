@@ -1,5 +1,27 @@
 # Hyprflow verification
 
+## Hyprpm installation
+
+Verified October 9, 2026, on Hyprland 0.56.2 in an isolated Arch Linux guest
+with a VirGL OpenGL display, hosted through OrbStack. The
+[installation receipt](../artifacts/hyprpm/verification.json) records the tested
+commit, managed library hash, environment, commands, and results.
+
+Hyprpm prepared matching headers, downloaded and built the plugin from the PR
+branch, and enabled and loaded its managed library. Actual keyboard events
+verified Super+Tab, both arrows, numeric selection, acceptance, and cancellation.
+Restarting the compositor loaded the enabled plugin through the documented Lua
+startup callback. The full example config passed both unloaded and loaded;
+managed disable/reload and the modal catchall also passed without config errors.
+
+This tests installation and controls, not performance under emulation. The PR
+branch revision was supplied to `hyprpm add` because the default branch did not
+yet contain the manifest. The first header setup exhausted the guest's small
+runtime tmpfs; moving hyprpm's temporary workspace onto the guest disk allowed
+the standard commands to complete.
+
+## Original rendering qualification
+
 Verified October 6, 2026, in an owned nested Hyprland session. The plugin,
 animation specification, default configuration, screenshots, recordings, and
 README are present. The daily compositor’s configuration and plugin list were
