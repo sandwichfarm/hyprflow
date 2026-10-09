@@ -9,7 +9,7 @@ button.addEventListener("click", async () => {
     );
     button.textContent = "Copied";
     status.textContent =
-      "Clone command copied. Follow the installation guide to build and configure.";
+      "hyprpm command copied. Follow the installation guide to enable and configure.";
     setTimeout(() => {
       button.textContent = "Copy";
     }, 2500);

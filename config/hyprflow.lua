@@ -1,5 +1,10 @@
--- Load build/hyprflow.so with hyprctl before sourcing this file.
+-- Load with hyprpm (recommended) or load a manual build with hyprctl.
 -- Hyprland 0.56.2 Lua configuration. Change these bindings to taste.
+-- Startup config is read before hyprpm loads plugins, and again after loading.
+if not hl.plugin.hyprflow then
+    return
+end
+
 hl.config({ plugin = { hyprflow = {
     workspace_count = 9,
     workspace_scale = 1.0,

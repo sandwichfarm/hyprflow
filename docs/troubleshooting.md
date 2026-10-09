@@ -1,8 +1,20 @@
 # Troubleshooting
 
+## Hyprpm cannot install or load Hyprflow
+
+Run `hyprpm update` before the first `hyprpm add`. Hyprpm needs its matching
+Hyprland headers and build tools; `hyprpm -v update` shows detailed build errors.
+Check `hyprpm list` for a failed build or disabled plugin, then run
+`hyprpm enable hyprflow` and `hyprpm reload`. Confirm loading with
+`hyprctl plugin list` and inspect `hyprctl configerrors`.
+
+Hyprflow targets Hyprland **0.56.2 / OpenGL**. The manifest skips older
+compositor revisions. Newer versions may need plugin changes even when hyprpm
+can prepare their headers. Do not bypass the plugin's API hash check.
+
 ## The plugin rejects an API hash
 
-The running compositor and build headers must match exactly. Check `hyprctl version` and `pkg-config --modversion hyprland`, install matching headers, and rebuild. The version number alone may not distinguish two different builds; Hyprflow checks the full API hash.
+The running compositor and build headers must match exactly. For a hyprpm install, restart into the installed Hyprland version, then run `hyprpm update` and `hyprpm reload`. Hyprpm manages its own header cache. For a manual build, check `hyprctl version` and `pkg-config --modversion hyprland`, install matching headers, and rebuild. The version number alone may not distinguish two different builds; Hyprflow checks the full API hash.
 
 ## A build dependency is missing
 
@@ -14,7 +26,7 @@ Install the missing development packages from your distribution. The plugin requ
 
 ## Bindings do nothing
 
-Confirm the plugin loaded with `hyprctl plugin list`, then source the default configuration. Test `hyprctl dispatch hyprflow:toggle` to distinguish plugin loading from a keybinding conflict. The nested demo uses **F10**; the normal configuration uses **Super + Tab**.
+Confirm the plugin loaded with `hyprctl plugin list`, then add the [quick-start bindings](getting-started.md#set-up-controls) or source the full configuration and run `hyprctl reload`. Test `hyprctl dispatch hyprflow:toggle` to distinguish plugin loading from a keybinding conflict. The nested demo uses **F10**; the normal configuration uses **Super + Tab**. If it works after a manual `hyprpm reload` but not after login, add the startup callback from the installation guide.
 
 ## A workspace is missing
 

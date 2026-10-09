@@ -6,7 +6,7 @@ hero:
   tagline: Classic Cover Flow for Hyprland, with real workspace snapshots, continuous motion, and fading reflections.
   actions:
     - theme: brand
-      text: Get started
+      text: Install with hyprpm
       link: /getting-started
     - theme: alt
       text: Configuration

@@ -1,6 +1,6 @@
 # Configuration & controls
 
-The [default Lua configuration](https://github.com/sandwichfarm/hyprflow/blob/main/config/hyprflow.lua) defines independent actions and a modal `hyprflow` submap. Load the plugin before sourcing it.
+The [default Lua configuration](https://github.com/sandwichfarm/hyprflow/blob/main/config/hyprflow.lua) defines independent actions and a modal `hyprflow` submap. Start with the [hyprpm installation and quick controls](getting-started.md#set-up-controls). The full configuration file waits until the plugin is loaded before applying settings and bindings; Hyprland rereads the configuration after loading a plugin.
 
 ## Workspace count
 

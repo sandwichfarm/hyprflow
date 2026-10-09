@@ -1,0 +1,11 @@
+[repository]
+name = "hyprflow"
+authors = ["sandwich.farm"]
+
+[hyprflow]
+description = "Classic Cover Flow workspace navigation for Hyprland"
+authors = ["sandwich.farm"]
+output = "build/hyprflow.so"
+build = ["make -j2 all"]
+# Hyprland v0.56.2; see artifacts/final/runtime.json for the verified revision.
+since_hyprland = 7661
