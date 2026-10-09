@@ -1,8 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { PassThrough, Writable } from "node:stream";
-import { promptConfig, setupFields, gh } from "./setup-bunny.mjs";
+import { promptConfig, setupFields, gh, runSetup } from "./setup-bunny.mjs";
 import { configFromEnv } from "./config.mjs";
+import { setupCheckpoint } from "./setup-checkpoint.mjs";
+import { mkdtempSync, rmSync, statSync, existsSync } from "node:fs";
+import { join } from "node:path";
+import { tmpdir } from "node:os";
 
 function terminal() {
   const input = new PassThrough();
@@ -192,4 +196,116 @@ test("cancelling hidden input exits without echoing the partial secret", async (
   term.input.write("\x03");
   await rejection;
   assert.ok(!term.transcript.includes("partial-secret"));
+});
+
+test("answers survive lookup failure, restart, and partial GitHub save without re-entry", async (t) => {
+  const directory = mkdtempSync(join(tmpdir(), "bunny-resume-test-"));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  const options = { repo: "owner/site", environment: "production", dryRun: false };
+  const checkpoint = setupCheckpoint(directory, options);
+  const term = terminal();
+  const noWrites = (args) => {
+    assert.equal(args[0], "auth");
+    return "";
+  };
+  const first = assert.rejects(runSetup(options, {
+    ...term, env: { UNRELATED_SECRET: "do-not-save" }, checkpointDirectory: directory,
+    run: noWrites,
+    discover: async () => { throw new Error("Unexpected Bunny storage lookup response."); },
+  }), /Unexpected Bunny/);
+  for (const [prompt, value] of [
+    ["Storage zone name: ", "example-site"],
+    ["Pull Zone ID: ", "12345"],
+    ["Public website address: ", "example-site.b-cdn.net"],
+    ["Storage write password: ", "private-storage-value"],
+    ["Bunny account API key: ", "private-api-value"],
+  ]) {
+    await waitFor(term, prompt);
+    // Earlier answers are saved before the next question, even before networking.
+    if (prompt === "Pull Zone ID: ") assert.equal(checkpoint.load().BUNNY_STORAGE_ZONE, "example-site");
+    term.input.write(value + "\n");
+  }
+  await first;
+  const expected = {
+    BUNNY_STORAGE_ZONE: "example-site", BUNNY_PULL_ZONE_ID: "12345",
+    BUNNY_PUBLIC_URL: "https://example-site.b-cdn.net",
+    BUNNY_STORAGE_PASSWORD: "private-storage-value", BUNNY_API_KEY: "private-api-value",
+  };
+  assert.deepEqual(checkpoint.load(), expected);
+  assert.equal(statSync(checkpoint.path).mode & 0o777, 0o600);
+  assert.equal(statSync(directory).mode & 0o777, 0o700);
+  assert.match(term.transcript, /Saved answers kept/);
+
+  const secondTerm = terminal();
+  await assert.rejects(runSetup(options, {
+    ...secondTerm, env: {}, checkpointDirectory: directory,
+    discover: async (name, key) => {
+      assert.equal(name, expected.BUNNY_STORAGE_ZONE);
+      assert.equal(key, expected.BUNNY_API_KEY);
+      return "ny.storage.bunnycdn.com";
+    },
+    run: (args) => {
+      if (args[0] === "secret") throw new Error("GitHub CLI timed out");
+      return args[0] === "api" ? "production" : "";
+    },
+  }), /GitHub CLI timed out/);
+  assert.equal(checkpoint.load().BUNNY_STORAGE_HOST, "ny.storage.bunnycdn.com");
+
+  const thirdTerm = terminal();
+  const writes = {};
+  await runSetup(options, {
+    ...thirdTerm, env: { BUNNY_PULL_ZONE_ID: "67890" }, checkpointDirectory: directory,
+    discover: () => assert.fail("already detected endpoint should be reused"),
+    run: (args, value) => {
+      if (["variable", "secret"].includes(args[0])) writes[args[2]] = value;
+      return args[0] === "api" ? "production" : "";
+    },
+  });
+  assert.deepEqual(writes, { ...expected, BUNNY_STORAGE_HOST: "ny.storage.bunnycdn.com", BUNNY_PULL_ZONE_ID: "67890" });
+  assert.equal(existsSync(checkpoint.path), false);
+  for (const resumed of [secondTerm, thirdTerm]) {
+    assert.match(resumed.transcript, /Resuming saved answers/);
+    assert.doesNotMatch(resumed.transcript, /Storage write password: |Bunny account API key: /);
+  }
+  for (const session of [term, secondTerm, thirdTerm]) {
+    assert.doesNotMatch(session.transcript, /private-storage-value|private-api-value|do-not-save/);
+  }
+});
+
+test("dry runs never load or create a resume file", async (t) => {
+  const directory = mkdtempSync(join(tmpdir(), "bunny-dry-test-"));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  const checkpointDirectory = join(directory, "absent");
+  await runSetup({ repo: "owner/site", environment: "production", dryRun: true }, {
+    ...terminal(), env: {}, checkpointDirectory,
+    run: () => assert.fail("dry run must not contact GitHub when repo is supplied"),
+    discover: () => assert.fail("dry run must not contact Bunny"),
+  });
+  assert.equal(existsSync(checkpointDirectory), false);
+});
+
+test("changing the saved zone redetects its endpoint while keeping other answers", async (t) => {
+  const directory = mkdtempSync(join(tmpdir(), "bunny-zone-test-"));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  const options = { repo: "owner/site", environment: "production", dryRun: false };
+  setupCheckpoint(directory, options).save({
+    BUNNY_STORAGE_ZONE: "old-zone", BUNNY_STORAGE_HOST: "ny.storage.bunnycdn.com",
+    BUNNY_PULL_ZONE_ID: "123", BUNNY_PUBLIC_URL: "https://example.b-cdn.net",
+    BUNNY_STORAGE_PASSWORD: "storage-secret", BUNNY_API_KEY: "account-secret",
+  });
+  let detected = false;
+  await runSetup(options, {
+    ...terminal(), env: { BUNNY_STORAGE_ZONE: "new-zone" }, checkpointDirectory: directory,
+    discover: async (zone, key) => {
+      assert.equal(zone, "new-zone");
+      assert.equal(key, "account-secret");
+      detected = true;
+      return "storage.bunnycdn.com";
+    },
+    run: (args, value) => {
+      if (args[2] === "BUNNY_STORAGE_HOST") assert.equal(value, "storage.bunnycdn.com");
+      return args[0] === "api" ? "production" : "";
+    },
+  });
+  assert.ok(detected);
 });

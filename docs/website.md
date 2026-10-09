@@ -75,9 +75,11 @@ The helper checks GitHub authentication before asking for credentials. It create
 
 For replicated storage, keep using your `*.b-cdn.net` delivery address for the public website. Bunny's [replication documentation](https://docs.bunny.net/storage/replication) describes uploads going to the primary region before replication. Setup reads that region from the account API; it does not alter replication. If a `*.b-cdn.net` address was exported as `BUNNY_STORAGE_HOST`, setup treats it as the public URL (unless you already supplied one), then detects the upload endpoint. It never sends your storage password to the delivery hostname.
 
-Endpoint detection is read-only and has a 30-second timeout. If the zone cannot be found or the API lookup fails, setup exits before changing any GitHub variables or secrets. A supplied `BUNNY_STORAGE_HOST` that already names a valid HTTP upload endpoint bypasses detection.
+Endpoint detection is read-only and has a 30-second timeout. It accepts both plain-list and paginated Bunny API responses. If the zone cannot be found or the API lookup fails, setup exits before changing any GitHub variables or secrets. A supplied `BUNNY_STORAGE_HOST` that already names a valid HTTP upload endpoint bypasses detection.
 
-Secret prompts remain visible while typing is hidden. Paste the secret and press Enter; `Received (hidden).` confirms it was read. Ctrl+C or end-of-input cancels without changing GitHub settings during the prompt phase. Once saving starts, progress names each operation, and every GitHub command has a 30-second timeout. If saving fails partway through, previously saved values remain; rerun the helper to finish.
+Secret prompts remain visible while typing is hidden. Paste the secret and press Enter; `Received (hidden).` confirms it was read. Ctrl+C or end-of-input cancels without changing GitHub settings during the prompt phase. Once saving starts, progress names each operation, and every GitHub command has a 30-second timeout.
+
+**Interactive setup saves each accepted answer before continuing.** Answers, including secrets, are stored unencrypted in a Git-ignored `.bunny-setup/` directory at the project root, with owner-only directory (`0700`) and file (`0600`) permissions. The script prints the exact file path. If interrupted, if lookup fails, or if GitHub saving fails partway through, rerun the same command to resume without re-entering saved answers. Resume data is separate for each repository and GitHub environment and is removed after every GitHub setting is saved successfully. To correct one saved answer, export that variable before rerunning; exported values override saved answers. Delete `.bunny-setup/` to discard all saved answers. Older script versions did not save answers, so entries from an already exited older run cannot be recovered by this helper.
 
 Read all prompt explanations without entering values or contacting GitHub:
 
@@ -85,7 +87,7 @@ Read all prompt explanations without entering values or contacting GitHub:
 npm run setup:bunny -- --help
 ```
 
-Values can instead be supplied as exported environment variables for noninteractive use. The setup helper detects `BUNNY_STORAGE_HOST` when omitted; the deployment workflow receives the resolved hostname. Secrets go to `gh` over stdin and are never printed or written to disk. The helper does not source `.env` files. Use `--environment NAME` only with a corresponding workflow environment change.
+Values can instead be supplied as exported environment variables for noninteractive use. The setup helper detects `BUNNY_STORAGE_HOST` when omitted; the deployment workflow receives the resolved hostname. Secrets go to `gh` over stdin and are never printed. Noninteractive runs and dry runs do not read or write resume files. The helper does not source `.env` files. Use `--environment NAME` only with a corresponding workflow environment change.
 
 Preview the setup without changing GitHub:
 

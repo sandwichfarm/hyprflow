@@ -68,11 +68,13 @@ export async function discoverStorageHost(zoneName, apiKey, fetchImpl = fetch) {
       throw new Error(
         `Bunny storage lookup failed: HTTP ${response.status}. Check the account API key and its Storage permissions. No GitHub settings changed.`,
       );
-    if (!Array.isArray(data?.Items))
+    // Accept both the legacy list response and the paginated API response.
+    const items = Array.isArray(data) ? data : data?.Items;
+    if (!Array.isArray(items))
       throw new Error(
         "Unexpected Bunny storage lookup response. No GitHub settings changed.",
       );
-    const zone = data.Items.find((item) => item.Name === zoneName);
+    const zone = items.find((item) => item?.Name === zoneName);
     if (zone) {
       const host =
         typeof zone.Region === "string"
@@ -84,7 +86,10 @@ export async function discoverStorageHost(zoneName, apiKey, fetchImpl = fetch) {
         );
       return host;
     }
-    if (!data.HasMoreItems)
+    const hasMore = Array.isArray(data)
+      ? items.length === 1000
+      : data.HasMoreItems === true;
+    if (!hasMore)
       throw new Error(
         "Storage zone not found in this Bunny account. Check BUNNY_STORAGE_ZONE against Storage → zone name, and use that account's API key. No GitHub settings changed.",
       );

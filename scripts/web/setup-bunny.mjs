@@ -1,9 +1,10 @@
 import { spawnSync } from "node:child_process";
 import { createInterface } from "node:readline/promises";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { Writable } from "node:stream";
 import { setupInputs, resolveSetupConfig } from "./bunny-storage.mjs";
 import { configFromEnv, variableNames, secretNames } from "./config.mjs";
+import { savedInputs, setupCheckpoint } from "./setup-checkpoint.mjs";
 
 export function parseArgs(args) {
   const options = { repo: "", environment: "production", dryRun: false };
@@ -112,7 +113,7 @@ function explainField(field, output) {
 
 export async function promptConfig(
   env,
-  { input = process.stdin, output = process.stdout, discover } = {},
+  { input = process.stdin, output = process.stdout, discover, onChange = () => {} } = {},
 ) {
   const values = setupInputs(env);
   let muted = false;
@@ -185,15 +186,17 @@ export async function promptConfig(
             { [field.name]: value },
             { dryRun: true },
           )[field.name];
-          output.write(
-            field.secret
-              ? "Received (hidden).\n"
-              : `Accepted: ${values[field.name]}\n`,
-          );
-          break;
         } catch (error) {
           output.write(`Invalid value: ${error.message} Try again.\n`);
+          continue;
         }
+        onChange(values);
+        output.write(
+          field.secret
+            ? "Received (hidden).\n"
+            : `Accepted: ${values[field.name]}\n`,
+        );
+        break;
       }
     }
     // Release the terminal before the network lookup; Ctrl+C can interrupt it normally.
@@ -268,31 +271,66 @@ export function applyConfig(config, options, run = gh, log = console.log) {
       : "GitHub environment configured. To deploy, run the Deploy website to Bunny workflow on main in GitHub Actions.",
   );
 }
+export async function runSetup(options, {
+  env = process.env,
+  input = process.stdin,
+  output = process.stdout,
+  run = gh,
+  discover,
+  checkpointDirectory = fileURLToPath(new URL("../../.bunny-setup/", import.meta.url)),
+} = {}) {
+  const log = (message) => output.write(`${message}\n`);
+  if (options.dryRun) {
+    const values = setupInputs(env);
+    const config = configFromEnv(values, { dryRun: true });
+    if (!values.BUNNY_STORAGE_HOST?.trim())
+      config.BUNNY_STORAGE_HOST = "(detected automatically during setup)";
+    applyConfig(config, options, run, log);
+    return;
+  }
+  log("Checking GitHub CLI authentication (30-second timeout)...");
+  run(["auth", "status", "--hostname", "github.com"]);
+  const repo = options.repo || run(["repo", "view", "--json", "nameWithOwner", "--jq", ".nameWithOwner"]);
+  if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) throw new Error("Repository must be OWNER/REPO.");
+  const target = { ...options, repo };
+  const checkpoint = input.isTTY ? setupCheckpoint(checkpointDirectory, target) : undefined;
+  let values = setupInputs(env);
+  if (checkpoint) {
+    const saved = checkpoint.load();
+    const exported = savedInputs(env);
+    values = setupInputs({ ...saved, ...exported });
+    // A saved endpoint belongs to the previous zone/account, unless explicitly overridden.
+    if (!exported.BUNNY_STORAGE_HOST && ["BUNNY_STORAGE_ZONE", "BUNNY_API_KEY"].some(
+      (name) => exported[name] && exported[name] !== saved[name],
+    )) delete values.BUNNY_STORAGE_HOST;
+    if (Object.keys(saved).length) log("Resuming saved answers. Exported values override saved answers; secrets remain hidden.");
+    checkpoint.save(values);
+    log(`Answers, including secrets, are saved locally in ${checkpoint.path} (owner-only access, Git-ignored). Rerun the same command to resume. The file is removed after success.`);
+  }
+  log("Configure an existing Bunny Storage + Pull Zone. GitHub settings are unchanged until all values are valid.");
+  try {
+    const config = input.isTTY
+      ? await promptConfig(values, { input, output, discover, onChange: (answers) => checkpoint.save(answers) })
+      : await resolveSetupConfig(values, { discover, log });
+    checkpoint?.save(config);
+    applyConfig(config, target, run, log);
+    checkpoint?.clear();
+    if (checkpoint) log("Local resume file removed.");
+  } catch (error) {
+    if (checkpoint) log(`Saved answers kept in ${checkpoint.path}. Rerun the same setup command to resume without re-entering them.`);
+    throw error;
+  }
+}
+
 async function main() {
   if (process.argv.slice(2).includes("--help")) {
     console.log(
-      "Usage: npm run setup:bunny -- [--repo OWNER/REPO] [--environment production] [--dry-run]\n\nSets GitHub variables and secrets for an existing Bunny Storage + Pull Zone.\nInteractive setup explains and validates each value. Secrets stay hidden. The upload endpoint is detected automatically using a read-only Bunny API request.\n--dry-run shows planned settings without prompts or GitHub writes.",
+      "Usage: npm run setup:bunny -- [--repo OWNER/REPO] [--environment production] [--dry-run]\n\nSets GitHub variables and secrets for an existing Bunny Storage + Pull Zone.\nInteractive setup explains and validates each value. Secrets stay hidden. The upload endpoint is detected automatically using a read-only Bunny API request.\nInteractive answers (including secrets) are saved in .bunny-setup/ with owner-only permissions and removed after success. Rerun the same command to resume; exported values override saved answers. Delete .bunny-setup/ to discard saved answers.\n--dry-run shows planned settings without prompts, resume files, or GitHub writes.",
     );
     for (const field of setupFields) explainField(field, process.stdout);
     return;
   }
-  const options = parseArgs(process.argv.slice(2));
-  if (!options.dryRun) {
-    console.log("Checking GitHub CLI authentication (30-second timeout)...");
-    gh(["auth", "status", "--hostname", "github.com"]);
-    console.log(
-      "Configure an existing Bunny Storage + Pull Zone. Nothing is saved until all values are valid.",
-    );
-  }
-  const config =
-    !options.dryRun && process.stdin.isTTY
-      ? await promptConfig(process.env)
-      : options.dryRun
-        ? configFromEnv(setupInputs(process.env), { dryRun: true })
-        : await resolveSetupConfig(process.env);
-  if (options.dryRun && !setupInputs(process.env).BUNNY_STORAGE_HOST?.trim())
-    config.BUNNY_STORAGE_HOST = "(detected automatically during setup)";
-  applyConfig(config, options);
+  await runSetup(parseArgs(process.argv.slice(2)));
 }
 if (import.meta.url === pathToFileURL(process.argv[1] || "").href)
   main().catch((error) => {

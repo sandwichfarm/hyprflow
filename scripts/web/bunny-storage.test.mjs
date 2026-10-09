@@ -14,6 +14,30 @@ const env = {
 };
 const response = (data) => new Response(JSON.stringify(data));
 
+test("lookup accepts plain list responses as well as paginated responses", async () => {
+  for (const data of [
+    [null, { Name: "example-other", Region: "LA" }, { Name: "example", Region: "DE" }],
+    { Items: [null, { Name: "example", Region: "DE" }], HasMoreItems: false },
+  ]) {
+    assert.equal(await discoverStorageHost("example", "key", async () => response(data)),
+      "storage.bunnycdn.com");
+  }
+  await assert.rejects(discoverStorageHost("example", "key", async () => response([])),
+    /Storage zone not found/);
+});
+
+test("full plain-list pages continue until the exact zone is found", async () => {
+  const pages = [];
+  assert.equal(await discoverStorageHost("example", "key", async (url) => {
+    const page = new URL(url).searchParams.get("page");
+    pages.push(page);
+    return response(page === "0"
+      ? Array.from({ length: 1000 }, () => ({ Name: "another-zone", Region: "DE" }))
+      : [{ Name: "example", Region: "NY" }]);
+  }), "ny.storage.bunnycdn.com");
+  assert.deepEqual(pages, ["0", "1"]);
+});
+
 test("replicated zones use their primary write region, not a replica or delivery hostname", async () => {
   for (const [Region, host] of [
     ["DE", "storage.bunnycdn.com"],

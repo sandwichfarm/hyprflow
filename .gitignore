@@ -8,6 +8,7 @@ __pycache__/
 /docs/.vitepress/dist/
 .env
 .env.*
+/.bunny-setup/
 !.env.example
 /playwright-report/
 /test-results/
