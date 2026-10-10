@@ -58,13 +58,20 @@ Keep the default modal submap when adding bindings. Its `catchall` consumes unre
 ## Flow appearance
 
 These options belong under `plugin.hyprflow` in Lua configuration. They update
-an open flow on its next rendered frame. With all defaults, the output remains
-identical to the original unconfigured plugin.
+an open flow on its next rendered frame. Cards use the native workspace aspect ratio; wide and portrait workspaces have
+no matte padding. These defaults replace the original square-cover geometry.
 
 ```lua
 hl.config({ plugin = { hyprflow = {
     workspace_scale = 0.9,
     workspace_spread = 0.25,
+    workspace_overlay = 1,
+    background_color = "rgba(101827dd)",
+    background_opacity = 0.45,
+    background_blur = 16,
+    reflection_opacity = 0.2,
+    center_y = 0.45,
+    show_labels = 1,
     border_width = 3,
     border_color = "rgba(ffffff55)",
     border_color_current = "rgba(33ccffee) rgba(00ff99ee) 45deg",
@@ -77,9 +84,10 @@ values and assignable keys. The existing `workspace_count` option is unchanged.
 
 ### Size and spacing
 
-`workspace_scale` multiplies the original aspect-aware card size,
-`min(0.58 × monitor height, 0.38 × monitor width)`. Its default is `1.0`; the valid
-range is `0.1` through `2.0`. Cards, reflections, image containment, and label
+`workspace_scale` multiplies the card width,
+`min(0.58 × monitor height, 0.38 × monitor width)`. Card height is that width
+multiplied by `monitor height / monitor width`, including portrait monitors. Its default is `1.0`; the valid
+range is `0.1` through `2.0`. Cards, reflections, and label
 placement follow this size. Large values can extend cards beyond the viewport.
 Entry and exit still begin/end at the full native desktop size.
 
@@ -90,13 +98,54 @@ cover stays at its original position, and the transition curve’s endpoint slop
 changes with the spacing to preserve continuous travel. Perspective, yaw, and
 spring timing are unchanged.
 
+### Desktop overlay and background
+
+| Setting | Default | Range / behavior |
+| --- | --- | --- |
+| `workspace_overlay` | `0` | `0`: solid stage; `1`: current workspace behind the cards |
+| `background_color` | `rgb(000000)` | One color in the same hex formats as borders; no gradient |
+| `background_opacity` | `1.0` | 0–1; multiplied by the color's alpha |
+| `background_blur` | `0.0` | Gaussian kernel radius, 0–64 logical pixels; overlay only |
+| `reflection_opacity` | `0.34` | 0–1; zero skips reflection draws |
+| `center_y` | `0.4` | 0–1, vertical center as a fraction of monitor height |
+| `show_labels` | `1` | `0`: hide captions; `1`: show captions |
+
+Overlay uses a refreshed capture of the workspace where the switcher opened,
+including its special overlay and pinned windows. Selecting another card keeps
+that original desktop behind the stack until acceptance. It remains visible
+while input is captured by the switcher's modal controls. The desktop tint and
+blur fade in during entry and out during exit; the cards stay sharp. A blur of
+zero bypasses the kernel. Blur prefilters a reduced-resolution desktop capture,
+applies separate nine-tap horizontal and vertical Gaussian passes, and linearly
+upsamples the result. The radius scales with monitor scale. Blur adds offscreen
+render passes; software rendering can cost more GPU time.
+
+On the solid stage, `background_color` blends over black using color alpha ×
+`background_opacity`. With overlay enabled, the same tint blends over the desktop;
+`background_opacity = 0` exposes the desktop, and `1` with an opaque color hides it.
+Use numeric `0`/`1` for the two switches.
+
+For example, a clear desktop with a compact stack and no reflection or caption:
+
+```lua
+hl.config({ plugin = { hyprflow = {
+    workspace_overlay = 1, background_opacity = 0, background_blur = 0,
+    workspace_scale = 0.8, workspace_spread = 0.3,
+    reflection_opacity = 0, show_labels = 0, center_y = 0.5,
+} } })
+```
+
+The [configuration video](../artifacts/appearance/configurations.mp4) shows the
+solid stage, clear desktop overlay, and tinted blurred overlay with gradient
+borders. See the [current appearance verification](verification.md#workspace-appearance-update).
+
 ### Borders
 
 `border_width` is the inset stroke width in logical pixels, before the card’s
 perspective projection. It accepts integers from `0` to `32`; zero, the default,
-disables borders. The stroke follows the full square cover, including matte
-padding. It foreshortens with the card, appears in its reflection, and fades out
-at the full-desktop entry/exit endpoints. The label has no border.
+disables borders. The stroke follows the full workspace rectangle. It
+foreshortens with the card, appears in its reflection, and fades out at the
+full-desktop entry/exit endpoints. The label has no border.
 
 The color options use Hyprexpo’s modern naming and documented hex forms:
 
@@ -131,7 +180,7 @@ and color conversion uses the compositor’s parser and Oklab cache.
 
 ### Invalid settings and reloads
 
-Out-of-range or nonfinite sizes/spreads, invalid widths, malformed colors,
+Out-of-range or nonfinite numeric appearance values, invalid switches/widths, malformed colors,
 nonfinite angles, and more than ten stops are not applied. The previous valid
 value remains effective. Hyprflow logs a rejection and posts a notification once
 per changed invalid value. Restoring a valid value resets that suppression.
@@ -144,6 +193,28 @@ not depend on host validation or mutate the host’s config registry. See the
 [upstream conversion path](https://github.com/hyprwm/Hyprland/blob/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/lua/types/LuaConfigUtils.cpp).
 
 ### Tests
+
+The current appearance proof checks monitor aspect, overlay origin, tint and
+opacity pixels, background blur with sharp cards, reflections, captions, vertical
+placement, invalid settings, borders, reloads, and accept/cancel cleanup. Start
+with the seven calibration fixtures and the exact loaded plugin:
+
+```sh
+python3 scripts/verify-appearance.py "$session_dir" /tmp/hyprflow-appearance \
+    --artifact "$PWD/build/hyprflow.so" \
+    --sha256 "$(sha256sum build/hyprflow.so | cut -d' ' -f1)" --video
+python3 scripts/caption-appearance-video.py /tmp/hyprflow-appearance
+```
+
+The script replaces only the owned session's test fixtures for the detailed blur
+check and video. `manifest.json` records each scene's complete configuration and
+timing; `configurations-raw.mp4` is the compositor recording. The published demo
+adds preset captions using Pillow and FFmpeg. Capture preserves variable frame
+timestamps; the caption tool rejects a recording whose duration does not match
+the preset timeline. The earlier baseline/candidate border proof is retained
+for historical comparisons; its square-default equality assertion is superseded
+by the native-aspect assertion above.
+
 
 `make check format-check` covers the build, pure geometry tests, Python syntax,
 Cppcheck, and formatting. The geometry suite checks original defaults, resizing,
@@ -158,10 +229,10 @@ reload and plugin unload/reload. Run its `--help` for exact phase arguments.
 It uses the existing nested-session helpers, `grim`, and the already-installed
 Pillow test tooling; there are no new plugin dependencies.
 
-### Verified result
+### Historical border verification
 
 The [proof summary](../artifacts/configuration/verified/summary.json) records the
-tested artifact and exact-build mapping checks. Five complete default PNGs are
+tested artifact and exact-build mapping checks. Before the workspace-aspect update, five complete default PNGs were
 byte-identical to the original plugin in the same nested compositor. Customized
 size, spacing, 2/8-pixel borders, alpha, state precedence, three/ten-color
 gradients, and angle normalization pass actual pixel assertions.

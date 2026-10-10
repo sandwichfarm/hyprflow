@@ -10,6 +10,7 @@ on:
         "package*.json",
         ".github/workflows/deploy-website.yml",
         "artifacts/final/navigation/**",
+        "artifacts/appearance/**",
       ]
   workflow_dispatch:
 permissions:

@@ -34,7 +34,7 @@ Navigation covers the focused monitor. Other monitors and special workspaces are
 
 ## The flow shows black bars
 
-Wide desktops fit inside square covers without cropping or distortion. Black matte padding is intentional. See the [animation specification](design-spec.md#workspace-imagery-and-lighting).
+Cards follow the native workspace aspect ratio without matte padding. Use `workspace_scale` to resize them; `workspace_overlay`, `background_opacity`, and `background_blur` control the surrounding desktop. See the [animation specification](design-spec.md#workspace-imagery-and-lighting).
 
 ## Report a problem
 

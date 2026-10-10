@@ -1,0 +1,44 @@
+{
+  "raw_sha256": "442c35ba809698f35c3e438bfae2cdaf363c869a120a638d9c9743c7b26600f5",
+  "published_sha256": "9b48bdea93d1ee46a1f5aebde5dc7eb85af40de55d021e5c69977b632e3e847f",
+  "duration_seconds": 36.850289,
+  "playback_speed": 1,
+  "captions": [
+    {
+      "preset": "solid",
+      "start_seconds": 0,
+      "end_seconds": 13.36626481999999,
+      "title": "Solid stage",
+      "detail": "Workspace proportions \u00b7 reflections and captions"
+    },
+    {
+      "preset": "clear-overlay",
+      "start_seconds": 13.36626481999999,
+      "end_seconds": 24.760125322000043,
+      "title": "Clear desktop overlay",
+      "detail": "No tint or blur \u00b7 reflections and captions off"
+    },
+    {
+      "preset": "blurred-tint",
+      "start_seconds": 24.760125322000043,
+      "end_seconds": 36.850289,
+      "title": "Blurred desktop overlay",
+      "detail": "45% tint \u00b7 16px blur \u00b7 gradient borders"
+    }
+  ],
+  "validation": {
+    "decoded_frames": 1106,
+    "blackout_frames": 0,
+    "output_duration_seconds": 36.866667,
+    "resolution": [
+      1280,
+      720
+    ],
+    "framerate": "30/1",
+    "visually_reviewed_presets_at_seconds": [
+      6,
+      18,
+      29
+    ]
+  }
+}

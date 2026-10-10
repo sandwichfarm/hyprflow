@@ -1,6 +1,7 @@
 #include "Motion.hpp"
 #include <cstdlib>
 #include <iostream>
+#include <limits>
 
 using namespace Hyprflow;
 void require(bool value, const char *message) {
@@ -30,6 +31,25 @@ void configurableSpacing() {
     }
 }
 int main() {
+    for (const auto monitor : {CardSize{1280, 720}, CardSize{720, 1280}, CardSize{960, 960}, CardSize{3440, 1440}}) {
+        for (const double scale : {.1, .75, 1.0, 2.0}) {
+            const auto size = cardSize(monitor.width, monitor.height, scale);
+            require(near(size.width / size.height, monitor.width / monitor.height), "cards preserve native monitor aspect without matte");
+            require(near(size.width, cardSide(monitor.width, monitor.height, scale)), "scale preserves horizontal footprint");
+            for (const double progress : {0.0, .1, .5, .9, 1.0}) {
+                const double width = std::lerp(monitor.width, size.width, progress);
+                const double height = std::lerp(monitor.height, size.height, progress);
+                require(near(width / height, monitor.width / monitor.height), "entry and exit retain source aspect at every step");
+            }
+            const auto top = project(pose(0), -.5, -.5 * size.height / size.width);
+            const auto bottom = project(pose(0), .5, .5 * size.height / size.width);
+            require(near((bottom.x - top.x) / (bottom.y - top.y), monitor.width / monitor.height), "rendered selected quad has native aspect");
+        }
+    }
+    require(validSetting(0, 0, 1) && validSetting(1, 0, 1), "appearance ranges accept both endpoints");
+    require(validSetting(64, 0, 64), "maximum blur radius accepted");
+    for (const double invalid : {-1.0, 65.0, std::numeric_limits<double>::infinity(), std::numeric_limits<double>::quiet_NaN()})
+        require(!validSetting(invalid, 0, 64), "invalid appearance values rejected");
     require(near(cardSide(1280, 720, 1.0), 417.6), "default workspace size preserves landscape geometry");
     require(near(cardSide(960, 960, 1.0), 364.8), "default workspace size preserves square geometry");
     require(near(cardSide(1280, 720, .75), 313.2), "workspace scale resizes the card");

@@ -170,7 +170,7 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE pluginHandle) {
             return;
         }
         try {
-            flow->preRender();
+            flow->preRender(appearanceConfig->read().workspaceOverlay);
             if (flow->finished)
                 reset();
         } catch (const std::exception &error) {

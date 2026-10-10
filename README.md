@@ -6,9 +6,10 @@ Classic Cover Flow for Hyprland workspaces.
 
 </div>
 
-![Hyprflow navigating real workspace snapshots](artifacts/final/navigation/02-open.png)
+![Hyprflow navigating real workspace snapshots](artifacts/appearance/02-solid.png)
 
-[Navigation recording](artifacts/final/navigation/navigation.mp4) ·
+[Configuration demo](artifacts/appearance/configurations.mp4) ·
+[Original navigation recording](artifacts/final/navigation/navigation.mp4) ·
 [Rapid reversal recording](artifacts/final/stress/stress.mp4) ·
 [Square calibration](artifacts/final/calibration.png)
 
@@ -121,13 +122,19 @@ one. Existing workspaces on the focused monitor are included, including named
 workspaces. Workspaces on other monitors and special workspaces are excluded
 from navigation. The active special overlay is included in the original card.
 
-Size, spacing, and borders update while the flow is open. Their defaults preserve
-the original appearance:
+Size, spacing, and borders update while the flow is open. Cards follow the workspace aspect ratio. The appearance controls are:
 
 | Option | Default | Meaning |
 | --- | --- | --- |
-| `workspace_scale` | `1.0` | Size multiplier, 0.1–2.0; applied to the original `min(0.58 × height, 0.38 × width)` card size |
+| `workspace_scale` | `1.0` | Size multiplier, 0.1–2.0; card width is `min(0.58 × height, 0.38 × width) × scale`; height follows workspace aspect |
 | `workspace_spread` | `0.18` | Inactive-card spacing in card widths, 0–1; preserves the nearest cover’s position |
+| `workspace_overlay` | `0` | Set to `1` to show the current workspace behind the switcher |
+| `background_color` | `rgb(000000)` | Stage color or desktop tint, including color alpha |
+| `background_opacity` | `1.0` | Tint opacity, 0–1; use `0` for an unobscured desktop |
+| `background_blur` | `0.0` | Desktop backdrop Gaussian radius, 0–64 logical pixels |
+| `reflection_opacity` | `0.34` | Reflection strength, 0–1; zero disables reflections |
+| `center_y` | `0.4` | Vertical card center as a fraction of monitor height, 0–1 |
+| `show_labels` | `1` | Set to `0` to hide workspace captions |
 | `border_width` | `0` | Inset border width in logical pixels, 0–32; zero disables borders |
 | `border_color` | `rgba(ffffffff)` | Default solid color or multicolor gradient |
 | `border_color_current` | empty | Override for the workspace active when the flow opened |
@@ -146,8 +153,9 @@ including keys that could otherwise reach an input method.
 
 ## Design and verification
 
-The selected cover is square; complete workspace imagery fits inside it without
-stretching or cropping. Wide workspaces have black matte padding. Snapshots are
+Cards use the complete workspace aspect ratio without stretching, cropping, or
+matte padding. Overlay mode keeps the original workspace visible and refreshed
+behind the cards; blur affects only that backdrop. Snapshots are
 taken on entry and refreshed for the card nearest the center. Far cards are
 discarded outside the visible stack to bound texture memory.
 
@@ -186,7 +194,7 @@ identity, receipts, and limits.
 | [Acceptance gates](docs/acceptance.md) | Required behavior and evidence |
 | [Verification report](docs/verification.md) | Build, runtime, screenshot, and lifecycle evidence |
 | [Default configuration](config/hyprflow.lua) | Assignable bindings and options |
-| [Appearance settings](docs/configuration.md) | Size, inactive spacing, and Hyprexpo-style borders |
+| [Appearance settings](docs/configuration.md) | Workspace proportions, overlay, opacity, blur, reflections, labels, and borders |
 
 Exact Apple easing constants and pixel equivalence to every iTunes release are
 unknown. This implementation reconstructs the documented appearance and motion;

@@ -1,0 +1,121 @@
+{
+  "passed": true,
+  "phase": "appearance-video",
+  "artifact_sha256": "ed91eeffd8b97339e3cd36602300b911946ad438344f6d50c995eeae670c0a12",
+  "runtime_identity_sha256": "c1335b7ef75d9370ca0947d74b26097f4a210f9daa8daaef35393db2b0ae0f88",
+  "checks": [
+    {
+      "name": "three_configurations_recorded",
+      "passed": true,
+      "scenes": [
+        "solid",
+        "clear-overlay",
+        "blurred-tint"
+      ]
+    }
+  ],
+  "frames": [
+    {
+      "file": "02-solid.png",
+      "sha256": "aa32418315ca9ec3c07b473ed2ebef9133597682732e0e238b5d6e2aa396cf97",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "02-clear-overlay.png",
+      "sha256": "fa10e2c160f3f0ebf10e375bb4ede16310954a270e9fa4e41984dbfd2993b6f7",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "02-blurred-tint.png",
+      "sha256": "7b4e471fb37d7393c2baf8bb16540301a958b8ebf11d83d4dfec0c6f0bbe4adb",
+      "size": [
+        1280,
+        720
+      ]
+    }
+  ],
+  "artifact_mapping_verified": true,
+  "input_isolation": {
+    "device": "wl_keyboard",
+    "nested_only": true,
+    "present": true,
+    "disabled_during_proof": true,
+    "restored": true
+  },
+  "cursor_isolation": "Owned nested config; restored on exit",
+  "duration_seconds": 44.553,
+  "video_scenes": [
+    {
+      "name": "solid",
+      "settings": {
+        "workspace_scale": 1.25,
+        "workspace_spread": 0.18,
+        "border_width": 0,
+        "border_color": "rgba(ffffffff)",
+        "border_color_current": "",
+        "border_color_focus": "",
+        "workspace_overlay": 0,
+        "background_color": "rgb(000000)",
+        "background_opacity": 1,
+        "background_blur": 0,
+        "reflection_opacity": 0.34,
+        "show_labels": 1,
+        "center_y": 0.4
+      },
+      "start_seconds": 0.3930365520000123,
+      "end_seconds": 11.74195151999993
+    },
+    {
+      "name": "clear-overlay",
+      "settings": {
+        "workspace_scale": 1.1,
+        "workspace_spread": 0.18,
+        "border_width": 0,
+        "border_color": "rgba(ffffffff)",
+        "border_color_current": "",
+        "border_color_focus": "",
+        "workspace_overlay": 1,
+        "background_color": "rgb(000000)",
+        "background_opacity": 0,
+        "background_blur": 0,
+        "reflection_opacity": 0,
+        "show_labels": 0,
+        "center_y": 0.5
+      },
+      "start_seconds": 12.141197382999962,
+      "end_seconds": 23.12930597600007
+    },
+    {
+      "name": "blurred-tint",
+      "settings": {
+        "workspace_scale": 1.25,
+        "workspace_spread": 0.18,
+        "border_width": 3,
+        "border_color": "rgba(ffffffff)",
+        "border_color_current": "",
+        "border_color_focus": "rgb(40cda9) rgb(ecA06d) 45deg",
+        "workspace_overlay": 1,
+        "background_color": "rgb(182030)",
+        "background_opacity": 0.45,
+        "background_blur": 16,
+        "reflection_opacity": 0.34,
+        "show_labels": 1,
+        "center_y": 0.4
+      },
+      "start_seconds": 23.535057885000015,
+      "end_seconds": 35.62522156299997
+    }
+  ],
+  "final_status": {
+    "open": false
+  },
+  "final_workspace": 4,
+  "configerrors": "",
+  "owned_config_restored": true
+}

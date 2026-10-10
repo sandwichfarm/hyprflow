@@ -35,7 +35,21 @@ inline double cardSide(double width, double height, double scale = 1.0) {
     return std::min(.58 * height, .38 * width) * scale;
 }
 
-// Distances are in card heights; yaw sign puts the outside edges toward the viewer.
+struct CardSize {
+    double width, height;
+};
+
+// Keep the existing horizontal footprint, with the complete native workspace aspect.
+inline CardSize cardSize(double width, double height, double scale = 1.0) {
+    const double cardWidth = cardSide(width, height, scale);
+    return {cardWidth, cardWidth * height / width};
+}
+
+inline bool validSetting(double value, double minimum, double maximum) {
+    return std::isfinite(value) && value >= minimum && value <= maximum;
+}
+
+// Distances are in card widths; yaw sign puts the outside edges toward the viewer.
 inline Pose pose(double distance, double spread = .18) {
     const double a = std::abs(distance), t = std::min(1.0, a);
     const double s = smooth(t), sign = distance < 0 ? -1.0 : 1.0;

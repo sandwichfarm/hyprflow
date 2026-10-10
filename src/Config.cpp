@@ -1,4 +1,5 @@
 #include "Config.hpp"
+#include "Motion.hpp"
 #include <hyprland/src/config/shared/parserUtils/ParserUtils.hpp>
 #include <hyprland/src/debug/log/Logger.hpp>
 #include <algorithm>
@@ -21,10 +22,6 @@ bool whitespace(char value) {
 
 bool emptySpec(const std::string &text) {
     return std::ranges::all_of(text, whitespace);
-}
-
-bool inRange(double value, double minimum, double maximum) {
-    return std::isfinite(value) && value >= minimum && value <= maximum;
 }
 
 // The native border shader has ten equally spaced color stops.
@@ -152,6 +149,29 @@ FlowConfig::FlowConfig(HANDLE handle)
     add(workspaceScale);
     add(workspaceSpread);
     add(borderWidth);
+    constexpr const char *effectNames[] = {"plugin:hyprflow:background_opacity", "plugin:hyprflow:background_blur",
+                                           "plugin:hyprflow:reflection_opacity", "plugin:hyprflow:center_y"};
+    constexpr float defaults[] = {1.F, 0.F, .34F, .4F}, maxima[] = {1.F, 64.F, 1.F, 1.F};
+    for (size_t i = 0; i < effects.size(); ++i) {
+        effects[i] = makeShared<::Config::Values::CFloatValue>(effectNames[i], "Flow backdrop and composition", defaults[i],
+                                                               ::Config::Values::SFloatValueOptions{.min = 0.F, .max = maxima[i]});
+        add(effects[i]);
+    }
+    constexpr const char *switchNames[] = {"plugin:hyprflow:workspace_overlay", "plugin:hyprflow:show_labels"};
+    for (size_t i = 0; i < switches.size(); ++i) {
+        switches[i] = makeShared<::Config::Values::CIntValue>(switchNames[i], "Enable flow appearance feature", i == 0 ? 0 : 1,
+                                                              ::Config::Values::SIntValueOptions{.min = 0, .max = 1});
+        add(switches[i]);
+    }
+    backgroundColor = makeShared<::Config::Values::CStringValue>(
+        "plugin:hyprflow:background_color", "Backdrop tint color", "rgb(000000)",
+        ::Config::Values::SStringValueOptions{.validator = [](const std::string &text) -> std::expected<void, std::string> {
+            const auto parsed = borderColor(text);
+            if (!parsed)
+                return std::unexpected(parsed.error());
+            return {};
+        }});
+    add(backgroundColor);
     for (const auto &color : borderColors)
         add(color);
 }
@@ -171,24 +191,45 @@ void FlowConfig::rejectScalar(size_t index, const char *option, const std::strin
 
 void FlowConfig::readScalars() {
     const auto scale = workspaceScale->value();
-    if (inRange(scale, .1, 2.0)) {
+    if (validSetting(scale, .1, 2.0)) {
         appearance.workspaceScale = scale;
         lastRejectedScalar[0].reset();
     } else
         rejectScalar(0, "workspace_scale", std::format("{}", scale), "must be finite and between 0.1 and 2");
     const auto spread = workspaceSpread->value();
-    if (inRange(spread, 0.0, 1.0)) {
+    if (validSetting(spread, 0.0, 1.0)) {
         // Preserve the original double-precision default through the float config API.
         appearance.workspaceSpread = spread == .18F ? .18 : static_cast<double>(spread);
         lastRejectedScalar[1].reset();
     } else
         rejectScalar(1, "workspace_spread", std::format("{}", spread), "must be finite and between 0 and 1");
     const auto width = borderWidth->value();
-    if (inRange(static_cast<double>(width), 0.0, 32.0)) {
+    if (validSetting(static_cast<double>(width), 0.0, 32.0)) {
         appearance.borderWidth = static_cast<int>(width);
         lastRejectedScalar[2].reset();
     } else
         rejectScalar(2, "border_width", std::format("{}", width), "must be between 0 and 32");
+    constexpr const char *names[] = {"background_opacity", "background_blur", "reflection_opacity", "center_y"};
+    constexpr double maxima[] = {1, 64, 1, 1};
+    double *destinations[] = {&appearance.backgroundOpacity, &appearance.backgroundBlur, &appearance.reflectionOpacity, &appearance.centerY};
+    for (size_t i = 0; i < effects.size(); ++i) {
+        const double value = effects[i]->value();
+        if (validSetting(value, 0, maxima[i])) {
+            *destinations[i] = value;
+            lastRejectedScalar[3 + i].reset();
+        } else
+            rejectScalar(3 + i, names[i], std::format("{}", value), "outside the finite documented range");
+    }
+    constexpr const char *switchNames[] = {"workspace_overlay", "show_labels"};
+    bool *flags[] = {&appearance.workspaceOverlay, &appearance.showLabels};
+    for (size_t i = 0; i < switches.size(); ++i) {
+        const auto value = switches[i]->value();
+        if (value == 0 || value == 1) {
+            *flags[i] = value == 1;
+            lastRejectedScalar[7 + i].reset();
+        } else
+            rejectScalar(7 + i, switchNames[i], std::format("{}", value), "must be 0 or 1");
+    }
 }
 
 void FlowConfig::readBorders() {
@@ -213,6 +254,15 @@ void FlowConfig::readBorders() {
 const FlowAppearance &FlowConfig::read() {
     readScalars();
     readBorders();
+    const std::string text = backgroundColor->value();
+    if (lastBackgroundText != text) {
+        lastBackgroundText = text;
+        const auto parsed = borderColor(text);
+        if (parsed)
+            appearance.backgroundColor = *parsed;
+        else
+            reject("background_color", parsed.error());
+    }
     return appearance;
 }
 

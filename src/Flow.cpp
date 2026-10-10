@@ -103,19 +103,19 @@ void Flow::reopen() {
     g_pHyprRenderer->damageMonitor(monitor);
 }
 
-void Flow::refresh() {
+void Flow::refresh(bool workspaceOverlay) {
     capturing = true;
     const auto nearest = static_cast<size_t>(std::clamp(std::round(focus.value), 0.0, static_cast<double>(cards.size() - 1)));
     for (size_t i = 0; i < cards.size(); ++i) {
         auto &card = cards[i];
-        const bool visible = std::abs(static_cast<double>(i) - focus.value) <= 5.5 || i == anchor;
+        const bool visible = std::abs(static_cast<double>(i) - focus.value) <= 5.5 || i == anchor || i == origin;
         if (!visible) {
             card.framebuffer.reset();
             continue;
         }
         if (card.workspace && card.workspace->inert())
             card.workspace.reset();
-        if (!card.framebuffer || i == nearest) {
+        if (!card.framebuffer || i == nearest || (workspaceOverlay && i == origin)) {
             if (!captureWorkspace(monitor, card.workspace, card.framebuffer)) {
                 capturing = false;
                 throw std::runtime_error("hyprflow: workspace capture failed");
@@ -142,7 +142,7 @@ void Flow::finish() {
         Desktop::focusState()->fullWindowFocus(card.workspace->getFocusCandidate(), Desktop::FOCUS_REASON_KEYBIND);
 }
 
-void Flow::preRender() {
+void Flow::preRender(bool workspaceOverlay) {
     if (monitor->m_activeWorkspace != cards[origin].workspace) {
         finished = true;
         return;
@@ -153,13 +153,13 @@ void Flow::preRender() {
     // Capture before starting the clock: an initial batch cannot skip entry frames.
     const bool first = !cards[origin].framebuffer;
     if (first) {
-        refresh();
+        refresh(workspaceOverlay);
         lastFrame = Time::steadyNow();
         return;
     }
     focus.advance(elapsed);
     openness.advance(elapsed);
-    refresh();
+    refresh(workspaceOverlay);
     if (closing && !exitStarted && focus.settled() && openness.settled()) {
         anchor = static_cast<size_t>(focus.target);
         openness.target = 0;
@@ -188,25 +188,24 @@ void Flow::decorateBorder(Quad &quad, size_t index, const FlowAppearance &appear
 
 Quad Flow::cardQuad(size_t index, bool reflection, const FlowAppearance &appearance) const {
     const double width = monitor->m_transformedSize.x, height = monitor->m_transformedSize.y;
-    const double side = cardSide(width, height, appearance.workspaceScale), cx = .5 * width, cy = .4 * height;
+    const auto size = cardSize(width, height, appearance.workspaceScale);
+    const double cx = .5 * width, cy = appearance.centerY * height;
     const double p = std::clamp(openness.value, 0.0, 1.0);
     const auto state = pose(static_cast<double>(index) - focus.value, appearance.workspaceSpread);
     const bool anchored = index == anchor && !reflection;
     Quad quad;
     quad.texture = cards[index].framebuffer->getTexture();
     quad.reflection = reflection;
+    quad.reflectionOpacity = appearance.reflectionOpacity;
     quad.opacity = anchored ? 1 : smooth(p);
     quad.opacity *= 1 - smooth(std::abs(static_cast<double>(index) - focus.value) - 4.5);
     if (anchored)
         quad.opacity = std::lerp(1.0, static_cast<double>(quad.opacity), p);
     quad.shade = anchored ? std::lerp(1.0, state.shade, p) : state.shade;
     quad.lightDirection = state.yaw < 0 ? 1 : -1;
-    const double aspect = width / height;
-    quad.imageWidth = std::min(1.0, aspect);
-    quad.imageHeight = std::min(1.0, 1 / aspect);
-    Vector2D extent{side, side};
+    Vector2D extent{size.width, size.height};
     if (anchored) {
-        const double w = std::lerp(width, side, p), h = std::lerp(height, side, p);
+        const double w = std::lerp(width, size.width, p), h = std::lerp(height, size.height, p);
         extent = {w, h};
         const double fit = std::min(w / width, h / height);
         quad.imageWidth = width * fit / w;
@@ -215,9 +214,9 @@ Quad Flow::cardQuad(size_t index, bool reflection, const FlowAppearance &appeara
     decorateBorder(quad, index, appearance, extent, p);
     for (size_t i = 0; i < 4; ++i) {
         const double u = (i % 2) - .5, v = (i / 2) - .5;
-        auto point = project(state, u, reflection ? 1 - v : v);
-        point.x = cx + side * point.x;
-        point.y = cy + side * point.y;
+        auto point = project(state, u, (reflection ? 1 - v : v) * size.height / size.width);
+        point.x = cx + size.width * point.x;
+        point.y = cy + size.width * point.y;
         if (anchored)
             point = morph({(u + .5) * width, (v + .5) * height, 1}, point, p);
         quad.points[i] = point;
@@ -232,7 +231,23 @@ void Flow::render(const FlowAppearance &appearance) {
         return std::abs(static_cast<double>(a) - focus.value) > std::abs(static_cast<double>(b) - focus.value);
     });
     std::vector<Quad> quads;
+    if (cards[origin].framebuffer) {
+        Quad background;
+        const double width = monitor->m_transformedSize.x, height = monitor->m_transformedSize.y;
+        background.points = {{{0, 0, 1}, {width, 0, 1}, {0, height, 1}, {width, height, 1}}};
+        background.texture = cards[origin].framebuffer->getTexture();
+        background.backdrop = true;
+        background.workspaceOverlay = appearance.workspaceOverlay;
+        const double progress = smooth(openness.value);
+        background.blurRadius = appearance.backgroundBlur * monitor->m_scale * progress;
+        const auto &color = appearance.backgroundColor;
+        background.tint = {static_cast<float>(color.r), static_cast<float>(color.g), static_cast<float>(color.b),
+                           static_cast<float>(color.a * appearance.backgroundOpacity * (appearance.workspaceOverlay ? progress : 1.0))};
+        quads.push_back(background);
+    }
     for (bool reflection : {true, false}) {
+        if (reflection && appearance.reflectionOpacity == 0)
+            continue;
         for (auto i : order) {
             if (cards[i].framebuffer)
                 quads.push_back(cardQuad(i, reflection, appearance));
@@ -245,14 +260,14 @@ void Flow::render(const FlowAppearance &appearance) {
         label = g_pHyprRenderer->renderText(text, CHyprColor{.85, .85, .85, 1}, 20 * monitor->m_scale);
         labelIndex = current;
     }
-    if (label) {
+    if (label && appearance.showLabels) {
         Quad caption;
         caption.texture = label;
         caption.opacity = smooth(openness.value);
         const double x = (monitor->m_transformedSize.x - label->m_size.x) / 2;
-        const double side = cardSide(monitor->m_transformedSize.x, monitor->m_transformedSize.y, appearance.workspaceScale);
-        const double y =
-            std::min(monitor->m_transformedSize.y * .4 + side * .70, monitor->m_transformedSize.y - label->m_size.y - 8 * monitor->m_scale);
+        const auto size = cardSize(monitor->m_transformedSize.x, monitor->m_transformedSize.y, appearance.workspaceScale);
+        const double y = std::min(monitor->m_transformedSize.y * appearance.centerY + size.height * .70,
+                                  monitor->m_transformedSize.y - label->m_size.y - 8 * monitor->m_scale);
         caption.points = {{{x, y, 1}, {x + label->m_size.x, y, 1}, {x, y + label->m_size.y, 1}, {x + label->m_size.x, y + label->m_size.y, 1}}};
         quads.push_back(caption);
     }

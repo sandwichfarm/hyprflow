@@ -1,0 +1,28 @@
+selected region 0,0 1280x720
+Setting codec option: crf=20
+Setting codec option: preset=superfast
+Setting codec option: tune=zerolatency
+Using video filter: null
+[libx264 @ 0x7f0af0001e80] using SAR=1/1
+[libx264 @ 0x7f0af0001e80] MB rate (3600000000) > level limit (16711680)
+[libx264 @ 0x7f0af0001e80] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2
+[libx264 @ 0x7f0af0001e80] profile High, level 6.2, 4:2:0, 8-bit
+[libx264 @ 0x7f0af0001e80] 264 - core 165 r3222 b35605a - H.264/MPEG-4 AVC codec - Copyleft 2003-2025 - http://www.videolan.org/x264.html - options: cabac=1 ref=1 deblock=1:0:0 analyse=0x3:0x3 me=dia subme=1 psy=1 psy_rd=1.00:0.00 mixed_ref=0 me_range=16 chroma_me=1 trellis=0 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=0 threads=2 lookahead_threads=2 sliced_threads=1 slices=2 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=0 weightp=1 keyint=250 keyint_min=25 scenecut=40 intra_refresh=0 rc=crf mbtree=0 crf=20.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to '/home/sandwich/hyprflow-finishing/video-final-4/configurations-raw.mp4':
+  Stream #0:0: Video: h264, yuv420p(pc), 1280x720 [SAR 1:1 DAR 16:9], q=2-31
+    Side data:
+      CPB properties: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+[Source @ 0x7f0af0003c80] Changing video frame properties on the fly is not supported by all filters.
+[Source @ 0x7f0af0003c80] filter context - w: 1280 h: 720 fmt: 121 csp: gbr range: unknown alpha: unspecified, incoming frame - w: 1280 h: 720 fmt: 121 csp: unknown range: unknown alpha: unspecified pts_time: 0
+[libx264 @ 0x7f0af0001e80] frame I:4     Avg QP: 7.86  size: 58766
+[libx264 @ 0x7f0af0001e80] frame P:236   Avg QP:13.47  size:  4802
+[libx264 @ 0x7f0af0001e80] mb I  I16..4: 71.4%  9.1% 19.5%
+[libx264 @ 0x7f0af0001e80] mb P  I16..4:  3.3%  0.9%  0.7%  P16..4:  6.4%  0.0%  0.0%  0.0%  0.0%    skip:88.8%
+[libx264 @ 0x7f0af0001e80] 8x8 transform intra:15.4% inter:40.3%
+[libx264 @ 0x7f0af0001e80] coded y,uvDC,uvAC intra: 33.1% 26.4% 14.0% inter: 3.1% 1.8% 0.3%
+[libx264 @ 0x7f0af0001e80] i16 v,h,dc,p: 65% 29%  5%  1%
+[libx264 @ 0x7f0af0001e80] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 19% 26% 23%  8%  2%  2%  5%  6% 10%
+[libx264 @ 0x7f0af0001e80] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 28% 41% 15%  4%  2%  2%  3%  2%  5%
+[libx264 @ 0x7f0af0001e80] i8c dc,h,v,p: 66% 18% 12%  5%
+[libx264 @ 0x7f0af0001e80] Weighted P-Frames: Y:0.8% UV:0.4%
+[libx264 @ 0x7f0af0001e80] kb/s:45613132.00
