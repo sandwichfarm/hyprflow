@@ -9,6 +9,7 @@ on:
         "package*.json",
         ".github/workflows/*website*",
         "artifacts/final/navigation/**",
+        "artifacts/appearance/**",
       ]
   push:
     branches: [main]
@@ -20,6 +21,7 @@ on:
         "package*.json",
         ".github/workflows/*website*",
         "artifacts/final/navigation/**",
+        "artifacts/appearance/**",
       ]
   workflow_dispatch:
 permissions:

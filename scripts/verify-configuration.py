@@ -180,9 +180,14 @@ class ConfigurationProof:
     def bright_bounds(image):
         # The white calibration workspace, above the separate caption/reflection.
         width, height = image.size
-        points = [(x, y) for y in range(int(height * .08), int(height * .68))
-                  for x in range(int(width * .2), int(width * .8))
-                  if min(image.getpixel((x, y))) > 180]
+        points = []
+        for y in range(int(height * .08), int(height * .68)):
+            row = [(x, y) for x in range(int(width * .2), int(width * .8))
+                   if min(image.getpixel((x, y))) > 180]
+            # A caption is much narrower than the calibration cover. Native-aspect
+            # cards place captions higher than the old square composition.
+            if len(row) > width * .15:
+                points.extend(row)
         require(points, "Centered calibration workspace was not visible")
         return [min(x for x, _ in points), min(y for _, y in points), max(x for x, _ in points) + 1, max(y for _, y in points) + 1]
 
@@ -222,7 +227,7 @@ class ConfigurationProof:
 
     @staticmethod
     def red_run(image):
-        return longest_run([y for y in range(round(image.height * .02), round(image.height * .24))
+        return longest_run([y for y in range(round(image.height * .08), round(image.height * .4))
                             if (lambda c: c[0] > 180 and c[1] < 60 and c[2] < 60)(image.getpixel((image.width // 2, y)))])
 
     def borders(self):
@@ -239,7 +244,9 @@ class ConfigurationProof:
         self.settings(border_color="rgba(ff000080)")
         alpha = self.frame("border-alpha")
         sample = alpha.getpixel((x, y))
-        require(110 <= sample[0] <= 145 and sample[1] < 20 and sample[2] < 20, f"Border alpha was not blended: {sample}")
+        underlay = Image.open(self.output / "default-4.png").convert("RGB").getpixel((x, y))
+        expected = [round(255 * 128 / 255 + underlay[0] * 127 / 255), round(underlay[1] * 127 / 255), round(underlay[2] * 127 / 255)]
+        require(max(abs(a - b) for a, b in zip(sample, expected)) < 5, f"Border alpha was not blended: {sample}, expected {expected}")
         self.record("border_alpha", sample=list(sample))
         self.settings(border_color="rgba(ff0000ff) rgba(0000ffff) 0deg")
         horizontal = self.frame("border-gradient-0")

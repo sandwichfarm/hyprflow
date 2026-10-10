@@ -1,0 +1,11 @@
+{
+  "owned_config_restored": true,
+  "parent_keyboard_isolation_restored": true,
+  "nested_compositor_stopped": true,
+  "owned_root_compositor_stopped": true,
+  "fixture_processes_stopped": true,
+  "guest_powered_off": true,
+  "qemu_exited": true,
+  "owned_virtual_display_stopped": true,
+  "test_host_memory_limit_restored_mib": 4096
+}

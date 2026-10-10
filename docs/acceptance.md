@@ -26,4 +26,10 @@ complete this project.
 8. Supply a working default configuration and a README using readme-wizard.
    Document tested compatibility and limitations without claiming broader proof.
 
+9. Use each workspace's native aspect ratio, including portrait and ultrawide
+   cases, without arbitrary square matte padding. Expose desktop overlay,
+   background color/opacity/blur, reflections, captions, and vertical placement
+   alongside size, spacing, and borders. Verify live changes and invalid values,
+   update documentation, and show multiple configurations in the demo video.
+
 Completion requires fresh evidence for every gate. Keep incomplete gates explicit.

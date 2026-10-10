@@ -1,8 +1,8 @@
 # Hyprflow animation specification
 
-Status: implementation contract, 2026-10-06. Target: the desktop iTunes 7–10 Cover Flow visual language, with iTunes 7 and 7.1 screenshots as the reproducible reference set.
+Status: implementation contract, updated 2026-10-09. Target: the desktop iTunes 7–10 Cover Flow visual language, with iTunes 7 and 7.1 screenshots as the reproducible reference set.
 
-The measured targets describe the default appearance. Optional [appearance settings](configuration.md) change size, inactive spacing, and borders; their defaults preserve this reference design.
+The historical targets describe square album covers. Hyprflow now adapts their horizontal geometry to each workspace’s native aspect ratio, with no matte padding. [Appearance settings](configuration.md) also control desktop overlay, tint, blur, reflections, captions, size, spacing, and borders.
 
 ## Evidence and fidelity boundary
 
@@ -35,28 +35,28 @@ The 420 × 263 full-screen reference has a roughly 162 px center card, or 0.616 
 
 Acceptance targets for a settled Hyprflow frame:
 
-1. The selected square is front-facing, sharp, opaque, and visually dominant.
+1. The selected workspace rectangle is front-facing, sharp, opaque, and visually dominant.
 2. Both side stacks have vertical edges. Their **outer edges are taller and closer** than their inner edges. Left and right stacks mirror each other.
 3. The nearest side cover is mostly visible; farther covers overlap densely rather than occupying separate thumbnail tiles.
 4. Reflections touch the respective lower edges and preserve each card’s perspective.
-5. The stage is black. No rounded corners, colored glow, frosted panel, thick outline, or elliptical carousel path is introduced.
+5. The default stage is black; desktop overlay, tint, blur, and borders are configurable.
 
 ## Coordinate and projection contract
 
-Let `H` be the square card side length. All world distances below are multiples of `H`. World x increases right, y increases down, and positive z points toward the viewer. The camera is centered on the row and looks down negative z.
+Let `W` be card width and `H = W × monitor_height / monitor_width` be card height. Horizontal world distances and camera depth below use `W`; the historic `H`-based landmarks apply when `W = H`. World x increases right, y increases down, and positive z points toward the viewer. The camera is centered on the row and looks down negative z.
 
 Default composition:
 
-- `H = min(0.58 × monitor_height, 0.38 × monitor_width)`.
+- `W = min(0.58 × monitor_height, 0.38 × monitor_width) × workspace_scale`; height follows native aspect.
 - Selected card center: `(0.50 × monitor_width, 0.40 × monitor_height)`.
-- Camera distance / focal length: `F = 2.5H`.
+- Camera distance / focal length: `F = 2.5W`.
 - Maximum yaw magnitude: `65°`.
-- First side-card world center: `0.84H` from the selected center.
-- Subsequent side-card center spacing: `0.18H`.
-- Side-card center depth: `−0.45H`.
+- First side-card world center: `0.84W` from the selected center.
+- Subsequent side-card center spacing: `0.18W`.
+- Side-card center depth: `−0.45W`.
 - Card pitch and roll: `0°`.
 
-For a settled side card, left yaw is `+65°`, right yaw is `−65°`. For a local card point `(u, v, 0)`, where both `u` and `v` range from `−H/2` to `+H/2`:
+For a settled side card, left yaw is `+65°`, right yaw is `−65°`. For a local card point `(u, v, 0)`, where `u` ranges from `−W/2` to `+W/2` and `v` from `−H/2` to `+H/2`:
 
 ```text
 world_x = center_x + u × cos(yaw)
@@ -66,7 +66,7 @@ projected_x = stage_center_x + F × world_x / (F − world_z)
 projected_y = stage_center_y + F × world_y / (F − world_z)
 ```
 
-This sign convention makes the outside edge of each side stack closer. With the defaults, a side card’s outer edge is about `1.001H` tall and its inner edge about `0.735H` tall. Its visible width next to the selected cover is about `0.55H`, after central occlusion. These are close to the measured `1.04H`, `0.73H`, and `0.57H` reference landmarks.
+This sign convention makes the outside edge of each side stack closer. With the defaults, a side card’s outer edge is about `1.001H` tall and its inner edge about `0.735H` tall. Its visible width next to the selected cover is about `0.55W`, after central occlusion. These are close to the measured `1.04H`, `0.73H`, and `0.57H` reference landmarks.
 
 Perspective must remain projective throughout the textured quad. Two affine triangles with no perspective correction create a diagonal kink and do not meet the target. Depth ordering must consistently put nearer cards above farther cards; the centered card is foremost at rest. Equal-distance ties use a stable order.
 
@@ -103,11 +103,11 @@ Large jumps follow the same path and show intermediate cards. Repeated key press
 
 ## Workspace imagery and lighting
 
-Each cover contains a snapshot of the complete workspace. Preserve its aspect ratio with containment inside the square, using black matte padding. Never stretch a widescreen desktop to square. Empty workspaces still have a stable cover and identity. The backdrop, windows, and decorations must refer to the same workspace capture.
+Each cover contains a snapshot of the complete workspace. The card rectangle has exactly the native workspace aspect ratio, without containment padding, cropping, or stretching. Empty workspaces still have a stable cover and identity. The backdrop, windows, and decorations must refer to the same workspace capture.
 
 The selected cover uses the snapshot’s original brightness. Side covers are moderately shaded as yaw increases, with a subtle horizontal gradient; the outer edge remains legible. Initial target: center multiplier `1.0`, side multiplier approximately `0.72–0.82`. Do not use stronger dimming to conceal incorrect geometry.
 
-Reflection geometry mirrors the transformed card across its lower world edge, rather than mirroring its screen bounding box. Reflect the complete cover, including matte padding. Initial reflection opacity at contact is `0.34`; fade smoothly to zero over about `0.45H`. No hard bottom cutoff or duplicate title in the reflection. Reflections remain behind all upright cards.
+Reflection geometry mirrors the transformed card across its lower world edge, rather than mirroring its screen bounding box. Reflect the complete workspace rectangle. Initial reflection opacity at contact is `0.34`; fade smoothly to zero over about `0.45H`. No hard bottom cutoff or duplicate title in the reflection. Reflections remain behind all upright cards.
 
 A small, centered workspace number/name may sit below the selected cover. It must not obstruct the image or become a large product heading. Labels update to the target only when the corresponding cover reaches the focal region, avoiding a new name on an old cover.
 
@@ -119,14 +119,14 @@ Entry and exit are first-class animations. A fade to a prearranged carousel does
 
 1. Capture the current workspace at its exact monitor geometry before taking visual ownership.
 2. The first presented plugin frame reproduces that workspace at full-monitor size, with no visible seam, duplicate image, or black flash.
-3. Continuously transform the same snapshot into the selected cover’s contained image. Preserve source aspect ratio throughout. Reveal the square matte as the cover contracts.
-4. Fade the black stage and side stack in during that contraction. Reflection opacity follows the entry progress and is zero at the first frame.
+3. Continuously contract the same snapshot into the selected card, preserving native aspect ratio throughout.
+4. Fade the stage (or desktop tint and blur) and side stack in during that contraction. Reflection opacity follows the entry progress and is zero at the first frame.
 5. Arrive at the settled composition with negligible velocity. Initial target: roughly 350–450 ms.
 
 ### Exit and commit
 
 1. If selection is still moving, complete the focus movement before expanding the chosen cover. Avoid an unannounced sideways teleport.
-2. Expand the selected workspace image from its contained cover rectangle to the exact monitor rectangle. Fade matte padding, side cards, reflection, and labels continuously.
+2. Expand the selected workspace image from its contained cover rectangle to the exact monitor rectangle. Fade side cards, reflection, labels, desktop tint, and blur continuously.
 3. Switch the compositor’s real workspace underneath the covering image before the final reveal. Do not expose Hyprland’s ordinary workspace slide simultaneously.
 4. Remove visual ownership only when the overlay’s final image and destination workspace match. The next compositor frame must not flash black or show the previous workspace.
 

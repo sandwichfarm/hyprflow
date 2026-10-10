@@ -1,5 +1,44 @@
 # Hyprflow verification
 
+## Workspace appearance update
+
+Verified October 9, 2026, against Hyprland 0.56.2 in an owned nested
+1280 × 720 Wayland output at scale 1, using the VirGL OpenGL guest described
+below. The [appearance receipt](../artifacts/appearance/manifest.json) contains
+29 passing checks and 72 captured frames. The exact loaded library SHA-256 was
+`ed91eeffd8b97339e3cd36602300b911946ad438344f6d50c995eeae670c0a12`;
+the proof verified its mapped inode throughout the run.
+
+The selected card's measured raster aspect was 1.7863 against a native 1.7778,
+within the pixel-boundary tolerance. The full workspace fills the rectangular
+card. Pure geometry tests also cover portrait, square, and ultrawide monitors,
+multiple scales, and entry/exit interpolation; those output shapes were not
+separately qualified in this live appearance run.
+
+Pixel checks cover the original-workspace overlay while selecting another
+destination, tint alpha and opacity, reflection strength, caption visibility,
+vertical position, and the existing border controls. With 16 logical pixels
+of blur, background edge energy fell from 6.1045 to 0.5588 while the centered
+card interior remained pixel-identical. Sixteen invalid appearance settings,
+including nonfinite values, retained the last valid pixels. Reloads and three
+unload/load cycles exercised blur resources and retained the new settings.
+Acceptance and cancellation restored a clean closed flow on workspace 4.
+The harness restored the owned configuration and parent keyboard isolation.
+
+The [configuration demo](../artifacts/appearance/configurations.mp4) shows a
+solid stage, a clear desktop overlay, and a tinted blurred overlay with gradient
+borders. [Recording evidence](../artifacts/appearance/recording.json) identifies
+the same loaded artifact and each preset's settings and timing;
+[video metadata](../artifacts/appearance/video.json) records the source and
+published hashes and caption intervals. Capture uses variable frame timestamps
+to preserve elapsed time under software rendering; captioning encodes a 30 fps
+version without changing playback speed.
+
+`make check format-check`, ASan/UBSan motion tests, Python syntax checks, and
+the website tests/build/deployment dry run pass. The original square-cover
+qualification below is historical; native workspace proportions supersede its
+matte-padding behavior.
+
 ## Hyprpm installation
 
 Verified October 9, 2026, on Hyprland 0.56.2 in an isolated Arch Linux guest
@@ -98,8 +137,9 @@ initial native workspace 7-to-4 cut is fixture setup before F10 opens the plugin
 
 Apple’s exact proprietary timing constants are unknown. This is a measured
 reconstruction against the documented iTunes references, with desktop-specific
-entry/exit and aspect-preserving workspace containment. Widescreen snapshots
-have black matte padding inside square covers.
+entry/exit and aspect-preserving workspace containment. In that original
+qualification, widescreen snapshots had matte padding inside square covers;
+the workspace appearance update above removes it.
 
 Other Hyprland revisions, Vulkan, HDR, rotated/fractionally scaled outputs,
 physical multi-monitor configurations, and interaction with other plugins were
@@ -127,5 +167,6 @@ visible host workspace; the source of those placement changes was not proven.
 - `docs/`, `README.md`, and `artifacts/`: specification, reference provenance,
   usage, evidence, and retained attempts.
 
-The starting directory had no Git repository. No commits, remote repository,
-release publication, package installation, or production plugin load were made.
+At the time of the October 6 qualification, the starting directory had no Git
+repository. That run made no commits, remote repository, release publication,
+package installation, or production plugin load.
