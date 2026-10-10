@@ -6,9 +6,9 @@ Classic Cover Flow for Hyprland workspaces.
 
 </div>
 
-![Hyprflow navigating real workspace snapshots](artifacts/appearance/02-solid.png)
+https://github.com/user-attachments/assets/c59aaee7-d7a7-4baa-b428-4806a0ac8ccf
 
-[Configuration demo](artifacts/appearance/configurations.mp4) ·
+[Watch the website demo](https://hyprflow.fyi/media/navigation.mp4) ·
 [Original navigation recording](artifacts/final/navigation/navigation.mp4) ·
 [Rapid reversal recording](artifacts/final/stress/stress.mp4) ·
 [Square calibration](artifacts/final/calibration.png)
