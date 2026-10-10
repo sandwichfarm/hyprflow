@@ -6,7 +6,7 @@ Classic Cover Flow for Hyprland workspaces.
 
 </div>
 
-[![Watch the Hyprflow website demo](artifacts/appearance/02-solid.png)](https://hyprflow.fyi/media/navigation.mp4)
+https://github.com/user-attachments/assets/c59aaee7-d7a7-4baa-b428-4806a0ac8ccf
 
 [Watch the website demo](https://hyprflow.fyi/media/navigation.mp4) ·
 [Original navigation recording](artifacts/final/navigation/navigation.mp4) ·
