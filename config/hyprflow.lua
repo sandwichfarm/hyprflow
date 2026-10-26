@@ -7,6 +7,8 @@ end
 
 hl.config({ plugin = { hyprflow = {
     workspace_count = 9,
+    -- Accept when the modifiers held on opening are released.
+    select_on_release = false,
     workspace_scale = 1.0,
     workspace_spread = 0.18,
     -- Keep full workspace proportions. Set overlay to 1 for a desktop backdrop.
@@ -38,8 +40,8 @@ hl.define_submap("hyprflow", function()
     hl.bind("Right", function() hl.plugin.hyprflow.right() end, { repeating = true })
     hl.bind("SUPER + ALT + Left", function() hl.plugin.hyprflow.left() end, { repeating = true })
     hl.bind("SUPER + ALT + Right", function() hl.plugin.hyprflow.right() end, { repeating = true })
-    hl.bind("Return", function() hl.plugin.hyprflow.accept() end)
-    hl.bind("Escape", function() hl.plugin.hyprflow.cancel() end)
+    hl.bind("Return", function() hl.plugin.hyprflow.accept() end, { ignore_mods = true })
+    hl.bind("Escape", function() hl.plugin.hyprflow.cancel() end, { ignore_mods = true })
     hl.bind("SUPER + Tab", function() hl.plugin.hyprflow.toggle() end)
     for index = 1, 9 do
         hl.bind(tostring(index), function() hl.plugin.hyprflow.jump(index) end)

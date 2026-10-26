@@ -4,6 +4,7 @@
 import argparse
 import array
 import ctypes
+from contextlib import contextmanager
 import os
 from pathlib import Path
 import runpy
@@ -11,7 +12,7 @@ import socket
 import struct
 import time
 
-KEYS = {"F10": 68, "Left": 105, "Right": 106, "Return": 28, "Escape": 1, "Z": 44,
+KEYS = {"Tab": 15, "F10": 68, "Left": 105, "Right": 106, "Return": 28, "Escape": 1, "Z": 44,
         **{str(index): index + 1 for index in range(1, 8)}}
 
 
@@ -66,7 +67,9 @@ def keymap():
     return fd, len(data)
 
 
-def send_key(directory, key):
+@contextmanager
+def keyboard(directory):
+    """Keep a virtual keyboard alive across a chord and its modifier releases."""
     helper = runpy.run_path(str(Path(__file__).with_name("nested-session.py")))
     state = helper["session"](directory)
     path = Path(state["env"]["XDG_RUNTIME_DIR"]) / state["env"]["WAYLAND_DISPLAY"]
@@ -104,12 +107,19 @@ def send_key(directory, key):
     os.close(fd)
     send(connection, 6, 2, word(0) * 4)
     roundtrip(connection, 7)
-    for pressed in (1, 0):
-        send(connection, 6, 1, word(int(time.monotonic() * 1000) & 0xFFFFFFFF) + word(KEYS[key]) + word(pressed))
-        roundtrip(connection, 9 - pressed)
-        time.sleep(0.035)
-    connection.close()
-    print(f"Sent {key} to nested PID {state['pid']}")
+    try:
+        yield connection
+    finally:
+        connection.close()
+
+
+def send_key(directory, key):
+    with keyboard(directory) as connection:
+        for pressed in (1, 0):
+            send(connection, 6, 1, word(int(time.monotonic() * 1000) & 0xFFFFFFFF) + word(KEYS[key]) + word(pressed))
+            roundtrip(connection, 9 - pressed)
+            time.sleep(0.035)
+    print(f"Sent {key} to nested compositor")
 
 
 if __name__ == "__main__":
