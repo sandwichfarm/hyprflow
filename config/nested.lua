@@ -2,7 +2,7 @@
 hl.monitor({ output = "", mode = "1280x720@60", position = "auto", scale = 1 })
 hl.config({
     general = { gaps_in = 0, gaps_out = 0, border_size = 0 },
-    decoration = { rounding = 0, shadow = { enabled = false }, blur = { enabled = false } },
+    decoration = { rounding = 0, shadow = { enabled = true }, blur = { enabled = false } },
     animations = { enabled = false },
     input = { follow_mouse = 0 },
     misc = {
