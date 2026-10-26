@@ -1,0 +1,39 @@
+{
+  "scope": "AMD Vulkan native compositor baseline with no Hyprflow plugin loaded",
+  "runtime_base": "b60bb19e8c8f5005a121714520acf41bd095e74b",
+  "runtime_binary_sha256": "bc5d78dd8ed5e7ad024a8440b04ff1675e65cd1a1ce6ad0245cdff90583aca8e",
+  "gpu": "AMD Radeon RX Vega (RADV VEGA10)",
+  "validation_layer": {
+    "version": "1.4.357.0-1",
+    "source": "https://archive.archlinux.org/packages/v/vulkan-validation-layers/vulkan-validation-layers-1.4.357.0-1-x86_64.pkg.tar.zst",
+    "sha256": "6f24c667b61e374b88789950f15e819cf4b32e9a1297a525520eed53d4077cf9",
+    "checksum_matches_repository": true,
+    "pgp_signature": "Good signature, Robin Candau, key from installed Arch keyring",
+    "pgp_fingerprint": "262A58EC6C51F7EA395B2E2DFDC3040B92ACA748",
+    "dependencies": "ldd -r: no missing libraries or unresolved symbols",
+    "installation": "Extracted into task-local temporary prefix; no system install",
+    "core_validation": true,
+    "synchronization_validation": true,
+    "gpu_assisted_validation": false
+  },
+  "native_baseline": {
+    "plugin_registry": "no plugins loaded",
+    "lua_repl_result": 42,
+    "runtime_alive_before_cleanup": true,
+    "cleanly_stopped": true,
+    "validation_clean": false
+  },
+  "findings": [
+    {
+      "id": "VUID-VkImageCreateInfo-imageCreateMaxMipLevels-02251",
+      "instances": 1,
+      "cause": "Native stencil allocation requests unsupported VK_FORMAT_D24_UNORM_S8_UINT depth/stencil image on this GPU."
+    },
+    {
+      "id": "SYNC-HAZARD-READ-AFTER-WRITE",
+      "instances": 5,
+      "cause": "Native color attachment LOAD operations lack synchronization after image layout transition, reported during recording and queue submission."
+    }
+  ],
+  "qualification": "Native baseline requires repair before attributing GPU-lost errors to Hyprflow or claiming validation-clean plugin support."
+}

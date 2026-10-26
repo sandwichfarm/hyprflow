@@ -1,0 +1,39 @@
+{
+  "scope": "Vulkan inactive workspace capture after configuration/lifecycle roundtrips",
+  "before_artifact_sha256": "27ed9f901147e9023206740eb2c7ba2efda5696ebf8ddb03a4d473b818330249",
+  "after_artifact_sha256": "1077bbfa5ea6bf4a590cb24bdfd8e8aeb01051dc6e54c87b260a36c48d38f37b",
+  "oracle": "Unmodified ConfigurationProof.inactive_spacing orange/green calibration runs",
+  "before_failed": true,
+  "before_result": "Expected colored pixels were absent",
+  "after_result": {
+    "orange": [
+      180,
+      200
+    ],
+    "green": [
+      200,
+      431
+    ],
+    "spacing": 20
+  },
+  "diagnosis": {
+    "requested_capture_extent": [
+      1280,
+      720
+    ],
+    "observed_inherited_damage_extent": [
+      0,
+      0
+    ],
+    "source_window_mapped": true,
+    "source_window_hidden": false,
+    "source_window_renderable": true,
+    "source_window_alpha": 1
+  },
+  "fix": "Initialize the Vulkan fake-render damage to the entire target after successful begin; existing RenderState RAII restores outer damage.",
+  "evidence": [
+    "spread-0.05-before.png",
+    "spread-0.05-after.png"
+  ],
+  "qualification": "Inactive geometry and border oracles pass; full Vulkan appearance/lifecycle qualification is pending native validation repairs."
+}

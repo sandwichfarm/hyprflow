@@ -1,0 +1,49 @@
+{
+  "runtime_base": "b60bb19e8c8f5005a121714520acf41bd095e74b",
+  "renderer": "Vulkan",
+  "gpu": "AMD Radeon RX Vega / RADV",
+  "scope": "Native compositor scene/screencopy control with no plugin loaded",
+  "configuration_sequence": {
+    "scales": [
+      1,
+      1.25,
+      1.5,
+      2
+    ],
+    "transform": 1,
+    "resolution": [
+      1440,
+      900
+    ]
+  },
+  "operation": "Full-screen then restore the same raw terminal client before any Hyprflow action",
+  "result": "failed native baseline; rotated Vulkan qualification remains unsupported",
+  "native_fullscreen_roundtrip": {
+    "name": "native-fullscreen-roundtrip",
+    "mean": 0.26436574074074076,
+    "bbox": [
+      0,
+      0,
+      338,
+      900
+    ],
+    "maximum": 24
+  },
+  "corner_before": [
+    24,
+    24,
+    24
+  ],
+  "corner_after": [
+    0,
+    0,
+    0
+  ],
+  "captures": [
+    "rotated-full-redraw.png",
+    "rotated-after-fullscreen.png"
+  ],
+  "visual_observation": "Rotated native screenshot contains sideways content in the first 900 rows with the remaining 540 rows black. This evidence cannot qualify stable rotated plugin endpoints.",
+  "root_cause_status": "native scene/screencopy control fails independently of Hyprflow; exact upstream mechanism unresolved",
+  "attempted_clear_damage_fix": "Did not fix the native control and was reverted; endpoint threshold was not relaxed."
+}

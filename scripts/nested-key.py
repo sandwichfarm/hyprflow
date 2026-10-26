@@ -113,12 +113,14 @@ def keyboard(directory):
         connection.close()
 
 
-def send_key(directory, key):
-    with keyboard(directory) as connection:
-        for pressed in (1, 0):
-            send(connection, 6, 1, word(int(time.monotonic() * 1000) & 0xFFFFFFFF) + word(KEYS[key]) + word(pressed))
-            roundtrip(connection, 9 - pressed)
-            time.sleep(0.035)
+def send_key(directory, key, connection=None):
+    if connection is None:
+        with keyboard(directory) as owned:
+            return send_key(directory, key, owned)
+    for pressed in (1, 0):
+        send(connection, 6, 1, word(int(time.monotonic() * 1000) & 0xFFFFFFFF) + word(KEYS[key]) + word(pressed))
+        roundtrip(connection, 9 - pressed)
+        time.sleep(0.035)
     print(f"Sent {key} to nested compositor")
 
 

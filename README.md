@@ -23,7 +23,9 @@ the [animation specification](docs/design-spec.md).
 
 ## Install with hyprpm
 
-The supported target is **Hyprland 0.56.2 with the OpenGL renderer**. Install
+The stable target is **Hyprland 0.56.2 with the OpenGL renderer**. A separate
+[experimental Vulkan build and qualification](docs/render-qualification.md) uses
+an isolated, patched upstream WIP runtime; release 0.56.2 itself has no Vulkan renderer. Install
 using Hyprland's plugin manager from a terminal in your Hyprland session:
 
 ```sh
@@ -58,8 +60,9 @@ make test
 The artifact is `build/hyprflow.so`. The build uses C++23, the installed Hyprland
 development headers and their dependencies, Lua 5.4, EGL, GLES, and Pango/Cairo.
 No libraries are downloaded or vendored. The current target is **Hyprland 0.56.2
-with the OpenGL renderer**. Other compositor revisions and the Vulkan renderer
-are not qualified.
+with the OpenGL renderer**. Experimental Vulkan support requires the exact
+runtime and separate build described in the [qualification guide](docs/render-qualification.md).
+Other compositor ABIs and unpatched Vulkan runtimes are not qualified.
 
 ## Try it in a nested session
 
@@ -74,11 +77,13 @@ python3 scripts/nested-session.py fixtures "$session_dir"
 python3 scripts/nested-session.py ctl "$session_dir" plugin load "$PWD/build/hyprflow.so"
 ```
 
-`place` floats, sizes, and pins only the nested compositor’s own window, keeping
-frame callbacks available while you switch host workspaces. It records the
-previous placement for restoration. Every plugin operation targets the nested
-instance explicitly. The daily compositor’s plugin list and configuration remain
-unchanged.
+`start` opens the owned window silently on host **workspace 5**, without taking
+focus. `place` sizes that window and keeps it unpinned on workspace 5. Switch
+there manually for interactive testing; hidden Wayland windows can pause frame
+callbacks. `start --headless` creates a virtual output for background tests when
+the selected GPU/backend supports headless rendering. Every plugin operation
+targets the nested instance explicitly. The daily compositor’s plugin list and
+configuration remain unchanged.
 
 In the nested window, press **F10**, then **Left/Right** or **1–7**. Press
 **Return** to activate the selection; **Escape** returns to the original workspace.
@@ -89,8 +94,8 @@ python3 scripts/nested-session.py capture "$session_dir" /tmp/hyprflow.png
 python3 scripts/nested-session.py stop "$session_dir"
 ```
 
-Stop restores the owned window’s placement and exits only the recorded compositor
-process. Do not rebuild a library while that file is loaded: unload it first,
+Stop restores the owned window’s geometry while keeping it on workspace 5,
+then exits only the recorded compositor process. Do not rebuild a library while that file is loaded: unload it first,
 build, then load the new artifact.
 
 ## Configure

@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "scope": "Native same-window surface focus restoration and unchanged raw-input isolation proof",
+  "native_binary_sha256": "6a4e23cedc63c7f9d76336a67cce1f4b3f178170e916e37906988f42963f3922",
+  "previous_native_binary_sha256": "02e496f284517c0b64bedb18cd1d49db9fa6e7c33a3e4a923303eacf03f76a6c",
+  "qualification_abi_suffix": "_hyprflow_vulkan_qualification_v1",
+  "native_control": {
+    "method": "With one persistent virtual keyboard, clear raw surface focus and request default-surface focus restoration to the same window; no Hyprflow actions are involved in the control.",
+    "before": {
+      "desktop_surface_restored": false,
+      "seat_keyboard_focus_restored": false
+    },
+    "after": {
+      "desktop_surface_restored": true,
+      "seat_keyboard_focus_restored": true
+    }
+  },
+  "fix": "Backport stable Hyprland 0.56.2 rawWindowFocus early-return condition: a matching window/null argument is not already focused when the cached surface is null. Require m_focusSurface before returning early.",
+  "source_delta": "FocusState.cpp only: one condition. No headers, fields, graphics, or ABI layout changes.",
+  "raw_input_checks": [
+    {
+      "baseline": "z"
+    },
+    {
+      "exit_key": "Return",
+      "unbound_blocked": true,
+      "exit_key_blocked": true,
+      "focus_restored": true
+    },
+    {
+      "exit_key": "Escape",
+      "unbound_blocked": true,
+      "exit_key_blocked": true,
+      "focus_restored": true
+    }
+  ],
+  "input_device": "One persistent virtual keyboard spans the proof, matching normal physical-keyboard lifetime; separate keyboard-hotplug behavior is not qualified.",
+  "core_validation_errors": 0,
+  "synchronization_validation_errors": 0,
+  "product_artifact_sha256": "40ef44a3c373a04693fe8972c4aa80186c16b6f4f8212cdf6557e4f7180db448",
+  "product_focus_candidate_changed": false,
+  "remaining_parent_checks": [
+    "20 lifecycle checks",
+    "graceful exit"
+  ]
+}

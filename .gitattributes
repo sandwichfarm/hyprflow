@@ -1,0 +1,2 @@
+# Unified diff context markers on empty lines are significant patch data.
+docs/testing/vulkan/*.patch -whitespace

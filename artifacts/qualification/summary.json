@@ -1,0 +1,704 @@
+{
+  "scopes": {
+    "opengl-matrix": {
+      "passed": true,
+      "checks": [
+        "scale-1-transform-0",
+        "scale-1.25-transform-0",
+        "scale-1.5-transform-0",
+        "scale-2-transform-0",
+        "scale-1-transform-1",
+        "scale-1-transform-2",
+        "scale-1-transform-3",
+        "scale-1-transform-4",
+        "scale-1.25-transform-1",
+        "scale-and-rotation-change-while-open",
+        "color-wide-8-forced-False",
+        "color-srgb-10-forced-False",
+        "color-hdr-10-forced-False",
+        "color-hdr-10-forced-True",
+        "cross-monitor-exclusion-and-active-output-removal",
+        "unload_reload_01",
+        "unload_reload_02",
+        "unload_reload_03",
+        "unload_reload_04",
+        "unload_reload_05",
+        "unload_reload_06",
+        "unload_reload_07",
+        "unload_reload_08",
+        "unload_reload_09",
+        "unload_reload_10"
+      ],
+      "check_count": 25,
+      "artifact_sha256": "2be01b9ae75b54c3d6c6ff3f2c1cdb41e6d65aa0e66a9c465fb6a3baa61f7891",
+      "profile": "full",
+      "duration_seconds": 80.975,
+      "outputs": [
+        {
+          "check": "scale-1-transform-0",
+          "requested": {
+            "output": "HEADLESS-2",
+            "mode": "1440x900@60",
+            "position": "0x0",
+            "scale": 1,
+            "transform": 0,
+            "cm": "srgb",
+            "bitdepth": 8,
+            "supports_hdr": 0,
+            "supports_wide_color": 0
+          },
+          "effective": {
+            "width": 1440,
+            "height": 900,
+            "scale": 1,
+            "transform": 0,
+            "currentFormat": "XRGB8888",
+            "colorManagementPreset": "srgb"
+          }
+        },
+        {
+          "check": "scale-1.25-transform-0",
+          "requested": {
+            "output": "HEADLESS-2",
+            "mode": "1440x900@60",
+            "position": "0x0",
+            "scale": 1.25,
+            "transform": 0,
+            "cm": "srgb",
+            "bitdepth": 8,
+            "supports_hdr": 0,
+            "supports_wide_color": 0
+          },
+          "effective": {
+            "width": 1440,
+            "height": 900,
+            "scale": 1.25,
+            "transform": 0,
+            "currentFormat": "XRGB8888",
+            "colorManagementPreset": "srgb"
+          }
+        },
+        {
+          "check": "scale-1.5-transform-0",
+          "requested": {
+            "output": "HEADLESS-2",
+            "mode": "1440x900@60",
+            "position": "0x0",
+            "scale": 1.5,
+            "transform": 0,
+            "cm": "srgb",
+            "bitdepth": 8,
+            "supports_hdr": 0,
+            "supports_wide_color": 0
+          },
+          "effective": {
+            "width": 1440,
+            "height": 900,
+            "scale": 1.5,
+            "transform": 0,
+            "currentFormat": "XRGB8888",
+            "colorManagementPreset": "srgb"
+          }
+        },
+        {
+          "check": "scale-2-transform-0",
+          "requested": {
+            "output": "HEADLESS-2",
+            "mode": "1440x900@60",
+            "position": "0x0",
+            "scale": 2,
+            "transform": 0,
+            "cm": "srgb",
+            "bitdepth": 8,
+            "supports_hdr": 0,
+            "supports_wide_color": 0
+          },
+          "effective": {
+            "width": 1440,
+            "height": 900,
+            "scale": 2,
+            "transform": 0,
+            "currentFormat": "XRGB8888",
+            "colorManagementPreset": "srgb"
+          }
+        },
+        {
+          "check": "scale-1-transform-1",
+          "requested": {
+            "output": "HEADLESS-2",
+            "mode": "1440x900@60",
+            "position": "0x0",
+            "scale": 1,
+            "transform": 1,
+            "cm": "srgb",
+            "bitdepth": 8,
+            "supports_hdr": 0,
+            "supports_wide_color": 0
+          },
+          "effective": {
+            "width": 1440,
+            "height": 900,
+            "scale": 1,
+            "transform": 1,
+            "currentFormat": "XRGB8888",
+            "colorManagementPreset": "srgb"
+          }
+        },
+        {
+          "check": "scale-1-transform-2",
+          "requested": {
+            "output": "HEADLESS-2",
+            "mode": "1440x900@60",
+            "position": "0x0",
+            "scale": 1,
+            "transform": 2,
+            "cm": "srgb",
+            "bitdepth": 8,
+            "supports_hdr": 0,
+            "supports_wide_color": 0
+          },
+          "effective": {
+            "width": 1440,
+            "height": 900,
+            "scale": 1,
+            "transform": 2,
+            "currentFormat": "XRGB8888",
+            "colorManagementPreset": "srgb"
+          }
+        },
+        {
+          "check": "scale-1-transform-3",
+          "requested": {
+            "output": "HEADLESS-2",
+            "mode": "1440x900@60",
+            "position": "0x0",
+            "scale": 1,
+            "transform": 3,
+            "cm": "srgb",
+            "bitdepth": 8,
+            "supports_hdr": 0,
+            "supports_wide_color": 0
+          },
+          "effective": {
+            "width": 1440,
+            "height": 900,
+            "scale": 1,
+            "transform": 3,
+            "currentFormat": "XRGB8888",
+            "colorManagementPreset": "srgb"
+          }
+        },
+        {
+          "check": "scale-1-transform-4",
+          "requested": {
+            "output": "HEADLESS-2",
+            "mode": "1440x900@60",
+            "position": "0x0",
+            "scale": 1,
+            "transform": 4,
+            "cm": "srgb",
+            "bitdepth": 8,
+            "supports_hdr": 0,
+            "supports_wide_color": 0
+          },
+          "effective": {
+            "width": 1440,
+            "height": 900,
+            "scale": 1,
+            "transform": 4,
+            "currentFormat": "XRGB8888",
+            "colorManagementPreset": "srgb"
+          }
+        },
+        {
+          "check": "scale-1.25-transform-1",
+          "requested": {
+            "output": "HEADLESS-2",
+            "mode": "1440x900@60",
+            "position": "0x0",
+            "scale": 1.25,
+            "transform": 1,
+            "cm": "srgb",
+            "bitdepth": 8,
+            "supports_hdr": 0,
+            "supports_wide_color": 0
+          },
+          "effective": {
+            "width": 1440,
+            "height": 900,
+            "scale": 1.25,
+            "transform": 1,
+            "currentFormat": "XRGB8888",
+            "colorManagementPreset": "srgb"
+          }
+        },
+        {
+          "check": "color-wide-8-forced-False",
+          "requested": {
+            "output": "HEADLESS-2",
+            "mode": "1440x900@60",
+            "position": "0x0",
+            "scale": 1,
+            "transform": 0,
+            "cm": "wide",
+            "bitdepth": 8,
+            "supports_hdr": 0,
+            "supports_wide_color": 0
+          },
+          "effective": {
+            "width": 1440,
+            "height": 900,
+            "scale": 1,
+            "transform": 0,
+            "currentFormat": "XRGB8888",
+            "colorManagementPreset": "wide"
+          }
+        },
+        {
+          "check": "color-srgb-10-forced-False",
+          "requested": {
+            "output": "HEADLESS-2",
+            "mode": "1440x900@60",
+            "position": "0x0",
+            "scale": 1,
+            "transform": 0,
+            "cm": "srgb",
+            "bitdepth": 10,
+            "supports_hdr": 0,
+            "supports_wide_color": 0
+          },
+          "effective": {
+            "width": 1440,
+            "height": 900,
+            "scale": 1,
+            "transform": 0,
+            "currentFormat": "XRGB2101010",
+            "colorManagementPreset": "srgb"
+          }
+        },
+        {
+          "check": "color-hdr-10-forced-False",
+          "requested": {
+            "output": "HEADLESS-2",
+            "mode": "1440x900@60",
+            "position": "0x0",
+            "scale": 1,
+            "transform": 0,
+            "cm": "hdr",
+            "bitdepth": 10,
+            "supports_hdr": 0,
+            "supports_wide_color": 0
+          },
+          "effective": {
+            "width": 1440,
+            "height": 900,
+            "scale": 1,
+            "transform": 0,
+            "currentFormat": "XRGB2101010",
+            "colorManagementPreset": "srgb"
+          }
+        },
+        {
+          "check": "color-hdr-10-forced-True",
+          "requested": {
+            "output": "HEADLESS-2",
+            "mode": "1440x900@60",
+            "position": "0x0",
+            "scale": 1,
+            "transform": 0,
+            "cm": "hdr",
+            "bitdepth": 10,
+            "supports_hdr": 1,
+            "supports_wide_color": 1
+          },
+          "effective": {
+            "width": 1440,
+            "height": 900,
+            "scale": 1,
+            "transform": 0,
+            "currentFormat": "XRGB2101010",
+            "colorManagementPreset": "hdr"
+          }
+        }
+      ]
+    },
+    "opengl-appearance": {
+      "passed": true,
+      "checks": [
+        "all_appearance_options_registered",
+        "default_cancel_restores_workspace",
+        "native_workspace_aspect",
+        "workspace_scale_updates_open_flow",
+        "workspace_spread_updates_open_flow",
+        "solid_border_width",
+        "border_alpha",
+        "multicolor_border_and_angle",
+        "gradient_3_stops",
+        "gradient_10_stops",
+        "native_angle_equivalence",
+        "native_angle_equivalence",
+        "rgb_rgba_argb_color_equivalence",
+        "border_current_focus_precedence_and_inheritance",
+        "zero_border_width_restores_defaults",
+        "background_opacity",
+        "background_opacity",
+        "background_opacity",
+        "desktop_overlay_origin_and_tint_alpha",
+        "reflections_labels_and_vertical_center",
+        "invalid_effects_retain_last_valid_pixels",
+        "invalid_configuration_reload_while_closed",
+        "documented_lua_configuration_loads",
+        "custom_configuration_reload_while_open",
+        "custom_configuration_unload_reload_three_cycles",
+        "custom_configuration_accept_cancel_cleanup",
+        "appearance_and_blur_survive_reload",
+        "background_blur_preserves_sharp_cards"
+      ],
+      "check_count": 28,
+      "artifact_sha256": "2be01b9ae75b54c3d6c6ff3f2c1cdb41e6d65aa0e66a9c465fb6a3baa61f7891",
+      "artifact_mapping_verified": true,
+      "phase": "appearance",
+      "duration_seconds": 68.868
+    },
+    "opengl-lifecycle-hyprexpo": {
+      "passed": true,
+      "checks": [
+        "invalid_jump_closed",
+        "invalid_jump_open",
+        "boundary_left",
+        "boundary_right",
+        "accept_empty_nine",
+        "cancel_preserves_origin_nine",
+        "rapid_reversal",
+        "toggle_during_entry",
+        "toggle_during_exit",
+        "config_reload_while_open",
+        "unload_reload_01",
+        "unload_reload_02",
+        "unload_reload_03",
+        "unload_reload_04",
+        "unload_reload_05",
+        "unload_reload_06",
+        "unload_reload_07",
+        "unload_reload_08",
+        "unload_reload_09",
+        "unload_reload_10"
+      ],
+      "check_count": 20,
+      "artifact_sha256": "2be01b9ae75b54c3d6c6ff3f2c1cdb41e6d65aa0e66a9c465fb6a3baa61f7891",
+      "duration_seconds": 21.511
+    },
+    "opengl-input": {
+      "passed": true,
+      "checks": [
+        "check_1",
+        "check_2",
+        "check_3"
+      ],
+      "check_count": 3,
+      "artifact_sha256": "2be01b9ae75b54c3d6c6ff3f2c1cdb41e6d65aa0e66a9c465fb6a3baa61f7891"
+    },
+    "opengl-release": {
+      "passed": true,
+      "checks": [
+        "default false leaves flow open",
+        "Tab release with Super held leaves flow open",
+        "cycling and reverse cycling accept on opening modifier release",
+        "multi-modifier chord waits for last opening modifier",
+        "quick release commits pending destination",
+        "Escape while modifier held cancels without release overriding",
+        "explicit toggle disarms automatic acceptance",
+        "explicit accept still works",
+        "unmodified opening does not arm on later modifiers",
+        "lock state does not arm selection",
+        "failed jump clears release state",
+        "unload while armed removes listeners and restores submap"
+      ],
+      "check_count": 12,
+      "artifact_sha256": "2be01b9ae75b54c3d6c6ff3f2c1cdb41e6d65aa0e66a9c465fb6a3baa61f7891"
+    },
+    "abi-rejection": {
+      "passed": true,
+      "checks": [],
+      "check_count": 0,
+      "artifact_sha256": "2be01b9ae75b54c3d6c6ff3f2c1cdb41e6d65aa0e66a9c465fb6a3baa61f7891",
+      "rejections": [
+        {
+          "exit_code": 0,
+          "reason": "headers do not match the running Hyprland ABI"
+        },
+        {
+          "exit_code": 0,
+          "reason": "headers do not match the running Hyprland ABI"
+        },
+        {
+          "exit_code": 0,
+          "reason": "headers do not match the running Hyprland ABI"
+        }
+      ],
+      "runtime_survived": true
+    },
+    "vulkan-appearance": {
+      "passed": true,
+      "checks": [
+        "all_appearance_options_registered",
+        "default_cancel_restores_workspace",
+        "native_workspace_aspect",
+        "workspace_scale_updates_open_flow",
+        "workspace_spread_updates_open_flow",
+        "solid_border_width",
+        "border_alpha",
+        "multicolor_border_and_angle",
+        "gradient_3_stops",
+        "gradient_10_stops",
+        "native_angle_equivalence",
+        "native_angle_equivalence",
+        "rgb_rgba_argb_color_equivalence",
+        "border_current_focus_precedence_and_inheritance",
+        "zero_border_width_restores_defaults",
+        "background_opacity",
+        "background_opacity",
+        "background_opacity",
+        "desktop_overlay_origin_and_tint_alpha",
+        "reflections_labels_and_vertical_center",
+        "invalid_effects_retain_last_valid_pixels",
+        "invalid_configuration_reload_while_closed",
+        "documented_lua_configuration_loads",
+        "custom_configuration_reload_while_open",
+        "custom_configuration_unload_reload_three_cycles",
+        "custom_configuration_accept_cancel_cleanup",
+        "appearance_and_blur_survive_reload",
+        "background_blur_preserves_sharp_cards"
+      ],
+      "check_count": 28,
+      "artifact_sha256": "40ef44a3c373a04693fe8972c4aa80186c16b6f4f8212cdf6557e4f7180db448",
+      "artifact_mapping_verified": true,
+      "phase": "appearance",
+      "duration_seconds": 69.283,
+      "native_binary_sha256": "1e1ffac2f71cbba2180fffc3ca3701087cb359c24e5313e5dc0a17677d9fe30d"
+    },
+    "vulkan-matrix": {
+      "passed": true,
+      "checks": [
+        "scale-1-transform-0",
+        "scale-1.25-transform-0",
+        "scale-1.5-transform-0",
+        "scale-2-transform-0",
+        "scale-change-while-open",
+        "color-srgb-8-forced-False",
+        "cross-monitor-exclusion-and-active-output-removal",
+        "unload_reload_01",
+        "unload_reload_02",
+        "unload_reload_03",
+        "unload_reload_04",
+        "unload_reload_05",
+        "unload_reload_06",
+        "unload_reload_07",
+        "unload_reload_08",
+        "unload_reload_09",
+        "unload_reload_10"
+      ],
+      "check_count": 17,
+      "artifact_sha256": "40ef44a3c373a04693fe8972c4aa80186c16b6f4f8212cdf6557e4f7180db448",
+      "profile": "vulkan-sdr",
+      "limits": [
+        "Native WIP rotated-output control fails without the plugin",
+        "Native WIP HDR/FP16 and physical HDR scanout are not qualified"
+      ],
+      "duration_seconds": 38.799,
+      "outputs": [
+        {
+          "check": "scale-1-transform-0",
+          "requested": {
+            "output": "HEADLESS-2",
+            "mode": "1440x900@60",
+            "position": "0x0",
+            "scale": 1,
+            "transform": 0,
+            "cm": "srgb",
+            "bitdepth": 8,
+            "supports_hdr": 0,
+            "supports_wide_color": 0
+          },
+          "effective": {
+            "width": 1440,
+            "height": 900,
+            "scale": 1.0,
+            "transform": 0,
+            "currentFormat": "XRGB8888",
+            "colorManagementPreset": "srgb"
+          }
+        },
+        {
+          "check": "scale-1.25-transform-0",
+          "requested": {
+            "output": "HEADLESS-2",
+            "mode": "1440x900@60",
+            "position": "0x0",
+            "scale": 1.25,
+            "transform": 0,
+            "cm": "srgb",
+            "bitdepth": 8,
+            "supports_hdr": 0,
+            "supports_wide_color": 0
+          },
+          "effective": {
+            "width": 1440,
+            "height": 900,
+            "scale": 1.25,
+            "transform": 0,
+            "currentFormat": "XRGB8888",
+            "colorManagementPreset": "srgb"
+          }
+        },
+        {
+          "check": "scale-1.5-transform-0",
+          "requested": {
+            "output": "HEADLESS-2",
+            "mode": "1440x900@60",
+            "position": "0x0",
+            "scale": 1.5,
+            "transform": 0,
+            "cm": "srgb",
+            "bitdepth": 8,
+            "supports_hdr": 0,
+            "supports_wide_color": 0
+          },
+          "effective": {
+            "width": 1440,
+            "height": 900,
+            "scale": 1.5,
+            "transform": 0,
+            "currentFormat": "XRGB8888",
+            "colorManagementPreset": "srgb"
+          }
+        },
+        {
+          "check": "scale-2-transform-0",
+          "requested": {
+            "output": "HEADLESS-2",
+            "mode": "1440x900@60",
+            "position": "0x0",
+            "scale": 2,
+            "transform": 0,
+            "cm": "srgb",
+            "bitdepth": 8,
+            "supports_hdr": 0,
+            "supports_wide_color": 0
+          },
+          "effective": {
+            "width": 1440,
+            "height": 900,
+            "scale": 2.0,
+            "transform": 0,
+            "currentFormat": "XRGB8888",
+            "colorManagementPreset": "srgb"
+          }
+        },
+        {
+          "check": "color-srgb-8-forced-False",
+          "requested": {
+            "output": "HEADLESS-2",
+            "mode": "1440x900@60",
+            "position": "0x0",
+            "scale": 1,
+            "transform": 0,
+            "cm": "srgb",
+            "bitdepth": 8,
+            "supports_hdr": 0,
+            "supports_wide_color": 0
+          },
+          "effective": {
+            "width": 1440,
+            "height": 900,
+            "scale": 1.0,
+            "transform": 0,
+            "currentFormat": "XRGB8888",
+            "colorManagementPreset": "srgb"
+          }
+        }
+      ],
+      "native_binary_sha256": "1e1ffac2f71cbba2180fffc3ca3701087cb359c24e5313e5dc0a17677d9fe30d"
+    },
+    "vulkan-release": {
+      "passed": true,
+      "checks": [
+        "default false leaves flow open",
+        "Tab release with Super held leaves flow open",
+        "cycling and reverse cycling accept on opening modifier release",
+        "multi-modifier chord waits for last opening modifier",
+        "quick release commits pending destination",
+        "Escape while modifier held cancels without release overriding",
+        "explicit toggle disarms automatic acceptance",
+        "explicit accept still works",
+        "unmodified opening does not arm on later modifiers",
+        "lock state does not arm selection",
+        "failed jump clears release state",
+        "unload while armed removes listeners and restores submap"
+      ],
+      "check_count": 12,
+      "native_binary_sha256": "02e496f284517c0b64bedb18cd1d49db9fa6e7c33a3e4a923303eacf03f76a6c",
+      "artifact_sha256": "40ef44a3c373a04693fe8972c4aa80186c16b6f4f8212cdf6557e4f7180db448"
+    },
+    "vulkan-input": {
+      "passed": true,
+      "checks": [
+        "check_1",
+        "check_2",
+        "check_3"
+      ],
+      "check_count": 3,
+      "native_binary_sha256": "6a4e23cedc63c7f9d76336a67cce1f4b3f178170e916e37906988f42963f3922",
+      "artifact_sha256": "40ef44a3c373a04693fe8972c4aa80186c16b6f4f8212cdf6557e4f7180db448"
+    },
+    "vulkan-lifecycle": {
+      "passed": true,
+      "checks": [
+        "invalid_jump_closed",
+        "invalid_jump_open",
+        "boundary_left",
+        "boundary_right",
+        "accept_empty_nine",
+        "cancel_preserves_origin_nine",
+        "rapid_reversal",
+        "toggle_during_entry",
+        "toggle_during_exit",
+        "config_reload_while_open",
+        "unload_reload_01",
+        "unload_reload_02",
+        "unload_reload_03",
+        "unload_reload_04",
+        "unload_reload_05",
+        "unload_reload_06",
+        "unload_reload_07",
+        "unload_reload_08",
+        "unload_reload_09",
+        "unload_reload_10"
+      ],
+      "check_count": 20,
+      "artifact_sha256": "40ef44a3c373a04693fe8972c4aa80186c16b6f4f8212cdf6557e4f7180db448",
+      "duration_seconds": 21.44,
+      "native_binary_sha256": "6a4e23cedc63c7f9d76336a67cce1f4b3f178170e916e37906988f42963f3922"
+    },
+    "vulkan-validation": {
+      "passed": true,
+      "checks": [
+        "core validation zero errors",
+        "synchronization validation zero errors",
+        "graceful plugin unload and compositor shutdown"
+      ],
+      "check_count": 3,
+      "artifact_sha256": "40ef44a3c373a04693fe8972c4aa80186c16b6f4f8212cdf6557e4f7180db448",
+      "native_binary_sha256": "6a4e23cedc63c7f9d76336a67cce1f4b3f178170e916e37906988f42963f3922"
+    }
+  },
+  "scope_notes": [
+    "Vulkan graphics receipts use 1e1; subsequent native changes are one keybind condition (02e) and one focus condition (6a4e), with headers, layouts and graphics unchanged.",
+    "Vulkan is qualified only with the repaired ABI-v1 SDK in normal-orientation SDR. OpenGL full profile includes virtual HDR/10-bit/rotation, not physical HDR scanout.",
+    "A historical native-only rotated Vulkan control fails; it is retained as unqualified, never counted as passing."
+  ],
+  "screenshots": {
+    "opengl-flow.png": "1a0a9294e9b3fd2073408522f476434e9f16fcf3b41ab038ee202993e8d9f125",
+    "vulkan-flow.png": "1c3adb7530b4fb78e0532315fe820bdea9cd8b8681df81f86e4f03f4b4c63c48"
+  }
+}

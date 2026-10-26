@@ -1,0 +1,39 @@
+{
+  "passed": true,
+  "scope": "Native keybind dispatch original-submap matching; Hyprflow was loaded but not invoked by the counter callbacks",
+  "native_binary_sha256": "02e496f284517c0b64bedb18cd1d49db9fa6e7c33a3e4a923303eacf03f76a6c",
+  "previous_native_sha256": "1e1ffac2f71cbba2180fffc3ca3701087cb359c24e5313e5dc0a17677d9fe30d",
+  "qualification_abi_suffix": "_hyprflow_vulkan_qualification_v1",
+  "counter_setup": "Two original-submap bindings share Super+Z; first switches submap. A third matching binding exists only in the new submap.",
+  "before": {
+    "after_press": {
+      "first_original": 1,
+      "second_original": 0,
+      "new_submap": 1
+    },
+    "release_and_modifier_clear_change_counters": false
+  },
+  "after": {
+    "after_press": {
+      "first_original": 1,
+      "second_original": 1,
+      "new_submap": 0
+    },
+    "release_and_modifier_clear_change_counters": false
+  },
+  "fix": "Match keybinds against existing key.submapAtPress.name, as newer Hyprland does, instead of reevaluating the live submap after each Lua callback.",
+  "preserved": "Multiple matching callbacks belonging to the original submap still execute.",
+  "source_delta": "KeybindManager.cpp only; one matching condition plus comment. No fields, headers, graphics, or SDK ABI change.",
+  "regression": {
+    "unchanged_select_on_release_checks": 12,
+    "passed": true,
+    "product_artifact_sha256": "40ef44a3c373a04693fe8972c4aa80186c16b6f4f8212cdf6557e4f7180db448",
+    "core_validation_errors": 0,
+    "synchronization_validation_errors": 0
+  },
+  "remaining_final_parent_checks": [
+    "raw input/focus restoration",
+    "20 lifecycle checks",
+    "graceful exit"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "checks": [
+    "three old same-base pre-qualification-ABI plugin loads safely rejected",
+    "open with colored inactive workspaces, navigate, cancel, accept",
+    "plugin unload renders native windowless config-error gradient border",
+    "reload clears config-error overlay and stale flow state"
+  ],
+  "artifact_sha256": "45e106698291b1d584fb663235104c4dcf14acd6d4fb046e4392a8a0cb5b0bcd",
+  "inactive_colors": {
+    "orange": [
+      125,
+      200
+    ],
+    "green": [
+      200,
+      431
+    ],
+    "spacing": 75
+  },
+  "validation_errors": 0,
+  "runtime_alive": true,
+  "abi_suffix": "_hyprflow_vulkan_qualification_v1",
+  "native_binary_sha256": "a9219caac77022582ada8c5913a9eff0692557265ed42a97677c4925a3257006"
+}

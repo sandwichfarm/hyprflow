@@ -11,6 +11,9 @@ import time
 HELPER = runpy.run_path(str(Path(__file__).with_name("nested-session.py")))
 
 
+if not __debug__:
+    raise SystemExit("Run acceptance proofs without -O/PYTHONOPTIMIZE; assertions are required.")
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory")

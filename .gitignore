@@ -1,4 +1,5 @@
 /build/
+/build-*/
 /.omx/
 /.firecrawl/
 __pycache__/

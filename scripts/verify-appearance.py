@@ -200,7 +200,7 @@ class AppearanceProof(BASE["ConfigurationProof"]):
             with (self.output / "recorder.log").open("w") as log:
                 # Preserve capture timestamps under slow software rendering. A
                 # forced recorder framerate compresses time when frames arrive late.
-                recorder = subprocess.Popen(["wf-recorder", "-D", "-o", "WAYLAND-1", "-f", str(self.output / "configurations-raw.mp4")],
+                recorder = subprocess.Popen(["wf-recorder", "-D", "-o", self.output_name, "-f", str(self.output / "configurations-raw.mp4")],
                                             env=HELPER["environment"](self.state), stdout=log, stderr=log)
             # Give screencopy/encoder startup time before timing the first preset,
             # including the emulated GPU used by the runtime proof.

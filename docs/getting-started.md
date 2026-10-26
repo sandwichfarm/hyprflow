@@ -118,14 +118,16 @@ python3 scripts/nested-session.py fixtures "$session_dir"
 python3 scripts/nested-session.py ctl "$session_dir" plugin load "$PWD/build/hyprflow.so"
 ```
 
-Focus the nested window and press **F10**, then **Left / Right** or **1–7**. **Return** activates the selection; **Escape** returns to the original workspace.
+Switch to host workspace **5**, focus the unpinned nested window, and press **F10**, then **Left / Right** or **1–7**. **Return** activates the selection; **Escape** returns to the original workspace.
 
 ```sh
 python3 scripts/nested-session.py ctl "$session_dir" repl 'return hl.plugin.hyprflow.status()'
 python3 scripts/nested-session.py stop "$session_dir"
 ```
 
-The helper targets only the nested instance. Stopping restores the owned window placement and exits the recorded compositor process.
+The helper targets only the nested instance. Launch and placement stay on host workspace 5 without taking focus or pinning.
+Stopping restores owned geometry within workspace 5 and exits the recorded compositor process.
+Hidden Wayland windows can stop receiving frames; use a supported headless output for background automation.
 
 ## Load a manual build
 

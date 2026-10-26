@@ -1,13 +1,11 @@
 #include "Capture.hpp"
+#include "CompositorCompat.hpp"
 
 #include <hyprland/src/desktop/Workspace.hpp>
-#include <hyprland/src/desktop/state/WindowState.hpp>
 #include <hyprland/src/desktop/view/Window.hpp>
 #include <hyprland/src/helpers/time/Time.hpp>
-#include <hyprland/src/output/Monitor.hpp>
 #include <hyprland/src/render/OpenGL.hpp>
 #include <hyprland/src/render/Renderer.hpp>
-#include <hyprland/src/state/WorkspaceState.hpp>
 
 #include <algorithm>
 #include <exception>
@@ -21,9 +19,15 @@ namespace {
 struct RendererAccess : Render::IHyprRenderer {
     using IHyprRenderer::m_renderMode;
     using IHyprRenderer::renderWorkspace;
+#ifdef HYPRFLOW_VULKAN
+    using IHyprRenderer::setDamage;
+#endif
 };
 
 constexpr auto RENDER_MODE = &RendererAccess::m_renderMode;
+#ifdef HYPRFLOW_VULKAN
+constexpr auto SET_DAMAGE = &RendererAccess::setDamage;
+#endif
 
 struct WorkspaceState {
     PHLWORKSPACE workspace;
@@ -47,19 +51,20 @@ class SceneState {
   public:
     explicit SceneState(PHLMONITOR monitor)
         : m_monitor(monitor), m_active(monitor->m_activeWorkspace), m_special(monitor->m_activeSpecialWorkspace), m_transform(monitor->m_transform),
-          m_pixelSize(monitor->m_pixelSize), m_specialDim(monitor->m_specialDim->value()), m_specialBlur(monitor->m_specialBlur->value()) {
+          m_pixelSize(monitor->m_pixelSize), m_specialDim(Compat::specialDim(monitor)->value()),
+          m_specialBlur(Compat::specialBlur(monitor)->value()) {
         // Finish all allocations before mutating any live scene state.
-        for (const auto &reference : State::workspaceState()->workspaces()) {
+        for (const auto &reference : Compat::workspaceReferences()) {
             const auto workspace = reference.lock();
             if (workspace->m_monitor != monitor)
                 continue;
             m_workspaces.push_back(
                 {workspace, workspace->m_visible, workspace->m_forceRendering, workspace->m_alpha->value(), workspace->m_renderOffset->value()});
         }
-        for (const auto &window : Desktop::windowState()->windows()) {
+        for (const auto &window : Compat::windows()) {
             if (!window->m_isMapped)
                 continue;
-            m_windows.push_back({window, window->m_isMapped, window->positionAnimation()->value(), window->sizeAnimation()->value(),
+            m_windows.push_back({window, window->m_isMapped, Compat::position(window)->value(), Compat::size(window)->value(),
                                  window->m_floatingOffset, window->alpha(Desktop::View::WINDOW_ALPHA_MOVE_TO_WORKSPACE)->value(),
                                  window->alpha(Desktop::View::WINDOW_ALPHA_MOVE_FROM_WORKSPACE)->value()});
         }
@@ -71,8 +76,8 @@ class SceneState {
         for (const auto &state : m_windows) {
             const auto &window = state.window;
             window->m_isMapped = state.mapped;
-            window->positionAnimation()->value() = state.position;
-            window->sizeAnimation()->value() = state.size;
+            Compat::position(window)->value() = state.position;
+            Compat::size(window)->value() = state.size;
             window->m_floatingOffset = state.floatingOffset;
             window->alpha(Desktop::View::WINDOW_ALPHA_MOVE_TO_WORKSPACE)->value() = state.moveToAlpha;
             window->alpha(Desktop::View::WINDOW_ALPHA_MOVE_FROM_WORKSPACE)->value() = state.moveFromAlpha;
@@ -87,8 +92,8 @@ class SceneState {
         m_monitor->m_activeSpecialWorkspace = m_special;
         m_monitor->m_transform = m_transform;
         m_monitor->m_pixelSize = m_pixelSize;
-        m_monitor->m_specialDim->value() = m_specialDim;
-        m_monitor->m_specialBlur->value() = m_specialBlur;
+        Compat::specialDim(m_monitor)->value() = m_specialDim;
+        Compat::specialBlur(m_monitor)->value() = m_specialBlur;
     }
 
     void apply(const PHLWORKSPACE &target) {
@@ -100,8 +105,8 @@ class SceneState {
         if (!originalScene) {
             m_monitor->m_activeWorkspace = target ? target : m_active;
             m_monitor->m_activeSpecialWorkspace.reset();
-            m_monitor->m_specialDim->value() = 0.F;
-            m_monitor->m_specialBlur->value() = 0.F;
+            Compat::specialDim(m_monitor)->value() = 0.F;
+            Compat::specialBlur(m_monitor)->value() = 0.F;
             for (const auto &state : m_workspaces) {
                 const bool selected = state.workspace == target;
                 state.workspace->m_visible = selected;
@@ -128,8 +133,8 @@ class SceneState {
 
         // Mutable current values preserve the animation goals, clock, velocity, and callbacks.
         // setValueAndWarp would fire callbacks and irreversibly alter a live animation.
-        window->positionAnimation()->value() = window->positionAnimation()->goal();
-        window->sizeAnimation()->value() = window->sizeAnimation()->goal();
+        Compat::position(window)->value() = Compat::position(window)->goal();
+        Compat::size(window)->value() = Compat::size(window)->goal();
         window->m_floatingOffset = {};
         window->alpha(Desktop::View::WINDOW_ALPHA_MOVE_TO_WORKSPACE)->value() = 1.F;
         window->alpha(Desktop::View::WINDOW_ALPHA_MOVE_FROM_WORKSPACE)->value() = 1.F;
@@ -170,6 +175,12 @@ class RenderState {
     bool begin(const PHLMONITOR &monitor, const SP<Render::IFramebuffer> &framebuffer) {
         CRegion damage{0, 0, framebuffer->m_size.x, framebuffer->m_size.y};
         m_begun = m_renderer->beginFullFakeRender(monitor, damage, framebuffer);
+#ifdef HYPRFLOW_VULKAN
+        // The WIP Vulkan fake-render entry point leaves the previous frame's damage unchanged.
+        // Every workspace snapshot is a complete replacement, including its first inactive capture.
+        if (m_begun)
+            (m_renderer->*SET_DAMAGE)(damage, std::nullopt);
+#endif
         m_renderer->m_bBlockSurfaceFeedback = true;
         m_renderer->m_renderData.blockScreenShader = true;
         return m_begun;
@@ -191,8 +202,10 @@ class RenderState {
 bool canCapture(const PHLMONITOR &monitor, const PHLWORKSPACE &workspace) {
     if (!monitor || !monitor->m_output || !g_pHyprRenderer)
         return false;
+#ifndef HYPRFLOW_VULKAN
     if (g_pHyprRenderer->type() != Render::IHyprRenderer::RT_GL)
         return false;
+#endif
     if (workspace && workspace->m_monitor != monitor)
         return false;
     return std::min(monitor->m_transformedSize.x, monitor->m_transformedSize.y) >= 1;
@@ -216,7 +229,9 @@ bool captureWorkspace(PHLMONITOR monitor, PHLWORKSPACE workspace, SP<Render::IFr
         return false;
 
     try {
+#ifndef HYPRFLOW_VULKAN
         Render::GL::g_pHyprOpenGL->makeEGLCurrent();
+#endif
         auto target = captureTarget(monitor, framebuffer);
         if (!target)
             return false;

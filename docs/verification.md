@@ -1,5 +1,9 @@
 # Hyprflow verification
 
+See [rendering and configuration qualification](render-qualification.md) for the expanded
+output matrix, ABI-rejection fix, and experimental AMD Vulkan path. The evidence below
+records the earlier release and appearance qualifications.
+
 ## Workspace appearance update
 
 Verified October 9, 2026, against Hyprland 0.56.2 in an owned nested
