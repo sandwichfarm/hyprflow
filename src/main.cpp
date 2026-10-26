@@ -7,6 +7,8 @@
 #include <hyprland/src/desktop/state/FocusState.hpp>
 #include <hyprland/src/managers/SessionLockManager.hpp>
 #include <hyprland/src/config/values/types/IntValue.hpp>
+#include <hyprland/src/config/values/types/BoolValue.hpp>
+#include <hyprland/src/managers/input/InputManager.hpp>
 #include <hyprland/src/debug/log/Logger.hpp>
 #include <lua.hpp>
 #include <memory>
@@ -15,11 +17,16 @@ namespace {
 HANDLE handle;
 std::unique_ptr<Hyprflow::Flow> flow;
 SP<Config::Values::CIntValue> workspaceCount;
+SP<Config::Values::CBoolValue> selectOnRelease;
+uint32_t openingModifiers = 0;
+std::vector<CHyprSignalListener> modifierListeners;
 std::unique_ptr<Hyprflow::FlowConfig> appearanceConfig;
 std::vector<CHyprSignalListener> listeners;
 uint64_t generation = 0;
 
 void reset() {
+    openingModifiers = 0;
+    modifierListeners.clear();
     g_pHyprRenderer->m_renderPass.removeAllOfType("HyprflowPass");
     auto released = std::move(flow);
     ++generation;
@@ -68,11 +75,13 @@ SDispatchResult action(const std::string &name, const std::string &argument) {
     if (g_pSessionLockManager->isSessionLocked())
         return {.success = false, .error = "hyprflow: session is locked"};
     if (name == "accept" || name == "cancel") {
+        openingModifiers = 0;
         if (flow)
             flow->close(name == "accept");
         return {};
     }
     if (name == "toggle" && flow) {
+        openingModifiers = 0;
         flow->toggle();
         return {};
     }
@@ -83,6 +92,19 @@ SDispatchResult action(const std::string &name, const std::string &argument) {
             if (!monitor || !monitor->m_activeWorkspace || monitor->m_pixelSize.x < 1 || monitor->m_pixelSize.y < 1)
                 return {.success = false, .error = "hyprflow: no usable focused monitor"};
             flow = std::make_unique<Hyprflow::Flow>(monitor, std::clamp<int>(workspaceCount->value(), 1, 32));
+            // Track the opening chord, not later navigation modifiers or lock keys.
+            openingModifiers = selectOnRelease->value() ? g_pInputManager->getModsFromAllKBs() & ~(HL_MODIFIER_CAPS | HL_MODIFIER_MOD2) : 0;
+            if (openingModifiers) {
+                for (const auto &keyboard : g_pInputManager->m_keyboards) {
+                    modifierListeners.push_back(keyboard->m_keyboardEvents.modifiers.listen([](IKeyboard::SModifiersEvent) {
+                        if (flow && openingModifiers && !(g_pInputManager->getModsFromAllKBs() & openingModifiers) &&
+                            !g_pSessionLockManager->isSessionLocked()) {
+                            openingModifiers = 0;
+                            flow->close(true);
+                        }
+                    }));
+                }
+            }
         }
         if (name == "left" || name == "right")
             flow->move(name == "left" ? -1 : 1);
@@ -154,6 +176,9 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE pluginHandle) {
     workspaceCount = makeShared<Config::Values::CIntValue>("plugin:hyprflow:workspace_count", "Number of default numeric workspace cards", 9,
                                                            Config::Values::SIntValueOptions{.min = 1, .max = 32});
     HyprlandAPI::addConfigValueV2(handle, workspaceCount);
+    selectOnRelease =
+        makeShared<Config::Values::CBoolValue>("plugin:hyprflow:select_on_release", "Accept when the modifiers held on opening are released", false);
+    HyprlandAPI::addConfigValueV2(handle, selectOnRelease);
     appearanceConfig = std::make_unique<Hyprflow::FlowConfig>(handle);
     const char *names[] = {"toggle", "left", "right", "jump", "accept", "cancel", "status"};
     PLUGIN_LUA_FN callbacks[] = {luaAction<0>, luaAction<1>, luaAction<2>, luaAction<3>, luaAction<4>, luaAction<5>, luaAction<6>};
@@ -201,4 +226,5 @@ APICALL EXPORT void PLUGIN_EXIT() {
     reset();
     appearanceConfig.reset();
     workspaceCount.reset();
+    selectOnRelease.reset();
 }

@@ -22,7 +22,59 @@ hl.config({ plugin = { hyprflow = { workspace_count = 9 } } })
 | Return | Expand and activate selection |
 | Escape | Return to original workspace |
 
-Selection is separate from activation. Jumps travel through intermediate covers and leave the flow open. Invalid targets return an error, and navigation clamps at the ends.
+By default, selection is separate from activation. Jumps travel through intermediate covers and leave the flow open until accepted or canceled. Invalid targets return an error, and navigation clamps at the ends.
+
+## Select on release
+
+```lua
+hl.config({ plugin = { hyprflow = { select_on_release = true } } })
+```
+
+`select_on_release` defaults to **false**. When enabled, Hyprflow remembers the
+modifiers held when a flow opens and accepts the selected workspace once all
+of those modifiers are released. For example, open with Super + Tab, browse
+while holding Super, then release Super to activate the selection using the
+normal expansion animation. Releasing Tab or an arrow alone keeps it open.
+For Super + Alt shortcuts, release both opening modifiers. Caps Lock and Num
+Lock do not participate.
+
+The option is read when opening a new flow; changes apply to the next flow.
+Opening without a held modifier, such as with F10 or an IPC action, keeps
+manual acceptance. Return, Escape, and toggle still work; an explicit accept,
+cancel, or toggle disarms automatic acceptance for that flow. Keep
+`{ ignore_mods = true }` on Return and Escape so they work while modifiers are held.
+
+The existing Lua actions run on key press. No `{ release = true }` binding is
+needed. For repeated Super + Tab browsing, replace the existing Super + Tab
+binding and `hyprflow` submap with this minimal cycling setup:
+
+```lua
+hl.bind("SUPER + Tab", function() hl.plugin.hyprflow.right() end)
+hl.define_submap("hyprflow", function()
+    hl.bind("SUPER + Tab", function() hl.plugin.hyprflow.right() end)
+    hl.bind("SUPER + SHIFT + Tab", function() hl.plugin.hyprflow.left() end)
+    hl.bind("Left", function() hl.plugin.hyprflow.left() end, { repeating = true })
+    hl.bind("Right", function() hl.plugin.hyprflow.right() end, { repeating = true })
+    hl.bind("Return", function() hl.plugin.hyprflow.accept() end, { ignore_mods = true })
+    hl.bind("Escape", function() hl.plugin.hyprflow.cancel() end, { ignore_mods = true })
+    hl.bind("catchall", function() end)
+end)
+```
+
+This opens one card to the right and moves one card per Tab press, clamping at
+the ends. Shift reverses the direction while Super remains held. Keep any
+additional navigation bindings you want inside the submap.
+
+The release-selection regression uses real virtual-keyboard chords in an owned
+nested session with the candidate plugin loaded:
+
+```sh
+python3 scripts/verify-select-on-release.py "$session_dir" --artifact "$PWD/build/hyprflow.so"
+```
+
+It covers the false default, forward/reverse cycling, partial and quick releases,
+explicit accept/cancel/toggle, unmodified entry, lock keys, failed-open cleanup,
+and unloading while armed.
 
 ## Lua actions and dispatchers
 

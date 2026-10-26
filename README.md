@@ -122,6 +122,12 @@ one. Existing workspaces on the focused monitor are included, including named
 workspaces. Workspaces on other monitors and special workspaces are excluded
 from navigation. The active special overlay is included in the original card.
 
+`plugin.hyprflow.select_on_release` defaults to **false**. Set it to `true`
+to activate the selected workspace when you release all modifiers held when
+the flow opened. Releasing Tab or an arrow alone keeps it open. The existing
+Lua press bindings work without release bindings; see the
+[cycling example and details](docs/configuration.md#select-on-release).
+
 Size, spacing, and borders update while the flow is open. Cards follow the workspace aspect ratio. The appearance controls are:
 
 | Option | Default | Meaning |
@@ -145,8 +151,9 @@ multiple colors select a gradient. There is no ignored legacy `border_style`
 switch. See [configuration and examples](docs/configuration.md) for syntax,
 inheritance, validation, and test commands.
 
-Selection is separate from activation. A jump travels through intermediate
-cards and leaves the flow open. Invalid targets return an error. Navigation
+By default, selection is separate from activation. A jump travels through intermediate
+cards and leaves the flow open until accepted or canceled. With `select_on_release`
+enabled, releasing the opening modifiers accepts it too. Invalid targets return an error. Navigation
 clamps at the ends. The previous submap and client focus are restored on exit.
 Keep the supplied submap’s `catchall` binding to consume unrelated keys,
 including keys that could otherwise reach an input method.
