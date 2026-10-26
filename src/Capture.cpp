@@ -220,6 +220,8 @@ bool captureWorkspace(PHLMONITOR monitor, PHLWORKSPACE workspace, SP<Render::IFr
         auto target = captureTarget(monitor, framebuffer);
         if (!target)
             return false;
+        // Native shadow and color-management passes require metadata, including on reused captures.
+        target->setImageDescription(monitor->workBufferImageDescription());
 
         SceneState scene{monitor};
         RenderState render;
