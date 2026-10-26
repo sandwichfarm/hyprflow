@@ -2,6 +2,8 @@ CXX ?= g++
 PKGS = hyprland lua5.4 egl glesv2 pangocairo
 CPPFLAGS += $(shell pkg-config --cflags $(PKGS))
 CXXFLAGS += -std=c++23 -O2 -g -fPIC -fno-gnu-unique -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
+# Rejecting an ABI mismatch must not first import unused incompatible dependencies.
+LDFLAGS += -Wl,--as-needed
 LDLIBS += $(shell pkg-config --libs $(PKGS))
 SOURCES = src/main.cpp src/Flow.cpp src/FlowRenderer.cpp src/Capture.cpp src/Config.cpp
 OBJECTS = $(SOURCES:src/%.cpp=build/%.o)
@@ -16,7 +18,7 @@ build/%.o: src/%.cpp | build
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -MMD -MP -c $< -o $@
 
 build/hyprflow.so: $(OBJECTS)
-	$(CXX) -shared $(OBJECTS) $(LDLIBS) -o $@
+	$(CXX) -shared $(LDFLAGS) $(OBJECTS) $(LDLIBS) -o $@
 
 build/motion-tests: tests/motion.cpp src/Motion.hpp | build
 	$(CXX) -std=c++23 -O2 -Wall -Wextra -Werror -Isrc $< -o $@
