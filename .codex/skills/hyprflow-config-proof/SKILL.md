@@ -32,15 +32,15 @@ python3 scripts/nested-session.py ctl "$session_dir" plugin load "$artifact"
 ```
 
 Use this session identity for every IPC call. The helper launches visible test windows
-directly on host workspace 5 with a silent, no-focus process-scoped rule. Keep them unpinned;
+directly on host workspace 16 with a silent, no-focus process-scoped rule. Keep them unpinned;
 never switch the user's active host workspace to make a proof render. For background
-proofs use `start --headless`; its startup config disables the parent Wayland output
+proofs use `--headless start`; its startup config disables the parent Wayland output
 before mapping and creates `HEADLESS-2` after IPC becomes available.
 Hyprland's exec placement rules expire after one minute. Initial-window confinement
 is not proof that an additional Wayland output will map safely later. Use headless
 outputs for automated multi-output cases; do not create extra parent GUI windows
 or rely on an expired exec rule. Do not add a global `aquamarine` class rule.
-`place` and `stop` may place/restore only the exact owned window within workspace 5.
+`place` and `stop` may place/restore only the exact owned window within workspace 16.
 Do not load the plugin or change output settings in the daily compositor. Keep private logs and temporary evidence under a task-specific
 `/tmp` directory; inspect and sanitize before publishing receipts.
 
@@ -55,6 +55,7 @@ Do not load the plugin or change output settings in the daily compositor. Keep p
 - `verify-appearance.py`: current workspace aspect, overlay origin, tint, blur, reflections,
   captions, placement, borders, invalid settings, and reload behavior. Start with calibration
   fixtures; the proof replaces those fixtures for detailed scenes.
+- `verify-workspaces.py`: empty-workspace inclusion, filtered navigation, empty-origin acceptance/cancellation, and all-empty recovery.
 - `verify-select-on-release.py`: held chords, explicit exit, default-off behavior, and armed unload.
 - `verify-input.py`: raw-client input isolation and focus restoration.
 - `verify-lifecycle.py`: reversals, reloads, submap/focus restoration, and repeated plugin unload/load.

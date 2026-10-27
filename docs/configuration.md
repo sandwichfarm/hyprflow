@@ -5,10 +5,19 @@ The [default Lua configuration](https://github.com/sandwichfarm/hyprflow/blob/ma
 ## Workspace count
 
 ```lua
-hl.config({ plugin = { hyprflow = { workspace_count = 9 } } })
+hl.config({ plugin = { hyprflow = { workspace_count = 9, include_empty_workspaces = true } } })
 ```
 
 `workspace_count` defaults to **9**, with an allowed range of **1–32**. Numeric cards do not create real workspaces until accepted. Existing workspaces on the focused monitor, including named workspaces, are also included. Workspaces on other monitors and special workspaces are excluded from navigation; an active special overlay is included in the original card.
+
+`include_empty_workspaces` defaults to **true**. Set it to `false` to include only
+existing workspaces with windows on the focused monitor. Empty numeric placeholders
+and empty named or persistent workspaces are omitted, regardless of `workspace_count`.
+The list is rebuilt each time coverflow opens.
+
+If the current workspace is empty, navigation starts on the next populated workspace
+by ID, or the last one if there is no next workspace. Cancel still returns to the
+original empty workspace. If no eligible workspace has windows, coverflow stays closed.
 
 ## Default bindings
 

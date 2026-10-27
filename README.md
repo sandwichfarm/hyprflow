@@ -77,10 +77,10 @@ python3 scripts/nested-session.py fixtures "$session_dir"
 python3 scripts/nested-session.py ctl "$session_dir" plugin load "$PWD/build/hyprflow.so"
 ```
 
-`start` opens the owned window silently on host **workspace 5**, without taking
-focus. `place` sizes that window and keeps it unpinned on workspace 5. Switch
+`start` opens the owned window silently on host **workspace 16**, without taking
+focus. `place` sizes that window and keeps it unpinned on workspace 16. Switch
 there manually for interactive testing; hidden Wayland windows can pause frame
-callbacks. `start --headless` creates a virtual output for background tests when
+callbacks. `--headless start` creates a virtual output for background tests when
 the selected GPU/backend supports headless rendering. Every plugin operation
 targets the nested instance explicitly. The daily compositor’s plugin list and
 configuration remain unchanged.
@@ -94,7 +94,7 @@ python3 scripts/nested-session.py capture "$session_dir" /tmp/hyprflow.png
 python3 scripts/nested-session.py stop "$session_dir"
 ```
 
-Stop restores the owned window’s geometry while keeping it on workspace 5,
+Stop restores the owned window’s geometry while keeping it on workspace 16,
 then exits only the recorded compositor process. Do not rebuild a library while that file is loaded: unload it first,
 build, then load the new artifact.
 
@@ -132,6 +132,10 @@ to activate the selected workspace when you release all modifiers held when
 the flow opened. Releasing Tab or an arrow alone keeps it open. The existing
 Lua press bindings work without release bindings; see the
 [cycling example and details](docs/configuration.md#select-on-release).
+
+`plugin.hyprflow.include_empty_workspaces` defaults to **true**. Set it to `false`
+to omit empty workspaces and numeric placeholders. The workspace list updates when
+coverflow opens; if no eligible workspace has windows, it stays closed.
 
 Size, spacing, and borders update while the flow is open. Cards follow the workspace aspect ratio. The appearance controls are:
 
@@ -184,6 +188,10 @@ python3 scripts/verify-input.py "$session_dir" artifacts/input-proof
 python3 scripts/capture-stress.py "$session_dir" artifacts/stress --sha256 "$(sha256sum build/hyprflow.so | cut -d' ' -f1)"
 python3 scripts/verify-lifecycle.py "$session_dir" artifacts/lifecycle --sha256 "$(sha256sum build/hyprflow.so | cut -d' ' -f1)"
 ```
+
+To verify workspace filtering, load the build in a fresh nested session without
+fixtures, then run `python3 scripts/verify-workspaces.py "$session_dir"`. The proof
+creates and closes its own windows and restores the nested configuration afterward.
 
 The proof harness uses real Wayland virtual-keyboard events, compositor state,
 screenshots, and an optional `wf-recorder` recording. It needs the installed

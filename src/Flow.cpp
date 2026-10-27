@@ -17,9 +17,9 @@ void submap(const std::string &name) {
 }
 } // namespace
 
-Flow::Flow(PHLMONITOR output, int workspaceCount) : monitor(output), lastFrame(Time::steadyNow()) {
+Flow::Flow(PHLMONITOR output, int workspaceCount, bool includeEmptyWorkspaces) : monitor(output), lastFrame(Time::steadyNow()) {
     auto workspaces = Compat::workspaces();
-    for (int id = 1; id <= workspaceCount; ++id) {
+    for (int id = 1; includeEmptyWorkspaces && id <= workspaceCount; ++id) {
         const auto found = std::ranges::find_if(workspaces, [id](const auto &w) { return w->m_id == id; });
         if (found != workspaces.end() && (*found)->m_monitor != monitor)
             continue;
@@ -28,6 +28,8 @@ Flow::Flow(PHLMONITOR output, int workspaceCount) : monitor(output), lastFrame(T
     for (const auto &workspace : workspaces) {
         if (workspace->m_monitor != monitor || workspace->m_isSpecialWorkspace || workspace->inert())
             continue;
+        if (!includeEmptyWorkspaces && Compat::windowCount(workspace) == 0)
+            continue;
         auto found = std::ranges::find_if(cards, [&](const Card &card) { return card.id == workspace->m_id; });
         if (found == cards.end())
             cards.push_back({workspace->m_id, workspace->m_name, workspace, {}});
@@ -35,11 +37,14 @@ Flow::Flow(PHLMONITOR output, int workspaceCount) : monitor(output), lastFrame(T
             found->name = workspace->m_name;
     }
     std::ranges::sort(cards, {}, &Card::id);
+    if (cards.empty())
+        throw std::runtime_error("hyprflow: no nonempty workspaces on the focused monitor");
+    original = {monitor->m_activeWorkspace->m_id, monitor->m_activeWorkspace->m_name, monitor->m_activeWorkspace, {}};
     const auto selected = std::ranges::find_if(cards, [&](const Card &card) { return card.workspace == monitor->m_activeWorkspace; });
-    if (selected == cards.end())
-        throw std::runtime_error("hyprflow: no active workspace in flow");
     origin = anchor = std::distance(cards.begin(), selected);
-    focus.value = focus.target = origin;
+    // If the source is empty, start at the next populated workspace (or the last one).
+    const auto next = std::ranges::lower_bound(cards, original.id, {}, &Card::id);
+    focus.value = focus.target = selected != cards.end() ? origin : std::min<size_t>(std::distance(cards.begin(), next), cards.size() - 1);
     openness.target = 1;
     previousSubmap = g_pKeybindManager->getCurrentSubmap().name;
     previousFocus = Desktop::focusState()->window();
@@ -79,8 +84,12 @@ void Flow::close(bool commit) {
     reopen();
     closing = true;
     committing = commit;
-    if (!commit)
-        focus.target = origin;
+    if (!commit) {
+        if (origin < cards.size())
+            focus.target = origin;
+        else
+            anchor = origin;
+    }
     // Reversing entry on its original card does not need a detour through fully open.
     if (focus.settled() && static_cast<size_t>(focus.target) == anchor) {
         openness.target = 0;
@@ -120,12 +129,20 @@ void Flow::refresh(bool workspaceOverlay) {
             }
         }
     }
+    if (origin < cards.size())
+        original.framebuffer = cards[origin].framebuffer;
+    else if (!original.framebuffer || workspaceOverlay) {
+        if (!captureWorkspace(monitor, original.workspace, original.framebuffer)) {
+            capturing = false;
+            throw std::runtime_error("hyprflow: source workspace capture failed");
+        }
+    }
     capturing = false;
 }
 
 void Flow::finish() {
     finished = true;
-    auto &card = cards[static_cast<size_t>(focus.target)];
+    auto &card = committing ? cards[static_cast<size_t>(focus.target)] : original;
     if (committing && !card.workspace)
         card.workspace = Compat::create(card.id, monitor->m_id, card.name);
     if (card.workspace && card.workspace != monitor->m_activeWorkspace) {
@@ -140,7 +157,7 @@ void Flow::finish() {
 }
 
 void Flow::preRender(bool workspaceOverlay) {
-    if (monitor->m_activeWorkspace != cards[origin].workspace) {
+    if (monitor->m_activeWorkspace != original.workspace) {
         finished = true;
         return;
     }
@@ -148,7 +165,7 @@ void Flow::preRender(bool workspaceOverlay) {
     const double elapsed = std::chrono::duration<double>(now - lastFrame).count();
     lastFrame = now;
     // Capture before starting the clock: an initial batch cannot skip entry frames.
-    const bool first = !cards[origin].framebuffer;
+    const bool first = !original.framebuffer;
     if (first) {
         refresh(workspaceOverlay);
         lastFrame = Time::steadyNow();
@@ -158,7 +175,7 @@ void Flow::preRender(bool workspaceOverlay) {
     openness.advance(elapsed);
     refresh(workspaceOverlay);
     if (closing && !exitStarted && focus.settled() && openness.settled()) {
-        anchor = static_cast<size_t>(focus.target);
+        anchor = committing ? static_cast<size_t>(focus.target) : origin;
         openness.target = 0;
         exitStarted = true;
     }
@@ -191,13 +208,15 @@ Quad Flow::cardQuad(size_t index, bool reflection, const FlowAppearance &appeara
     const auto state = pose(static_cast<double>(index) - focus.value, appearance.workspaceSpread);
     const bool anchored = index == anchor && !reflection;
     Quad quad;
-    quad.texture = cards[index].framebuffer->getTexture();
+    quad.texture = (index < cards.size() ? cards[index] : original).framebuffer->getTexture();
     quad.reflection = reflection;
     quad.reflectionOpacity = appearance.reflectionOpacity;
     quad.opacity = anchored ? 1 : smooth(p);
     quad.opacity *= 1 - smooth(std::abs(static_cast<double>(index) - focus.value) - 4.5);
     if (anchored)
         quad.opacity = std::lerp(1.0, static_cast<double>(quad.opacity), p);
+    if (index == cards.size())
+        quad.opacity *= 1 - smooth(p);
     quad.shade = anchored ? std::lerp(1.0, state.shade, p) : state.shade;
     quad.lightDirection = state.yaw < 0 ? 1 : -1;
     Vector2D extent{size.width, size.height};
@@ -228,11 +247,11 @@ void Flow::render(const FlowAppearance &appearance) {
         return std::abs(static_cast<double>(a) - focus.value) > std::abs(static_cast<double>(b) - focus.value);
     });
     std::vector<Quad> quads;
-    if (cards[origin].framebuffer) {
+    if (original.framebuffer) {
         Quad background;
         const double width = monitor->m_transformedSize.x, height = monitor->m_transformedSize.y;
         background.points = {{{0, 0, 1}, {width, 0, 1}, {0, height, 1}, {width, height, 1}}};
-        background.texture = cards[origin].framebuffer->getTexture();
+        background.texture = original.framebuffer->getTexture();
         background.backdrop = true;
         background.workspaceOverlay = appearance.workspaceOverlay;
         const double progress = smooth(openness.value);
@@ -250,6 +269,9 @@ void Flow::render(const FlowAppearance &appearance) {
                 quads.push_back(cardQuad(i, reflection, appearance));
         }
     }
+    // An excluded source is drawn only during entry/cancel, never as a navigable card.
+    if (origin == cards.size() && anchor == origin && original.framebuffer)
+        quads.push_back(cardQuad(origin, false, appearance));
     const size_t current = std::clamp(std::lround(focus.value), 0L, static_cast<long>(cards.size() - 1));
     if (!label || labelIndex != current) {
         const auto &card = cards[current];
@@ -273,7 +295,7 @@ void Flow::render(const FlowAppearance &appearance) {
 
 std::string Flow::status() const {
     const auto &card = cards[static_cast<size_t>(focus.target)];
-    return std::format("{{\"open\":true,\"selected\":{},\"origin\":{},\"position\":{:.6f},\"openness\":{:.6f},\"closing\":{}}}", card.id,
-                       cards[origin].id, focus.value, openness.value, closing);
+    return std::format("{{\"open\":true,\"selected\":{},\"origin\":{},\"position\":{:.6f},\"openness\":{:.6f},\"closing\":{}}}", card.id, original.id,
+                       focus.value, openness.value, closing);
 }
 } // namespace Hyprflow

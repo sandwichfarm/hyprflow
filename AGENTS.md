@@ -31,11 +31,11 @@ skill picker does not discover this directory automatically.
 
 Never alter the daily compositor's configuration, loaded plugins, renderer, or monitors for a test.
 Use `scripts/nested-session.py` and its explicit session identity. Visible nested windows must
-map directly to host workspace **5**, silently and without taking focus, and remain unpinned.
+map directly to host workspace **16**, silently and without taking focus, and remain unpinned.
 The helper uses a process-scoped launch rule, not a global host window rule. Hyprland expires
 exec rules after one minute; later Wayland-output windows are not qualified by the initial-launch proof.
 Use headless outputs for automated multi-output tests rather than creating additional parent GUI windows.
-The helper's other host IPC is limited to placing/restoring the exact owned window within workspace 5.
+The helper's other host IPC is limited to placing/restoring the exact owned window within workspace 16.
 Do not broaden that selector.
 Unload a plugin before rebuilding or replacing its library; verify the artifact loaded by the test.
 Stop owned sessions and restore temporary configuration even after a failure.

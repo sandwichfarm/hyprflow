@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Control an owned compositor with parent GUI windows confined to workspace 5."""
+"""Control an owned compositor with parent GUI windows confined to workspace 16."""
 
 import argparse
 from contextlib import contextmanager
@@ -108,7 +108,7 @@ with (folder / "compositor.log").open("w") as log:
     os.execve(command[0], command, env)
 ''')
     command = "exec " + shlex.join([sys.executable, str(launcher), str(folder)])
-    expression = 'hl.exec_cmd(' + json.dumps(command) + ', {workspace="5 silent", no_focus=true, float=true})'
+    expression = 'hl.exec_cmd(' + json.dumps(command) + ', {workspace="16 silent", no_focus=true, float=true})'
     host_control(signature, "eval", expression)
     for _ in range(100):
         process = folder / "process.json"
@@ -126,7 +126,7 @@ def start(config=None, compositor="/usr/bin/Hyprland", render_env=None, headless
         raise RuntimeError(f"Parent Wayland socket missing: {parent_socket}")
     parent_signature = os.environ.get("HYPRLAND_INSTANCE_SIGNATURE", "")
     if not parent_signature:
-        raise RuntimeError("Run start from the parent Hyprland session to enforce workspace 5 confinement")
+        raise RuntimeError("Run start from the parent Hyprland session to enforce workspace 16 confinement")
     # Linux UNIX socket paths must stay below 108 bytes, including Hyprland's signature.
     folder = Path(tempfile.mkdtemp(prefix="hf-"))
     for name in ("r", "config", "cache", "state"):
@@ -235,7 +235,7 @@ def place(state, size=(1280, 720)):
     # Exact Hyprland 0.56.2 uses on/off here; unsupported set/unset silently toggle.
     operations = [f'hl.dsp.window.pin({{ {selector}, action="off" }})',
                   f'hl.dsp.window.float({{ {selector}, action="on" }})',
-                  f'hl.dsp.window.move({{ {selector}, workspace=5, silent=true }})',
+                  f'hl.dsp.window.move({{ {selector}, workspace=16, silent=true }})',
                   f'hl.dsp.window.resize({{ {selector}, x={size[0]}, y={size[1]}, relative=false }})',
                   f'hl.dsp.window.move({{ {selector}, x=320, y=160, relative=false }})']
     for expression in operations:
@@ -257,7 +257,7 @@ def restore(state):
     selector = f'window="address:{client["address"]}"'
     # Old snapshots may predate workspace confinement. Restore geometry without escaping it.
     operations = [f'hl.dsp.window.pin({{ {selector}, action="off" }})',
-                  f'hl.dsp.window.move({{ {selector}, workspace=5, silent=true }})',
+                  f'hl.dsp.window.move({{ {selector}, workspace=16, silent=true }})',
                   f'hl.dsp.window.resize({{ {selector}, x={client["size"][0]}, y={client["size"][1]}, relative=false }})',
                   f'hl.dsp.window.move({{ {selector}, x={client["at"][0]}, y={client["at"][1]}, relative=false }})']
     if not client["floating"]:

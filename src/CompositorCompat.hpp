@@ -29,6 +29,13 @@ inline auto workspaces() {
     return State::workspaceState()->workspacesCopy();
 #endif
 }
+inline int windowCount(const PHLWORKSPACE &workspace) {
+#ifdef HYPRFLOW_VULKAN
+    return workspace->getWindows();
+#else
+    return workspace->getWindowCount();
+#endif
+}
 inline decltype(auto) windows() {
 #ifdef HYPRFLOW_VULKAN
     return (g_pCompositor->m_windows);

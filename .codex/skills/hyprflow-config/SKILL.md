@@ -5,7 +5,7 @@ description: Implement Hyprflow options, defaults, validation, Lua controls, and
 
 # Implement configuration behavior
 
-Keep visible nested test windows confined to host workspace 5, launched silently with
+Keep visible nested test windows confined to host workspace 16, launched silently with
 no focus and never pinned. Use the owned-session helper instead of launching a compositor
 directly or moving a new window after it has already appeared on another workspace.
 Headless sessions avoid GUI disruption when the affected behavior permits them.
