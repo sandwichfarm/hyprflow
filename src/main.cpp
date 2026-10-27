@@ -17,7 +17,7 @@ namespace {
 HANDLE handle;
 std::unique_ptr<Hyprflow::Flow> flow;
 SP<Config::Values::CIntValue> workspaceCount;
-SP<Config::Values::CBoolValue> selectOnRelease;
+SP<Config::Values::CBoolValue> selectOnRelease, includeEmptyWorkspaces;
 uint32_t openingModifiers = 0;
 std::vector<CHyprSignalListener> modifierListeners;
 std::unique_ptr<Hyprflow::FlowConfig> appearanceConfig;
@@ -91,7 +91,7 @@ SDispatchResult action(const std::string &name, const std::string &argument) {
             const auto monitor = Desktop::focusState()->monitor();
             if (!monitor || !monitor->m_activeWorkspace || monitor->m_pixelSize.x < 1 || monitor->m_pixelSize.y < 1)
                 return {.success = false, .error = "hyprflow: no usable focused monitor"};
-            flow = std::make_unique<Hyprflow::Flow>(monitor, std::clamp<int>(workspaceCount->value(), 1, 32));
+            flow = std::make_unique<Hyprflow::Flow>(monitor, std::clamp<int>(workspaceCount->value(), 1, 32), includeEmptyWorkspaces->value());
             // Track the opening chord, not later navigation modifiers or lock keys.
             openingModifiers = selectOnRelease->value() ? g_pInputManager->getModsFromAllKBs() & ~(HL_MODIFIER_CAPS | HL_MODIFIER_MOD2) : 0;
             if (openingModifiers) {
@@ -179,6 +179,9 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE pluginHandle) {
     selectOnRelease =
         makeShared<Config::Values::CBoolValue>("plugin:hyprflow:select_on_release", "Accept when the modifiers held on opening are released", false);
     HyprlandAPI::addConfigValueV2(handle, selectOnRelease);
+    includeEmptyWorkspaces =
+        makeShared<Config::Values::CBoolValue>("plugin:hyprflow:include_empty_workspaces", "Include workspaces without windows", true);
+    HyprlandAPI::addConfigValueV2(handle, includeEmptyWorkspaces);
     appearanceConfig = std::make_unique<Hyprflow::FlowConfig>(handle);
     const char *names[] = {"toggle", "left", "right", "jump", "accept", "cancel", "status"};
     PLUGIN_LUA_FN callbacks[] = {luaAction<0>, luaAction<1>, luaAction<2>, luaAction<3>, luaAction<4>, luaAction<5>, luaAction<6>};
@@ -227,4 +230,5 @@ APICALL EXPORT void PLUGIN_EXIT() {
     appearanceConfig.reset();
     workspaceCount.reset();
     selectOnRelease.reset();
+    includeEmptyWorkspaces.reset();
 }
