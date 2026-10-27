@@ -66,6 +66,9 @@ class ConfigurationProof:
                          "checks": [], "frames": []}
         self.started = time.monotonic()
         self.initial_submap = self.control("submap")
+        monitors = json.loads(self.control("-j", "monitors"))
+        require(len(monitors) == 1, "Configuration proof requires one active owned output")
+        self.output_name = monitors[0]["name"]
         self.assert_mapping()
 
     def control(self, *args, check=True):
@@ -126,7 +129,7 @@ class ConfigurationProof:
     def frame(self, name):
         time.sleep(.2)
         path = self.output / f"{name}.png"
-        subprocess.run(["grim", "-o", "WAYLAND-1", str(path)], env=HELPER["environment"](self.state), check=True, timeout=10)
+        subprocess.run(["grim", "-o", self.output_name, str(path)], env=HELPER["environment"](self.state), check=True, timeout=10)
         image = Image.open(path).convert("RGB")
         self.evidence["frames"].append({"file": path.name, "sha256": digest(path), "size": list(image.size)})
         self.save()
@@ -530,7 +533,9 @@ class ConfigurationProof:
                 self.evidence["input_isolation"] = receipt
                 # Cursor visibility also needs native reload refresh; changing its
                 # Lua raw value alone can leave a software cursor in screencopies.
-                config.write_bytes(config.read_bytes() + b"\nhl.config({cursor={invisible=true}})\n")
+                config.write_bytes(config.read_bytes() + b"\nhl.config({cursor={invisible=true},general={gaps_out=0},"
+                                   b"decoration={rounding=0}})\n")
+                self.evidence["fixture_layout"] = {"gaps_out": 0, "rounding": 0}
                 self.evidence["cursor_isolation"] = "Owned nested config; restored on exit"
                 if self.args.phase == "baseline":
                     self.baseline()
@@ -548,16 +553,25 @@ class ConfigurationProof:
             self.evidence["error"] = str(error)
             raise
         finally:
-            config.write_bytes(original_config)
             try:
-                self.control("reload")
-                self.evidence["owned_config_restored"] = config.read_bytes() == original_config
+                if self.status()["open"]:
+                    self.action("cancel")
+                    self.settled(None)
             except Exception as error:
                 self.evidence["passed"] = False
                 self.evidence["cleanup_error"] = str(error)
                 raise
             finally:
-                self.save()
+                config.write_bytes(original_config)
+                try:
+                    self.control("reload")
+                    self.evidence["owned_config_restored"] = config.read_bytes() == original_config
+                except Exception as error:
+                    self.evidence["passed"] = False
+                    self.evidence["cleanup_error"] = str(error)
+                    raise
+                finally:
+                    self.save()
 
 
 def main():

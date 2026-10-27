@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Start and control one isolated Hyprland compositor without touching the host session."""
+"""Control an owned compositor with parent GUI windows confined to workspace 16."""
 
 import argparse
 from contextlib import contextmanager
@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import runpy
+import shlex
 import shutil
 import signal
 import subprocess
@@ -24,8 +25,8 @@ def start_time(pid):
 
 def session(path):
     state = json.loads((Path(path) / "session.json").read_text())
-    if start_time(state["pid"]) != state["start_time"]:
-        raise RuntimeError("Owned compositor has exited; PID belongs to another process")
+    if not running(state["pid"], state["start_time"]):
+        raise RuntimeError("Owned compositor has exited or PID belongs to another process")
     return state
 
 
@@ -69,17 +70,72 @@ def isolated_input(state):
             backup.unlink(missing_ok=True)
 
 
-def start():
+def running(pid, started):
+    """Check an owned process lifetime without relying on a parent Popen handle."""
+    try:
+        fields = Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()
+    except FileNotFoundError:
+        return False
+    return fields[0] != "Z" and fields[19] == started
+
+
+def launch_owned(folder, compositor, isolated, signature):
+    """Apply process-scoped host placement rules before the owned process can map a window."""
+    (folder / "launch.json").write_text(json.dumps({"compositor": compositor, "env": isolated}))
+    launcher = folder / "launch.py"
+    launcher.write_text('''import json
+import os
+from pathlib import Path
+import sys
+
+folder = Path(sys.argv[1])
+settings = json.loads((folder / "launch.json").read_text())
+env = os.environ.copy()
+env.update(settings["env"])
+if os.getpgrp() != os.getpid():
+    os.setsid()
+pid = os.getpid()
+started = Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[19]
+process = folder / "process.tmp"
+process.write_text(json.dumps({"pid": pid, "start_time": started}))
+process.replace(folder / "process.json")
+with (folder / "compositor.log").open("w") as log:
+    os.dup2(log.fileno(), 1)
+    os.dup2(log.fileno(), 2)
+    with open(os.devnull) as null:
+        os.dup2(null.fileno(), 0)
+    command = [settings["compositor"], "--config", str(folder / "nested.lua")]
+    os.execve(command[0], command, env)
+''')
+    command = "exec " + shlex.join([sys.executable, str(launcher), str(folder)])
+    expression = 'hl.exec_cmd(' + json.dumps(command) + ', {workspace="16 silent", no_focus=true, float=true})'
+    host_control(signature, "eval", expression)
+    for _ in range(100):
+        process = folder / "process.json"
+        if process.exists():
+            return json.loads(process.read_text())
+        time.sleep(.05)
+    raise RuntimeError(f"Owned launcher did not start; inspect {folder}")
+
+
+def start(config=None, compositor="/usr/bin/Hyprland", render_env=None, headless=False):
     parent_runtime = os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}")
     parent_display = os.environ.get("WAYLAND_DISPLAY", "wayland-1")
     parent_socket = Path(parent_runtime) / parent_display
     if not parent_socket.is_socket():
         raise RuntimeError(f"Parent Wayland socket missing: {parent_socket}")
+    parent_signature = os.environ.get("HYPRLAND_INSTANCE_SIGNATURE", "")
+    if not parent_signature:
+        raise RuntimeError("Run start from the parent Hyprland session to enforce workspace 16 confinement")
     # Linux UNIX socket paths must stay below 108 bytes, including Hyprland's signature.
     folder = Path(tempfile.mkdtemp(prefix="hf-"))
     for name in ("r", "config", "cache", "state"):
         (folder / name).mkdir(mode=0o700)
-    shutil.copy2(ROOT / "config/nested.lua", folder / "nested.lua")
+    shutil.copy2(config or ROOT / "config/nested.lua", folder / "nested.lua")
+    if headless:
+        with (folder / "nested.lua").open("a") as config_file:
+            config_file.write('\n-- Suppress the parent GUI before its first frame.\n'
+                              'hl.monitor({output="WAYLAND-1",disabled=true})\n')
     isolated = {
         "XDG_RUNTIME_DIR": str(folder / "r"),
         "XDG_CONFIG_HOME": str(folder / "config"),
@@ -91,33 +147,42 @@ def start():
         "HYPRLAND_NO_SD_VARS": "1",
         "HYPRLAND_NO_SD_NOTIFY": "1",
     }
-    env = os.environ.copy()
-    env.update(isolated)
-    with (folder / "compositor.log").open("w") as log:
-        process = subprocess.Popen(
-            ["/usr/bin/Hyprland", "--config", str(folder / "nested.lua")],
-            env=env, stdin=subprocess.DEVNULL, stdout=log, stderr=log, start_new_session=True,
-        )
-    state = {"directory": str(folder), "pid": process.pid, "start_time": start_time(process.pid), "env": isolated}
-    for _ in range(150):
-        if process.poll() is not None:
-            raise RuntimeError(f"Nested compositor exited ({process.returncode}); inspect {folder}/compositor.log")
-        sockets = list((folder / "r/hypr").glob("*/.socket.sock"))
-        if sockets:
-            state["signature"] = sockets[0].parent.name
-            state["env"]["HYPRLAND_INSTANCE_SIGNATURE"] = state["signature"]
-            displays = [path for path in (folder / "r").glob("wayland-*") if path.is_socket()]
-            if not displays:
-                time.sleep(0.1)
-                continue
-            state["env"]["WAYLAND_DISPLAY"] = displays[0].name
-            if control(state, "-j", "monitors", check=False).returncode == 0:
-                (folder / "session.json").write_text(json.dumps(state, indent=2) + "\n")
-                print(json.dumps(state, indent=2))
-                return
-        time.sleep(0.1)
-    process.terminate()
-    raise RuntimeError(f"Nested compositor startup timed out; inspect {folder}/compositor.log")
+    isolated.update(render_env or {})
+    compositor = str(Path(compositor).resolve())
+    process = launch_owned(folder, compositor, isolated, parent_signature)
+    state = {"directory": str(folder), **process, "env": isolated, "compositor": compositor, "headless": headless}
+    try:
+        for _ in range(150):
+            if not running(state["pid"], state["start_time"]):
+                raise RuntimeError(f"Nested compositor exited; inspect {folder}/compositor.log")
+            sockets = list((folder / "r/hypr").glob("*/.socket.sock"))
+            if sockets:
+                state["signature"] = sockets[0].parent.name
+                state["env"]["HYPRLAND_INSTANCE_SIGNATURE"] = state["signature"]
+                displays = [path for path in (folder / "r").glob("wayland-*") if path.is_socket()]
+                if not displays:
+                    time.sleep(0.1)
+                    continue
+                state["env"]["WAYLAND_DISPLAY"] = displays[0].name
+                if control(state, "-j", "monitors", check=False).returncode == 0:
+                    (folder / "session.json").write_text(json.dumps(state, indent=2) + "\n")
+                    if headless:
+                        # HEADLESS-1 is reserved for the compositor's automatic fallback.
+                        reply = control(state, "output", "create", "headless", "HEADLESS-2").stdout
+                        if reply.strip() != "ok":
+                            raise RuntimeError(f"Headless output creation failed: {reply}")
+                    print(json.dumps(state, indent=2))
+                    return
+            time.sleep(0.1)
+        raise RuntimeError(f"Nested compositor startup timed out; inspect {folder}/compositor.log")
+    except Exception:
+        if running(state["pid"], state["start_time"]):
+            os.kill(state["pid"], signal.SIGTERM)
+            for _ in range(30):
+                if not running(state["pid"], state["start_time"]):
+                    break
+                time.sleep(.1)
+        raise
 
 
 def fixtures(state, calibration=False):
@@ -151,11 +216,11 @@ def fixtures(state, calibration=False):
 
 
 def host_control(signature, *args):
-    """Host IPC is reserved for placing/restoring this compositor's exact window."""
+    """Host IPC only launches or places/restores this compositor's owned window."""
     return subprocess.run(["hyprctl", "-i", signature, *args], text=True, capture_output=True, check=True, timeout=10)
 
 
-def place(state):
+def place(state, size=(1280, 720)):
     signature = os.environ.get("HYPRLAND_INSTANCE_SIGNATURE", "")
     if not signature or signature == state["signature"]:
         raise RuntimeError("Run place from the parent desktop session")
@@ -163,22 +228,23 @@ def place(state):
     client = next((item for item in clients if item["pid"] == state["pid"] and item["class"] == "aquamarine"), None)
     if not client:
         raise RuntimeError("Exact owned nested compositor window not found in parent")
-    workspace = json.loads(host_control(signature, "-j", "activeworkspace").stdout)
     snapshot = Path(state["directory"]) / "host-window-before.json"
     if not snapshot.exists():
-        snapshot.write_text(json.dumps({"signature": signature, "client": client, "workspace": workspace}, indent=2))
+        snapshot.write_text(json.dumps({"signature": signature, "client": client}, indent=2))
     selector = f'window="address:{client["address"]}"'
     # Exact Hyprland 0.56.2 uses on/off here; unsupported set/unset silently toggle.
-    operations = [f'hl.dsp.window.float({{ {selector}, action="on" }})',
-                  f'hl.dsp.window.move({{ {selector}, workspace={workspace["id"]}, silent=true }})',
-                  f'hl.dsp.window.resize({{ {selector}, x=1280, y=720, relative=false }})',
-                  f'hl.dsp.window.move({{ {selector}, x=320, y=160, relative=false }})',
-                  f'hl.dsp.window.pin({{ {selector}, action="on" }})']
+    operations = [f'hl.dsp.window.pin({{ {selector}, action="off" }})',
+                  f'hl.dsp.window.float({{ {selector}, action="on" }})',
+                  f'hl.dsp.window.move({{ {selector}, workspace=16, silent=true }})',
+                  f'hl.dsp.window.resize({{ {selector}, x={size[0]}, y={size[1]}, relative=false }})',
+                  f'hl.dsp.window.move({{ {selector}, x=320, y=160, relative=false }})']
     for expression in operations:
         print(host_control(signature, "dispatch", expression).stdout, end="")
 
 
 def restore(state):
+    if not running(state["pid"], state["start_time"]):
+        return
     snapshot = Path(state["directory"]) / "host-window-before.json"
     if not snapshot.exists():
         return
@@ -186,11 +252,12 @@ def restore(state):
     client, signature = saved["client"], saved["signature"]
     clients = json.loads(host_control(signature, "-j", "clients").stdout)
     if not any(item["address"] == client["address"] and item["pid"] == state["pid"] for item in clients):
-        raise RuntimeError("Refusing to restore host placement: owned window identity changed")
+        # A crashed compositor or disabled Wayland output has no owned window to restore.
+        return
     selector = f'window="address:{client["address"]}"'
-    pinned = "on" if client["pinned"] else "off"
-    operations = [f'hl.dsp.window.pin({{ {selector}, action="{pinned}" }})',
-                  f'hl.dsp.window.move({{ {selector}, workspace={client["workspace"]["id"]}, silent=true }})',
+    # Old snapshots may predate workspace confinement. Restore geometry without escaping it.
+    operations = [f'hl.dsp.window.pin({{ {selector}, action="off" }})',
+                  f'hl.dsp.window.move({{ {selector}, workspace=16, silent=true }})',
                   f'hl.dsp.window.resize({{ {selector}, x={client["size"][0]}, y={client["size"][1]}, relative=false }})',
                   f'hl.dsp.window.move({{ {selector}, x={client["at"][0]}, y={client["at"][1]}, relative=false }})']
     if not client["floating"]:
@@ -200,8 +267,16 @@ def restore(state):
 
 
 def stop(state):
+    if not running(state["pid"], state["start_time"]):
+        print(f"Owned nested compositor PID {state['pid']} already stopped")
+        return
     restore(state)
-    control(state, "dispatch", "hl.dsp.exit()", check=False)
+    try:
+        control(state, "dispatch", "hl.dsp.exit()", check=False)
+    except subprocess.TimeoutExpired:
+        # A crashed/hung GPU context may leave IPC unresponsive. Target only this lifetime.
+        if running(state["pid"], state["start_time"]):
+            os.kill(state["pid"], signal.SIGTERM)
     for _ in range(50):
         try:
             stat = Path(f'/proc/{state["pid"]}/stat').read_text().rsplit(")", 1)[1].split()
@@ -220,15 +295,19 @@ def stop(state):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=("start", "status", "ctl", "fixtures", "capture", "place", "stop", "env"))
+    parser.add_argument("--headless", action="store_true", help="Create a persistent headless output (start only)")
+    parser.add_argument("--config", type=Path, help="Owned-session startup configuration (start only)")
+    parser.add_argument("--compositor", default="/usr/bin/Hyprland", help="Isolated compositor binary (start only)")
     parser.add_argument("directory", nargs="?", help="Directory printed by start")
     parser.add_argument("args", nargs=argparse.REMAINDER)
     args = parser.parse_args()
     if args.action == "start":
-        start()
+        start(args.config, args.compositor, headless=args.headless)
         return
     if not args.directory:
         parser.error("directory is required for an existing session")
-    state = session(args.directory)
+    state = (json.loads((Path(args.directory) / "session.json").read_text())
+             if args.action == "stop" else session(args.directory))
     if args.action == "status":
         print(json.dumps(state, indent=2))
         print(control(state, "-j", "monitors").stdout)

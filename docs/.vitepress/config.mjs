@@ -35,6 +35,7 @@ export default defineConfig({
           { text: "Reference provenance", link: "/reference/SOURCES" },
           { text: "Acceptance gates", link: "/acceptance" },
           { text: "Verification report", link: "/verification" },
+          { text: "Rendering qualification", link: "/render-qualification" },
         ],
       },
       {

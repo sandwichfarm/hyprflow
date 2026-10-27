@@ -1,0 +1,58 @@
+{
+  "scope": "Qualified native Vulkan prerequisites; pure-native controls contain no Hyprflow plugin",
+  "runtime_base": "b60bb19e8c8f5005a121714520acf41bd095e74b",
+  "native_binary_sha256": "a9219caac77022582ada8c5913a9eff0692557265ed42a97677c4925a3257006",
+  "qualification_abi_suffix": "_hyprflow_vulkan_qualification_v1",
+  "controls": [
+    {
+      "name": "windowless native config-error gradient border",
+      "before": "VUID-vkCmdDraw-None-08600: native surface descriptor layout [80,160) remained bound while border pipeline required [80,208). First-error stack was native BorderPass draw, with no plugin loaded.",
+      "fix": "Always bind a per-draw immutable gradient UBO from the selected pipeline layout. Retain it in the command buffer until GPU-completed reuse.",
+      "after": "Same invalid-configuration reload renders successfully with zero core/synchronization validation errors.",
+      "after_native_binary_sha256": "3e8417730952fa7c8908cd9a212d2e7433e5779feb923a56def7bf1c048e0eae",
+      "final_component_confirmation": "Also exercised by final a921 minimal plugin custom-file unload/reload with zero validation errors."
+    },
+    {
+      "name": "native sharp border with color management",
+      "before": "VUID-VkGraphicsPipelineCreateInfo-layout-10069: shader push constants [80,208) exceeded CPU range [80,176) when rounding was zero.",
+      "fix": "Border shader always requires geometry: always count/push SRounding for border draws; other shader families retain their conditional layout.",
+      "after": "Native sharp-border client and actual screenshot pass core/synchronization validation.",
+      "after_native_binary_sha256": "a9219caac77022582ada8c5913a9eff0692557265ed42a97677c4925a3257006"
+    },
+    {
+      "name": "native graceful device shutdown",
+      "before": "Device/instance destroyed before monitor, cursor, overlay, and command-buffer resources; validation reported live children.",
+      "fix": "Finish GPU work before scene destruction, release all monitor/cursor/overlay references before backend teardown, release device children before device/instance.",
+      "after": "Both native error-overlay and sharp-border controls exit normally with zero validation errors.",
+      "after_native_binary_sha256": "a9219caac77022582ada8c5913a9eff0692557265ed42a97677c4925a3257006"
+    }
+  ],
+  "instrumentation": {
+    "core_validation": true,
+    "synchronization_validation": true,
+    "first_error_aborts_before_icd": true,
+    "test_opt_in": "HYPRFLOW_TEST_VALIDATION_ABORT=1",
+    "validation_layer": "Khronos 1.4.357.0-1; privately extracted official signed Arch package"
+  },
+  "minimal_plugin_validation": {
+    "qualified_artifact_sha256": "45e106698291b1d584fb663235104c4dcf14acd6d4fb046e4392a8a0cb5b0bcd",
+    "old_same_base_artifact_rejections": 3,
+    "checks": [
+      "colored inactive workspaces",
+      "open/navigation/accept/cancel",
+      "custom-file unload creates native config-error overlay",
+      "reload clears overlay and stale flow",
+      "graceful exit"
+    ],
+    "validation_errors": 0,
+    "native_binary_sha256": "3e8417730952fa7c8908cd9a212d2e7433e5779feb923a56def7bf1c048e0eae",
+    "final_live_confirmation_native_sha256": "a9219caac77022582ada8c5913a9eff0692557265ed42a97677c4925a3257006",
+    "final_live_confirmation_note": "Final guarded artifact full-suite results and final graceful exit are recorded separately."
+  },
+  "limits": [
+    "Native rotated output failed independently and is not qualified. Product output guards reject it safely.",
+    "HDR/FP16 remain outside the qualified Vulkan profile.",
+    "Full final guarded-artifact suite is recorded separately by the parent."
+  ],
+  "privacy": "Raw config-error screenshots and process/session paths are omitted."
+}

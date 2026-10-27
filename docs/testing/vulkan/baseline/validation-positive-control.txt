@@ -1,0 +1,8 @@
+Validation Error: [ VUID-VkImageCreateInfo-imageCreateMaxMipLevels-02251 ] | MessageID = 0xbebcae79
+Validation Error: [ SYNC-HAZARD-READ-AFTER-WRITE ] | MessageID = 0xe4d96472
+Validation Error: [ SYNC-HAZARD-READ-AFTER-WRITE ] | MessageID = 0xe4d96472
+Validation Error: [ SYNC-HAZARD-READ-AFTER-WRITE ] | MessageID = 0xe4d96472
+Validation Error: [ SYNC-HAZARD-READ-AFTER-WRITE ] | MessageID = 0xe4d96472
+Validation Error: [ SYNC-HAZARD-READ-AFTER-WRITE ] | MessageID = 0xe4d96472
+Validation Error: [ VUID-vkDestroyInstance-instance-00629 ] | MessageID = 0x8b3d8e18
+Validation Error: [ VUID-vkDestroyDevice-device-05137 ] | MessageID = 0x4872eaa0

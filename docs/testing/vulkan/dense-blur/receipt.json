@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "oracle": "Unmodified AppearanceProof.detailed_and_video background_blur_preserves_sharp_cards",
+  "artifact_sha256": "40ef44a3c373a04693fe8972c4aa80186c16b6f4f8212cdf6557e4f7180db448",
+  "before_artifact_sha256": "8ada9a8285f0695f95ea8d96f316c17764b587af26483df737ef7bfdb8c25455",
+  "before_sharp_edge_energy": 6.545220178372352,
+  "before_sparse_blur_edge_energy": 7.404,
+  "after_sharp_edge_energy": 6.545220178372352,
+  "after_dense_blur_edge_energy": 0.39601623467112596,
+  "required_blur_ratio_below": 0.65,
+  "measured_ratio": 0.060504646731319923,
+  "workspace_card_pixels_identical": true,
+  "algorithm": "Dense Cartesian Gaussian with adjacent-texel bilinear pairs; sigma=physical radius/2. At physical radius16,17x17fetches cover33x33texels.",
+  "core_and_sync_validation_errors": 0,
+  "captures": [
+    "blur-zero.png",
+    "blur-sixteen.png"
+  ]
+}

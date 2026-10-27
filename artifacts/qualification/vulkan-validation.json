@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "artifact_sha256": "40ef44a3c373a04693fe8972c4aa80186c16b6f4f8212cdf6557e4f7180db448",
+  "native_sha256": "6a4e23cedc63c7f9d76336a67cce1f4b3f178170e916e37906988f42963f3922",
+  "checks": [
+    "core validation zero errors",
+    "synchronization validation zero errors",
+    "graceful plugin unload and compositor shutdown"
+  ],
+  "validation_errors": 0,
+  "sync_hazards": 0,
+  "runtime_stopped": true
+}

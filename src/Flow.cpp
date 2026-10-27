@@ -1,13 +1,11 @@
 #include "Flow.hpp"
 #include "Config.hpp"
 #include "Capture.hpp"
+#include "CompositorCompat.hpp"
 #include <hyprland/src/render/Renderer.hpp>
 #include <hyprland/src/desktop/Workspace.hpp>
-#include <hyprland/src/state/WorkspaceState.hpp>
 #include <hyprland/src/desktop/state/FocusState.hpp>
 #include <hyprland/src/managers/KeybindManager.hpp>
-#include <hyprland/src/animation/WorkspaceAnimationController.hpp>
-#include <hyprland/src/output/Monitor.hpp>
 #include <algorithm>
 #include <numeric>
 #include <format>
@@ -20,7 +18,7 @@ void submap(const std::string &name) {
 } // namespace
 
 Flow::Flow(PHLMONITOR output, int workspaceCount, bool includeEmptyWorkspaces) : monitor(output), lastFrame(Time::steadyNow()) {
-    auto workspaces = State::workspaceState()->workspacesCopy();
+    auto workspaces = Compat::workspaces();
     for (int id = 1; includeEmptyWorkspaces && id <= workspaceCount; ++id) {
         const auto found = std::ranges::find_if(workspaces, [id](const auto &w) { return w->m_id == id; });
         if (found != workspaces.end() && (*found)->m_monitor != monitor)
@@ -30,7 +28,7 @@ Flow::Flow(PHLMONITOR output, int workspaceCount, bool includeEmptyWorkspaces) :
     for (const auto &workspace : workspaces) {
         if (workspace->m_monitor != monitor || workspace->m_isSpecialWorkspace || workspace->inert())
             continue;
-        if (!includeEmptyWorkspaces && workspace->getWindowCount() == 0)
+        if (!includeEmptyWorkspaces && Compat::windowCount(workspace) == 0)
             continue;
         auto found = std::ranges::find_if(cards, [&](const Card &card) { return card.id == workspace->m_id; });
         if (found == cards.end())
@@ -146,12 +144,11 @@ void Flow::finish() {
     finished = true;
     auto &card = committing ? cards[static_cast<size_t>(focus.target)] : original;
     if (committing && !card.workspace)
-        card.workspace = State::workspaceState()->create(card.id, monitor->m_id, card.name);
+        card.workspace = Compat::create(card.id, monitor->m_id, card.name);
     if (card.workspace && card.workspace != monitor->m_activeWorkspace) {
         auto old = monitor->m_activeWorkspace;
         monitor->changeWorkspace(card.workspace, false, true, false);
-        Animation::Workspace::startAnimation(old, Animation::Workspace::ANIMATION_TYPE_OUT, true, true);
-        Animation::Workspace::startAnimation(card.workspace, Animation::Workspace::ANIMATION_TYPE_IN, true, true);
+        Compat::stopWorkspaceAnimations(old, card.workspace);
     }
     if (!committing && previousFocus)
         Desktop::focusState()->fullWindowFocus(previousFocus.lock(), Desktop::FOCUS_REASON_KEYBIND);

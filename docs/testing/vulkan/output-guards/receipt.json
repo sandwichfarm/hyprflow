@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "method": "Atomic temporary monitor transform with RAII restoration inside qualified test-helper callbacks; no physical output rotation applied.",
+  "before_control": {
+    "old_open_succeeded": true,
+    "old_mid_flow_remained_open": true
+  },
+  "checks": [
+    "rotated output opening rejects explicitly without changing submap",
+    "cancel remains allowed under temporary unsupported transform",
+    "accept remains allowed under temporary unsupported transform",
+    "pre-render transform change closes before capture/draw and restores origin/submap"
+  ],
+  "artifact_sha256": "8ada9a8285f0695f95ea8d96f316c17764b587af26483df737ef7bfdb8c25455",
+  "validation_errors": 0,
+  "actual_native_rotated_output": "Separately tested and unqualified; this proof establishes protective rejection/reset behavior only."
+}

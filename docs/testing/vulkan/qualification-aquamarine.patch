@@ -1,0 +1,100 @@
+diff --git a/include/aquamarine/backend/Headless.hpp b/include/aquamarine/backend/Headless.hpp
+index 5945b00..497812e 100644
+--- a/include/aquamarine/backend/Headless.hpp
++++ b/include/aquamarine/backend/Headless.hpp
+@@ -64,6 +64,7 @@ namespace Aquamarine {
+         Hyprutils::Memory::CWeakPointer<CBackend>                       backend;
+         std::vector<Hyprutils::Memory::CSharedPointer<CHeadlessOutput>> outputs;
+ 
++        Hyprutils::OS::CFileDescriptor qualificationRenderNode;
+         size_t                                                          outputIDCounter = 0;
+ 
+         class CTimer {
+diff --git a/src/backend/Headless.cpp b/src/backend/Headless.cpp
+index 179b850..ccc1e4d 100644
+--- a/src/backend/Headless.cpp
++++ b/src/backend/Headless.cpp
+@@ -4,6 +4,8 @@
+ #include <ctime>
+ #include <sys/timerfd.h>
+ #include <cstring>
++#include <cstdlib>
++#include <xf86drm.h>
+ #include <unistd.h>
+ #include "Shared.hpp"
+ 
+@@ -123,6 +125,23 @@ eBackendType Aquamarine::CHeadlessBackend::type() {
+ }
+ 
+ bool Aquamarine::CHeadlessBackend::start() {
++    // Test-only AMD render node; no DRM master, seat session, or physical output ownership.
++    if (const char* selected = std::getenv("HYPRFLOW_TEST_RENDER_NODE")) {
++        const int fd = open(selected, O_RDWR | O_NONBLOCK | O_CLOEXEC);
++        drmDevicePtr device = nullptr;
++        const bool valid = fd >= 0 && drmGetNodeTypeFromFd(fd) == DRM_NODE_RENDER && drmGetDevice2(fd, 0, &device) == 0 &&
++                           device->bustype == DRM_BUS_PCI && device->deviceinfo.pci->vendor_id == 0x1002;
++        if (device)
++            drmFreeDevice(&device);
++        if (!valid) {
++            if (fd >= 0)
++                close(fd);
++            backend->log(AQ_LOG_ERROR, "HYPRFLOW_TEST_RENDER_NODE is not an accessible AMD DRM render node");
++            return false;
++        }
++        qualificationRenderNode = Hyprutils::OS::CFileDescriptor{fd};
++        backend->log(AQ_LOG_WARNING, std::format("Hyprflow isolated headless AMD render node: {}", selected));
++    }
+     return true;
+ }
+ 
+@@ -131,11 +150,11 @@ std::vector<SP<SPollFD>> Aquamarine::CHeadlessBackend::pollFDs() {
+ }
+ 
+ int Aquamarine::CHeadlessBackend::drmFD() {
+-    return -1;
++    return qualificationRenderNode.get();
+ }
+ 
+ int Aquamarine::CHeadlessBackend::drmRenderNodeFD() {
+-    return -1;
++    return qualificationRenderNode.get();
+ }
+ 
+ bool Aquamarine::CHeadlessBackend::dispatchEvents() {
+diff --git a/src/backend/Wayland.cpp b/src/backend/Wayland.cpp
+index 8905adc..39f1df7 100644
+--- a/src/backend/Wayland.cpp
++++ b/src/backend/Wayland.cpp
+@@ -6,6 +6,7 @@
+ #include "FormatUtils.hpp"
+ #include <chrono>
+ #include <cstring>
++#include <cstdlib>
+ #include <xf86drm.h>
+ #include <gbm.h>
+ #include <fcntl.h>
+@@ -455,6 +456,24 @@ bool Aquamarine::CWaylandBackend::initDmabuf() {
+ 
+     wl_display_roundtrip(waylandState.display);
+ 
++    // Isolated Hyprflow qualification only: select AMD without changing the parent compositor.
++    if (const char* selected = std::getenv("HYPRFLOW_TEST_RENDER_NODE")) {
++        const int fd = open(selected, O_RDWR | O_NONBLOCK | O_CLOEXEC);
++        drmDevicePtr device = nullptr;
++        const bool valid = fd >= 0 && drmGetNodeTypeFromFd(fd) == DRM_NODE_RENDER && drmGetDevice2(fd, 0, &device) == 0 &&
++                           device->bustype == DRM_BUS_PCI && device->deviceinfo.pci->vendor_id == 0x1002;
++        if (device)
++            drmFreeDevice(&device);
++        if (fd >= 0)
++            close(fd);
++        if (!valid) {
++            backend->log(AQ_LOG_ERROR, "HYPRFLOW_TEST_RENDER_NODE is not an accessible AMD DRM render node");
++            return false;
++        }
++        drmState.nodeName = selected;
++        backend->log(AQ_LOG_WARNING, std::format("Hyprflow isolated qualification render node override: {}", selected));
++    }
++
+     if (!drmState.nodeName.empty()) {
+         drmState.fd = open(drmState.nodeName.c_str(), O_RDWR | O_NONBLOCK | O_CLOEXEC);
+         if (drmState.fd < 0) {

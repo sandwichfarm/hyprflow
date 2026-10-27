@@ -1,0 +1,446 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "text-value",
+      "elapsed": 0.0033
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "false",
+      "elapsed": 0.0033
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "true",
+      "elapsed": 0.0031
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "nil",
+      "elapsed": 0.0032
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "3",
+      "elapsed": 0.0873
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "{\"open\":false}",
+      "elapsed": 0.0034
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "a\tfalse\tnil",
+      "elapsed": 0.0031
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0032
+    },
+    {
+      "command": "repl",
+      "expected_error": true,
+      "result": "error: [string \"return {\"]:1: unexpected symbol near <eof>",
+      "elapsed": 0.0033
+    },
+    {
+      "command": "repl",
+      "expected_error": true,
+      "result": "error: [string \"return error(\"repl-probe\");\"]:1: repl-probe",
+      "elapsed": 0.0031
+    },
+    {
+      "command": "repl",
+      "expected_error": true,
+      "result": "error: [Lua] execution timed out in hyprctl repl",
+      "elapsed": 0.2534
+    },
+    {
+      "command": "repl",
+      "expected_error": true,
+      "result": "error: [Lua] execution timed out in hyprctl repl result",
+      "elapsed": 0.2535
+    },
+    {
+      "command": "repl",
+      "expected_error": true,
+      "result": "error: [string \"return setmetatable({}, {__tostring=function(...\"]:1: conversion-probe",
+      "elapsed": 0.0033
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0039
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0032
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.003
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0029
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.003
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0031
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0036
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0031
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.003
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0033
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0051
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0037
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0029
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.003
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.003
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0032
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0031
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0037
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0033
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0035
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0033
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0033
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0031
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0029
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0034
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0037
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0031
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0032
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0032
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0032
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0038
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0032
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0029
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.003
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0031
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.003
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0035
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0038
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0031
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0034
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.003
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.003
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0034
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0034
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.003
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0029
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.003
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.004
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0035
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0037
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.004
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0031
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0034
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.003
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0032
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0033
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0035
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0031
+    },
+    {
+      "command": "eval",
+      "expected_error": false,
+      "result": "ok",
+      "elapsed": 0.0032
+    },
+    {
+      "command": "repl",
+      "expected_error": false,
+      "result": "recovered\ttrue\tnil",
+      "elapsed": 0.0036
+    }
+  ],
+  "watchdog_ms": 250,
+  "new_class_fields": false,
+  "ordinary_eval_discards_returns": true
+}

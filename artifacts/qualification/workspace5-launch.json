@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "headless": false,
+      "host_workspace_unchanged": true,
+      "other_clients_unchanged": true,
+      "owned_windows": 1,
+      "workspace5_unpinned": true
+    },
+    {
+      "headless": true,
+      "host_workspace_unchanged": true,
+      "other_clients_unchanged": true,
+      "owned_windows": 0,
+      "workspace5_unpinned": true
+    }
+  ]
+}

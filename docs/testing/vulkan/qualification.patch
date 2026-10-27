@@ -1,0 +1,1323 @@
+diff --git a/src/Compositor.cpp b/src/Compositor.cpp
+index 6c975b79..1e4f20f4 100644
+--- a/src/Compositor.cpp
++++ b/src/Compositor.cpp
+@@ -325,6 +325,10 @@ void CCompositor::initServer(std::string socketName, int socketFd) {
+     option.backendRequestMode = Aquamarine::eBackendRequestMode::AQ_BACKEND_REQUEST_FALLBACK;
+     implementations.emplace_back(option);
+ 
++    // Private qualification mode: never connect a Wayland window or claim physical DRM outputs.
++    if (Env::envEnabled("HYPRFLOW_TEST_HEADLESS_ONLY"))
++        std::erase_if(implementations, [](const auto& implementation) { return implementation.backendType != Aquamarine::eBackendType::AQ_BACKEND_HEADLESS; });
++
+     m_aqBackend = CBackend::create(implementations, options);
+ 
+     if (!m_aqBackend) {
+@@ -563,6 +567,11 @@ void CCompositor::cleanup() {
+ 
+     cleanEnvironment();
+ 
++    // Vulkan resources may still be referenced by submitted commands. Finish
++    // those commands before monitors, overlays, and renderer objects are freed.
++    if (Render::VK::g_pHyprVulkan && Render::VK::g_pHyprVulkan->device())
++        vkDeviceWaitIdle(Render::VK::g_pHyprVulkan->vkDevice());
++
+     // unload all remaining plugins while the compositor is
+     // still in a normal working state.
+     g_pPluginSystem->unloadAllPlugins();
+@@ -585,13 +594,16 @@ void CCompositor::cleanup() {
+ 
+     wl_display_destroy_clients(g_pCompositor->m_wlDisplay);
+     removeAllSignals();
++    m_realMonitors.clear();
+ 
+     g_pInputManager.reset();
+     g_pDynamicPermissionManager.reset();
+     g_pDecorationPositioner.reset();
+     g_pCursorManager.reset();
++    g_pPointerManager.reset();
+     g_pPluginSystem.reset();
+     Notification::overlay().reset();
++    ErrorOverlay::overlay().reset();
+     Debug::overlay().reset();
+     g_pEventManager.reset();
+     g_pSessionLockManager.reset();
+@@ -602,10 +614,8 @@ void CCompositor::cleanup() {
+     Render::g_pShaderLoader.reset();
+     Config::mgr().reset();
+     g_layoutManager.reset();
+-    ErrorOverlay::overlay().reset();
+     g_pKeybindManager.reset();
+     g_pXWaylandManager.reset();
+-    g_pPointerManager.reset();
+     g_pSeatManager.reset();
+     g_pHyprCtl.reset();
+     g_pEventLoopManager.reset();
+diff --git a/src/Compositor.hpp b/src/Compositor.hpp
+index 98473358..f5eec492 100644
+--- a/src/Compositor.hpp
++++ b/src/Compositor.hpp
+@@ -85,7 +85,7 @@ class CCompositor {
+     // ------------------------------------------------- //
+ 
+     auto getWorkspaces() {
+-        return std::views::filter(m_workspaces, [](const auto& e) { return e; });
++        return std::views::filter(m_workspaces, [](const auto& e) { return bool(e); });
+     }
+     std::vector<PHLWORKSPACE> getWorkspacesCopy();
+     void                      registerWorkspace(PHLWORKSPACE w);
+diff --git a/src/config/lua/ConfigManager.cpp b/src/config/lua/ConfigManager.cpp
+index fd7edffd..031ad92a 100644
+--- a/src/config/lua/ConfigManager.cpp
++++ b/src/config/lua/ConfigManager.cpp
+@@ -592,7 +592,12 @@ void CConfigManager::addEvalIssue(const Config::SConfigError& err) {
+         m_evalIssues.emplace_back(err);
+ }
+ 
+-std::optional<std::string> CConfigManager::eval(const std::string& code) {
++static int replValueToString(lua_State* state) {
++    luaL_tolstring(state, 1, nullptr);
++    return 1;
++}
++
++std::optional<std::string> CConfigManager::eval(const std::string& code, bool repl) {
+     if (!m_lua)
+         return "error: lua state not initialized";
+ 
+@@ -600,15 +605,26 @@ std::optional<std::string> CConfigManager::eval(const std::string& code) {
+     m_evalIssues.clear();
+     m_isEvaluating = true;
+ 
+-    Hyprutils::Utils::CScopeGuard x([this] { m_isEvaluating = false; });
++    const int stackBase = lua_gettop(m_lua);
++    Hyprutils::Utils::CScopeGuard x([this, stackBase] {
++        m_isEvaluating = false;
++        lua_settop(m_lua, stackBase);
++    });
+ 
+-    if (luaL_loadstring(m_lua, code.c_str()) != LUA_OK) {
++    // REPL accepts expressions and statement chunks; ordinary eval retains its existing semantics.
++    const auto chunk = repl && !code.starts_with("return") ? std::format("return {};", code) : code;
++    auto loaded = luaL_loadstring(m_lua, chunk.c_str());
++    if (loaded != LUA_OK && repl && chunk != code) {
++        lua_pop(m_lua, 1);
++        loaded = luaL_loadstring(m_lua, code.c_str());
++    }
++    if (loaded != LUA_OK) {
+         std::string err = lua_tostring(m_lua, -1);
+         lua_pop(m_lua, 1);
+         return std::format("error: {}", err);
+     }
+ 
+-    if (guardedPCall(0, 0, 0, LUA_TIMEOUT_EVAL_MS, "hyprctl eval") != LUA_OK) {
++    if (guardedPCall(0, repl ? LUA_MULTRET : 0, 0, LUA_TIMEOUT_EVAL_MS, repl ? "hyprctl repl" : "hyprctl eval") != LUA_OK) {
+         std::string err = lua_tostring(m_lua, -1);
+         lua_pop(m_lua, 1);
+         return std::format("error: {}", err);
+@@ -634,10 +650,28 @@ std::optional<std::string> CConfigManager::eval(const std::string& code) {
+         return out;
+     }
+ 
++    std::optional<std::string> returned;
++    if (repl && lua_gettop(m_lua) > stackBase) {
++        const int resultCount = lua_gettop(m_lua) - stackBase;
++        returned.emplace();
++        for (int index = 1; index <= resultCount; ++index) {
++            lua_pushcfunction(m_lua, replValueToString);
++            lua_pushvalue(m_lua, stackBase + index);
++            if (guardedPCall(1, 1, 0, LUA_TIMEOUT_EVAL_MS, "hyprctl repl result") != LUA_OK)
++                return std::format("error: {}", lua_tostring(m_lua, -1));
++            size_t length = 0;
++            const char* value = lua_tolstring(m_lua, -1, &length);
++            if (index > 1)
++                returned->push_back('\t');
++            returned->append(value, length);
++            lua_pop(m_lua, 1);
++        }
++    }
++
+     m_errors.clear();
+     m_evalIssues.clear();
+ 
+-    return std::nullopt;
++    return returned;
+ }
+ 
+ std::string CConfigManager::verify() {
+diff --git a/src/config/lua/ConfigManager.hpp b/src/config/lua/ConfigManager.hpp
+index 4e670b23..493ab05e 100644
+--- a/src/config/lua/ConfigManager.hpp
++++ b/src/config/lua/ConfigManager.hpp
+@@ -95,7 +95,7 @@ namespace Config::Lua {
+         std::expected<void, std::string>         registerLuaLayoutProvider(std::string name, lua_State* L, int providerTableIdx);
+ 
+         // execute an arbitrary lua string on the current state.
+-        std::optional<std::string> eval(const std::string& code);
++        std::optional<std::string> eval(const std::string& code, bool repl = false);
+ 
+         int                        guardedPCall(int nargs, int nresults, int errfunc, int timeoutMs, std::string_view context);
+ 
+diff --git a/src/config/shared/actions/ConfigActions.cpp b/src/config/shared/actions/ConfigActions.cpp
+index 5fc16308..0641348a 100644
+--- a/src/config/shared/actions/ConfigActions.cpp
++++ b/src/config/shared/actions/ConfigActions.cpp
+@@ -1371,7 +1371,7 @@ ActionResult Actions::moveWindowOrGroup(Math::eDirection direction, std::optiona
+ 
+     const auto PWINDOWINDIR = g_pCompositor->getWindowInDirection(window, direction);
+ 
+-    const bool ISWINDOWGROUP       = window->m_group;
++    const bool ISWINDOWGROUP       = bool(window->m_group);
+     const bool ISWINDOWGROUPLOCKED = ISWINDOWGROUP && window->m_group->locked();
+     const bool ISWINDOWGROUPSINGLE = ISWINDOWGROUP && window->m_group->size() == 1;
+     const bool ISWINDOWGROUPDENIED = ISWINDOWGROUP && window->m_group->denied();
+diff --git a/src/debug/HyprCtl.cpp b/src/debug/HyprCtl.cpp
+index fdb9c89c..dd475ed7 100644
+--- a/src/debug/HyprCtl.cpp
++++ b/src/debug/HyprCtl.cpp
+@@ -1092,7 +1092,7 @@ static std::string evalRequest(eHyprCtlOutputFormat format, std::string request)
+     // strip the command name ("eval ") from the request
+     auto code = request.substr(request.find_first_of(' ') + 1);
+ 
+-    auto err = luaMgr->eval(code);
++    auto err = luaMgr->eval(code, request.starts_with("repl "));
+     if (err)
+         return *err;
+ 
+@@ -1998,6 +1998,7 @@ CHyprCtl::CHyprCtl() {
+     registerCommand(SHyprCtlCommand{"decorations", false, decorationRequest});
+     registerCommand(SHyprCtlCommand{"[[BATCH]]", false, dispatchBatch});
+     registerCommand(SHyprCtlCommand{"eval", false, evalRequest});
++    registerCommand(SHyprCtlCommand{"repl", false, evalRequest});
+ 
+     startHyprCtlSocket();
+ }
+diff --git a/src/desktop/state/FocusState.cpp b/src/desktop/state/FocusState.cpp
+index 702b02c4..c320f70a 100644
+--- a/src/desktop/state/FocusState.cpp
++++ b/src/desktop/state/FocusState.cpp
+@@ -95,7 +95,7 @@ void CFocusState::rawWindowFocus(PHLWINDOW pWindow, eFocusReason reason, SP<CWLS
+     static auto PFOLLOWMOUSE        = CConfigValue<Config::INTEGER>("input:follow_mouse");
+     static auto PSPECIALFALLTHROUGH = CConfigValue<Config::INTEGER>("input:special_fallthrough");
+ 
+-    if (pWindow == m_focusWindow && surface == m_focusSurface)
++    if (pWindow == m_focusWindow && surface == m_focusSurface && m_focusSurface)
+         return;
+ 
+     if (!pWindow || !pWindow->priorityFocus()) {
+diff --git a/src/desktop/view/LayerSurface.hpp b/src/desktop/view/LayerSurface.hpp
+index a8cc7acd..883bc581 100644
+--- a/src/desktop/view/LayerSurface.hpp
++++ b/src/desktop/view/LayerSurface.hpp
+@@ -87,11 +87,11 @@ namespace Desktop::View {
+     };
+ 
+     inline bool valid(PHLLS l) {
+-        return l;
++        return bool(l);
+     }
+ 
+     inline bool valid(PHLLSREF l) {
+-        return l;
++        return bool(l);
+     }
+ 
+     inline bool validMapped(PHLLS l) {
+diff --git a/src/desktop/view/SessionLock.cpp b/src/desktop/view/SessionLock.cpp
+index a4a5b78b..12ba0dfe 100644
+--- a/src/desktop/view/SessionLock.cpp
++++ b/src/desktop/view/SessionLock.cpp
+@@ -28,7 +28,7 @@ View::CSessionLock::~CSessionLock() {
+ }
+ 
+ void View::CSessionLock::init() {
+-    m_listeners.destroy = m_surface->m_events.destroy.listen([this] { std::erase_if(g_pCompositor->m_otherViews, [this](const auto& e) { return e == m_self; }); });
++    m_listeners.destroy = m_surface->m_events.destroy.listen([this] { std::erase_if(g_pCompositor->m_otherViews, [this](const auto& e) { return e.get() == this; }); });
+ 
+     m_wlSurface->assign(m_surface->surface(), m_self.lock());
+ }
+diff --git a/src/desktop/view/WLSurface.cpp b/src/desktop/view/WLSurface.cpp
+index ae8a22e2..f58b7452 100644
+--- a/src/desktop/view/WLSurface.cpp
++++ b/src/desktop/view/WLSurface.cpp
+@@ -30,7 +30,7 @@ CWLSurface::~CWLSurface() {
+ }
+ 
+ bool CWLSurface::exists() const {
+-    return m_resource;
++    return bool(m_resource);
+ }
+ 
+ SP<CWLSurfaceResource> CWLSurface::resource() const {
+diff --git a/src/desktop/view/Window.cpp b/src/desktop/view/Window.cpp
+index 22967a62..ab504527 100644
+--- a/src/desktop/view/Window.cpp
++++ b/src/desktop/view/Window.cpp
+@@ -1346,7 +1346,7 @@ void CWindow::onX11ConfigureRequest(CBox box) {
+ 
+     g_pHyprRenderer->damageWindow(m_self.lock());
+ 
+-    if (!m_isFloating || isFullscreen() || g_layoutManager->dragController()->target() == m_self) {
++    if (!m_isFloating || isFullscreen() || g_layoutManager->dragController()->target() == layoutTarget()) {
+         sendWindowSize(true);
+         g_pInputManager->refocus();
+         g_pHyprRenderer->damageWindow(m_self.lock());
+@@ -2358,7 +2358,7 @@ void CWindow::unmapWindow() {
+         g_pInputManager->releaseAllMouseButtons();
+     }
+ 
+-    if (m_self.lock() == g_layoutManager->dragController()->target())
++    if (layoutTarget() == g_layoutManager->dragController()->target())
+         CKeybindManager::changeMouseBindMode(MBIND_INVALID);
+ 
+     // remove the fullscreen window status from workspace if we closed it
+@@ -2609,8 +2609,8 @@ std::optional<Vector2D> CWindow::minSize() {
+         return m_ruleApplicator->minSize().value();
+ 
+     // then check if we have any proto overrides
+-    bool hasSizeHints = m_xwaylandSurface ? m_xwaylandSurface->m_sizeHints : false;
+-    bool hasTopLevel  = m_xdgSurface ? m_xdgSurface->m_toplevel : false;
++    bool hasSizeHints = m_xwaylandSurface ? bool(m_xwaylandSurface->m_sizeHints) : false;
++    bool hasTopLevel  = m_xdgSurface ? bool(m_xdgSurface->m_toplevel) : false;
+     if ((m_isX11 && !hasSizeHints) || (!m_isX11 && !hasTopLevel))
+         return std::nullopt;
+ 
+@@ -2654,7 +2654,7 @@ bool CWindow::canBeGroupedInto(SP<CGroup> group) {
+         return false;
+ 
+     static auto ALLOWGROUPMERGE       = CConfigValue<Config::INTEGER>("group:merge_groups_on_drag");
+-    bool        isGroup               = m_group;
++    bool        isGroup               = bool(m_group);
+     bool        disallowDragIntoGroup = g_layoutManager->dragController()->wasDraggingWindow() && isGroup && !sc<bool>(*ALLOWGROUPMERGE);
+     return !g_pKeybindManager->m_groupsLocked           // global group lock disengaged
+         && ((m_groupRules & GROUP_INVADE && m_firstMap) // window ignore local group locks, or
+diff --git a/src/helpers/Monitor.cpp b/src/helpers/Monitor.cpp
+index ec32d5a0..1a4a4519 100644
+--- a/src/helpers/Monitor.cpp
++++ b/src/helpers/Monitor.cpp
+@@ -1,4 +1,5 @@
+ #include "Monitor.hpp"
++#include "../render/vulkan/Vulkan.hpp"
+ #include "MiscFunctions.hpp"
+ #include "../macros.hpp"
+ #include "SharedDefs.hpp"
+@@ -1081,6 +1082,9 @@ bool CMonitor::applyMonitorRule(Config::CMonitorRule&& pMonitorRule, bool force)
+     updateMatrix();
+ 
+     if ((WAS10B != m_enabled10bit || OLDPIXELSIZE != m_pixelSize)) {
++        // Output reconfiguration must not release descriptors/images still read by the last GPU frame.
++        if (g_pHyprRenderer && g_pHyprRenderer->type() == Render::IHyprRenderer::RT_VK && Render::VK::g_pHyprVulkan)
++            vkDeviceWaitIdle(Render::VK::g_pHyprVulkan->vkDevice());
+         m_resources.reset(); // TODO skip for 10bit change and fp16?
+ 
+         if (g_pHyprRenderer && g_pHyprRenderer->glBackend())
+@@ -2645,8 +2649,11 @@ WP<CMonitorResources> CMonitor::resources() {
+     const auto DRM_FORMAT = useFP16() ? DRM_FORMAT_ABGR16161616F : m_output->state->state().drmFormat;
+     const auto DESC       = workBufferImageDescription();
+ 
+-    if (!m_resources || m_resources->m_drmFormat != DRM_FORMAT || m_resources->m_size != m_pixelSize)
++    if (!m_resources || m_resources->m_drmFormat != DRM_FORMAT || m_resources->m_size != m_pixelSize) {
++        if (m_resources && g_pHyprRenderer && g_pHyprRenderer->type() == Render::IHyprRenderer::RT_VK && Render::VK::g_pHyprVulkan)
++            vkDeviceWaitIdle(Render::VK::g_pHyprVulkan->vkDevice());
+         m_resources = makeUnique<CMonitorResources>(m_self, DRM_FORMAT, m_pixelSize, DESC);
++    }
+ 
+     if (m_resources->m_imageDescription != DESC)
+         m_resources->setImageDescription(DESC);
+diff --git a/src/helpers/MonitorResources.hpp b/src/helpers/MonitorResources.hpp
+index 6092b9c9..43fba899 100644
+--- a/src/helpers/MonitorResources.hpp
++++ b/src/helpers/MonitorResources.hpp
+@@ -19,6 +19,8 @@ namespace Monitor {
+         void                     disableMirror();
+         SP<Render::IFramebuffer> mirrorFB();
+         SP<Render::ITexture>     getMirrorTexture();
++        // Retain the actual submitted Vulkan work buffer for native screencopy.
++        void retainMirrorFrame(const SP<Render::IFramebuffer>& frame) { m_monitorMirrorFB = frame; }
+         SP<Render::ITexture>     m_mirrorTex;
+ 
+         SP<Render::ITexture>     m_stencilTex; // TODO fix blur ignore alpha and remove
+diff --git a/src/layout/algorithm/tiled/scrolling/ScrollingAlgorithm.cpp b/src/layout/algorithm/tiled/scrolling/ScrollingAlgorithm.cpp
+index 842e5b85..9fe1c0cd 100644
+--- a/src/layout/algorithm/tiled/scrolling/ScrollingAlgorithm.cpp
++++ b/src/layout/algorithm/tiled/scrolling/ScrollingAlgorithm.cpp
+@@ -508,7 +508,7 @@ void SScrollingData::recalculate(bool forceInstant) {
+                 TARGET->layoutBox = controller->calculateTargetBox(i, j, USABLE, WORKAREA.pos(), *PFSONONE);
+ 
+             if (TARGET->target)
+-                TARGET->target->setPositionGlobal(targetBoxWithGaps(TARGET->layoutBox, i, j, FS));
++                TARGET->target->setPositionGlobal(targetBoxWithGaps(TARGET->layoutBox, i, j, bool(FS)));
+ 
+             if (forceInstant && TARGET->target)
+                 TARGET->target->warpPositionSize();
+diff --git a/src/managers/ANRManager.cpp b/src/managers/ANRManager.cpp
+index 7fea3c45..9f6bd25e 100644
+--- a/src/managers/ANRManager.cpp
++++ b/src/managers/ANRManager.cpp
+@@ -51,7 +51,7 @@ CANRManager::CANRManager() {
+             d->dialogSaidWait  = false;
+         }
+ 
+-        std::erase_if(m_data, [&window](auto& w) { return w == window; });
++        std::erase_if(m_data, [&window](auto& w) { return !w || w->fitsWindow(window); });
+     });
+ 
+     m_timer->updateTimeout(TIMER_TIMEOUT);
+diff --git a/src/managers/KeybindManager.cpp b/src/managers/KeybindManager.cpp
+index c9b5650a..ce75321d 100644
+--- a/src/managers/KeybindManager.cpp
++++ b/src/managers/KeybindManager.cpp
+@@ -601,7 +601,9 @@ SDispatchResult CKeybindManager::handleKeybinds(const uint32_t modmask, const SP
+         if (!k->locked && g_pSessionLockManager->isSessionLocked())
+             continue;
+ 
+-        if (!IGNORECONDITIONS && ((modmask != k->modmask && !k->ignoreMods) || (k->submap.name != Config::Actions::state()->m_currentSubmap && !k->submapUniversal) || k->shadowed))
++        // Lua handlers can change submaps during this same key event. Keep all
++        // matches in the original press context, as in newer Hyprland versions.
++        if (!IGNORECONDITIONS && ((modmask != k->modmask && !k->ignoreMods) || (k->submap.name != key.submapAtPress.name && !k->submapUniversal) || k->shadowed))
+             continue;
+ 
+         if (device) {
+diff --git a/src/managers/animation/AnimationManager.cpp b/src/managers/animation/AnimationManager.cpp
+index 76a12465..f15c74ae 100644
+--- a/src/managers/animation/AnimationManager.cpp
++++ b/src/managers/animation/AnimationManager.cpp
+@@ -258,7 +258,6 @@ void CHyprAnimationManager::tick() {
+         if (!PAV)
+             continue;
+ 
+-        const auto LOCK = PAV.lock();
+         bool       warp = !*PANIMENABLED || !PAV->enabled();
+ 
+         switch (PAV->m_Type) {
+diff --git a/src/managers/input/InputManager.cpp b/src/managers/input/InputManager.cpp
+index f57e935b..9342b23f 100644
+--- a/src/managers/input/InputManager.cpp
++++ b/src/managers/input/InputManager.cpp
+@@ -616,7 +616,7 @@ void CInputManager::mouseMoveUnified(uint32_t time, bool refocus, bool mouse, st
+         m_foundSurfaceToFocus = foundSurface;
+     }
+ 
+-    if (g_layoutManager->dragController()->target() && pFoundWindow != g_layoutManager->dragController()->target()) {
++    if (g_layoutManager->dragController()->target() && (!pFoundWindow || pFoundWindow->layoutTarget() != g_layoutManager->dragController()->target())) {
+         g_pSeatManager->setPointerFocus(foundSurface, surfaceLocal);
+         return;
+     }
+diff --git a/src/managers/input/UnifiedWorkspaceSwipeGesture.cpp b/src/managers/input/UnifiedWorkspaceSwipeGesture.cpp
+index e2eac693..026f7b41 100644
+--- a/src/managers/input/UnifiedWorkspaceSwipeGesture.cpp
++++ b/src/managers/input/UnifiedWorkspaceSwipeGesture.cpp
+@@ -6,7 +6,7 @@
+ #include "InputManager.hpp"
+ 
+ bool CUnifiedWorkspaceSwipeGesture::isGestureInProgress() {
+-    return m_workspaceBegin;
++    return bool(m_workspaceBegin);
+ }
+ 
+ void CUnifiedWorkspaceSwipeGesture::begin() {
+diff --git a/src/plugins/PluginAPI.cpp b/src/plugins/PluginAPI.cpp
+index c49fa0a0..7b8fe811 100644
+--- a/src/plugins/PluginAPI.cpp
++++ b/src/plugins/PluginAPI.cpp
+@@ -27,7 +27,7 @@ APICALL const char* __hyprland_api_get_hash() {
+     };
+ 
+     static const std::string ver = (std::string{GIT_COMMIT_HASH} + "_aq_" + stripPatch(AQUAMARINE_VERSION) + "_hu_" + stripPatch(HYPRUTILS_VERSION) + "_hg_" +
+-                                    stripPatch(HYPRGRAPHICS_VERSION) + "_hc_" + stripPatch(HYPRCURSOR_VERSION) + "_hlg_" + stripPatch(HYPRLANG_VERSION));
++                                    stripPatch(HYPRGRAPHICS_VERSION) + "_hc_" + stripPatch(HYPRCURSOR_VERSION) + "_hlg_" + stripPatch(HYPRLANG_VERSION) + HYPRFLOW_VULKAN_QUALIFICATION_ABI);
+ 
+     return ver.c_str();
+ }
+diff --git a/src/plugins/PluginAPI.hpp b/src/plugins/PluginAPI.hpp
+index 5321c8db..c2f57e22 100644
+--- a/src/plugins/PluginAPI.hpp
++++ b/src/plugins/PluginAPI.hpp
+@@ -374,6 +374,9 @@ namespace HyprlandAPI {
+     _get_hash() is server,
+     _get_client_hash() is client.
+ */
++// Private qualification fork changes renderer/command-buffer layouts. Bump this
++// suffix whenever those private ABI changes, and rebuild plugins against this SDK.
++inline constexpr const char* HYPRFLOW_VULKAN_QUALIFICATION_ABI = "_hyprflow_vulkan_qualification_v1";
+ APICALL EXPORT const char*        __hyprland_api_get_hash();
+ APICALL inline EXPORT const char* __hyprland_api_get_client_hash() {
+     static auto stripPatch = [](const char* ver) -> std::string {
+@@ -385,7 +388,7 @@ APICALL inline EXPORT const char* __hyprland_api_get_client_hash() {
+     };
+ 
+     static const std::string ver = (std::string{GIT_COMMIT_HASH} + "_aq_" + stripPatch(AQUAMARINE_VERSION) + "_hu_" + stripPatch(HYPRUTILS_VERSION) + "_hg_" +
+-                                    stripPatch(HYPRGRAPHICS_VERSION) + "_hc_" + stripPatch(HYPRCURSOR_VERSION) + "_hlg_" + stripPatch(HYPRLANG_VERSION));
++                                    stripPatch(HYPRGRAPHICS_VERSION) + "_hc_" + stripPatch(HYPRCURSOR_VERSION) + "_hlg_" + stripPatch(HYPRLANG_VERSION) + HYPRFLOW_VULKAN_QUALIFICATION_ABI);
+ 
+     return ver.c_str();
+ }
+diff --git a/src/protocols/ColorManagement.cpp b/src/protocols/ColorManagement.cpp
+index a704d4d7..e7b61a3f 100644
+--- a/src/protocols/ColorManagement.cpp
++++ b/src/protocols/ColorManagement.cpp
+@@ -269,11 +269,11 @@ CColorManagementSurface::CColorManagementSurface(SP<CWpColorManagementSurfaceV1>
+     m_imageDescription = getDefaultImageDescription();
+ 
+     m_resource->setDestroy([this](CWpColorManagementSurfaceV1* r) {
+-        LOGM(Log::TRACE, "Destroy wp cm surface {}", (uintptr_t)m_surface);
++        LOGM(Log::TRACE, "Destroy wp cm surface {}", (uintptr_t)m_surface.get());
+         PROTO::colorManagement->destroyResource(this);
+     });
+     m_resource->setOnDestroy([this](CWpColorManagementSurfaceV1* r) {
+-        LOGM(Log::TRACE, "Destroy wp cm surface {}", (uintptr_t)m_surface);
++        LOGM(Log::TRACE, "Destroy wp cm surface {}", (uintptr_t)m_surface.get());
+         PROTO::colorManagement->destroyResource(this);
+     });
+ 
+@@ -370,11 +370,11 @@ CColorManagementFeedbackSurface::CColorManagementFeedbackSurface(SP<CWpColorMana
+     m_client = m_resource->client();
+ 
+     m_resource->setDestroy([this](CWpColorManagementSurfaceFeedbackV1* r) {
+-        LOGM(Log::TRACE, "Destroy wp cm feedback surface {}", (uintptr_t)m_surface);
++        LOGM(Log::TRACE, "Destroy wp cm feedback surface {}", (uintptr_t)m_surface.get());
+         PROTO::colorManagement->destroyResource(this);
+     });
+     m_resource->setOnDestroy([this](CWpColorManagementSurfaceFeedbackV1* r) {
+-        LOGM(Log::TRACE, "Destroy wp cm feedback surface {}", (uintptr_t)m_surface);
++        LOGM(Log::TRACE, "Destroy wp cm feedback surface {}", (uintptr_t)m_surface.get());
+         PROTO::colorManagement->destroyResource(this);
+     });
+ 
+diff --git a/src/protocols/DRMSyncobj.hpp b/src/protocols/DRMSyncobj.hpp
+index f91ace4c..e5559c08 100644
+--- a/src/protocols/DRMSyncobj.hpp
++++ b/src/protocols/DRMSyncobj.hpp
+@@ -27,7 +27,7 @@ class CDRMSyncPointState {
+ 
+     //
+     operator bool() const {
+-        return m_timeline;
++        return bool(m_timeline);
+     }
+ 
+   private:
+diff --git a/src/protocols/ExtWorkspace.cpp b/src/protocols/ExtWorkspace.cpp
+index ac7c7277..9489a82a 100644
+--- a/src/protocols/ExtWorkspace.cpp
++++ b/src/protocols/ExtWorkspace.cpp
+@@ -44,7 +44,7 @@ CExtWorkspaceGroupResource::CExtWorkspaceGroupResource(WP<CExtWorkspaceManagerRe
+ }
+ 
+ bool CExtWorkspaceGroupResource::good() const {
+-    return m_resource;
++    return bool(m_resource);
+ }
+ 
+ WP<CExtWorkspaceGroupResource> CExtWorkspaceGroupResource::fromResource(wl_resource* resource) {
+@@ -130,7 +130,7 @@ CExtWorkspaceResource::CExtWorkspaceResource(WP<CExtWorkspaceManagerResource> ma
+ }
+ 
+ bool CExtWorkspaceResource::good() const {
+-    return m_resource;
++    return bool(m_resource);
+ }
+ 
+ bool CExtWorkspaceResource::isActive() const {
+@@ -242,7 +242,7 @@ void CExtWorkspaceManagerResource::init(WP<CExtWorkspaceManagerResource> self) {
+ }
+ 
+ bool CExtWorkspaceManagerResource::good() const {
+-    return m_resource;
++    return bool(m_resource);
+ }
+ 
+ void CExtWorkspaceManagerResource::scheduleDone() {
+diff --git a/src/protocols/Fifo.cpp b/src/protocols/Fifo.cpp
+index 7ba1bf20..a3dc44e0 100644
+--- a/src/protocols/Fifo.cpp
++++ b/src/protocols/Fifo.cpp
+@@ -140,7 +140,7 @@ CFifoManagerResource::CFifoManagerResource(UP<CWpFifoManagerV1>&& resource_) : m
+         }
+ 
+         surf->m_fifo = RESOURCE;
+-        LOGM(Log::DEBUG, "New fifo at {:x} for surface {:x}", (uintptr_t)RESOURCE, (uintptr_t)surf.get());
++        LOGM(Log::DEBUG, "New fifo at {:x} for surface {:x}", (uintptr_t)RESOURCE.get(), (uintptr_t)surf.get());
+     });
+ }
+ 
+diff --git a/src/protocols/LayerShell.cpp b/src/protocols/LayerShell.cpp
+index 80222627..e2a83678 100644
+--- a/src/protocols/LayerShell.cpp
++++ b/src/protocols/LayerShell.cpp
+@@ -44,7 +44,7 @@ CLayerShellResource::CLayerShellResource(SP<CZwlrLayerSurfaceV1> resource_, SP<C
+         m_current           = m_pending;
+         m_pending.committed = 0;
+ 
+-        bool attachedBuffer = m_surface->m_current.texture;
++        bool attachedBuffer = bool(m_surface->m_current.texture);
+ 
+         if (attachedBuffer && !m_configured) {
+             m_surface->error(-1, "layerSurface was not configured, but a buffer was attached");
+diff --git a/src/protocols/core/DataDevice.cpp b/src/protocols/core/DataDevice.cpp
+index 84c31888..7659049b 100644
+--- a/src/protocols/core/DataDevice.cpp
++++ b/src/protocols/core/DataDevice.cpp
+@@ -564,7 +564,7 @@ void CWLDataDeviceProtocol::initiateDrag(WP<CWLDataSourceResource> currentSource
+     Cursor::overrideController->setOverride("grabbing", Cursor::CURSOR_OVERRIDE_DND);
+     m_dnd.overriddenCursor = true;
+ 
+-    LOGM(Log::DEBUG, "initiateDrag: source {:x}, surface: {:x}, origin: {:x}", (uintptr_t)currentSource.get(), (uintptr_t)dragSurface, (uintptr_t)origin);
++    LOGM(Log::DEBUG, "initiateDrag: source {:x}, surface: {:x}, origin: {:x}", (uintptr_t)currentSource.get(), (uintptr_t)dragSurface.get(), (uintptr_t)origin.get());
+ 
+     currentSource->m_used = true;
+ 
+@@ -579,7 +579,7 @@ void CWLDataDeviceProtocol::initiateDrag(WP<CWLDataSourceResource> currentSource
+                 return;
+             }
+ 
+-            if (m_dnd.dndSurface->m_current.texture <= 0 && m_dnd.dndSurface->m_mapped) {
++            if (!m_dnd.dndSurface->m_current.texture && m_dnd.dndSurface->m_mapped) {
+                 m_dnd.dndSurface->unmap();
+                 return;
+             }
+@@ -836,7 +836,7 @@ void CWLDataDeviceProtocol::renderDND(PHLMONITOR pMonitor, const Time::steady_tp
+ }
+ 
+ bool CWLDataDeviceProtocol::dndActive() {
+-    return m_dnd.currentSource;
++    return bool(m_dnd.currentSource);
+ }
+ 
+ void CWLDataDeviceProtocol::abortDndIfPresent() {
+diff --git a/src/protocols/types/Buffer.cpp b/src/protocols/types/Buffer.cpp
+index 93bd5d20..11488f02 100644
+--- a/src/protocols/types/Buffer.cpp
++++ b/src/protocols/types/Buffer.cpp
+@@ -112,7 +112,7 @@ SP<IHLBuffer> CHLBufferReference::operator->() const {
+ }
+ 
+ CHLBufferReference::operator bool() const {
+-    return m_buffer;
++    return bool(m_buffer);
+ }
+ 
+ void CHLBufferReference::drop() {
+diff --git a/src/render/GLRenderer.cpp b/src/render/GLRenderer.cpp
+index 35aca7db..b0f45e20 100644
+--- a/src/render/GLRenderer.cpp
++++ b/src/render/GLRenderer.cpp
+@@ -55,7 +55,7 @@ bool CHyprGLRenderer::initRenderBuffer(SP<Aquamarine::IBuffer> buffer, uint32_t
+         return false;
+     }
+ 
+-    return m_currentRenderbuffer;
++    return bool(m_currentRenderbuffer);
+ }
+ 
+ bool CHyprGLRenderer::beginFullFakeRenderInternal(PHLMONITOR pMonitor, CRegion& damage, SP<IFramebuffer> fb, bool simple) {
+diff --git a/src/render/OpenGL.cpp b/src/render/OpenGL.cpp
+index 68e7e36d..e1db1f8b 100644
+--- a/src/render/OpenGL.cpp
++++ b/src/render/OpenGL.cpp
+@@ -749,7 +749,7 @@ void CHyprOpenGLImpl::begin(PHLMONITOR pMonitor, const CRegion& damage_, SP<IFra
+         g_pHyprRenderer->m_renderData.finalDamage.set(finalDamage.value_or(damage_));
+     }
+ 
+-    m_fakeFrame = fb;
++    m_fakeFrame = bool(fb);
+ 
+     if (g_pHyprRenderer->m_reloadScreenShader) {
+         g_pHyprRenderer->m_reloadScreenShader = false;
+diff --git a/src/render/Renderer.cpp b/src/render/Renderer.cpp
+index c4147354..935304e4 100644
+--- a/src/render/Renderer.cpp
++++ b/src/render/Renderer.cpp
+@@ -1700,7 +1700,7 @@ bool IHyprRenderer::beginRender(PHLMONITOR pMonitor, CRegion& damage, eRenderMod
+     const bool HAS_MIRROR_FB = g_pHyprRenderer->m_renderData.pMonitor->resources()->hasMirrorFB();
+     const bool NEEDS_COPY_FB = g_pHyprRenderer->m_renderData.pMonitor->needsACopyFB();
+ 
+-    if (HAS_MIRROR_FB && !NEEDS_COPY_FB)
++    if (type() == RT_GL && HAS_MIRROR_FB && !NEEDS_COPY_FB)
+         g_pHyprRenderer->m_renderData.pMonitor->resources()->mirrorFB()->release();
+ 
+     if (m_renderMode == RENDER_MODE_FULL_FAKE)
+diff --git a/src/render/VKRenderer.cpp b/src/render/VKRenderer.cpp
+index 12fb32d9..8f2faa7c 100644
+--- a/src/render/VKRenderer.cpp
++++ b/src/render/VKRenderer.cpp
+@@ -22,6 +22,7 @@
+ #include "helpers/cm/ColorManagement.hpp"
+ #include <algorithm>
+ #include <array>
++#include <stdexcept>
+ #include <cairo.h>
+ #include <cstdint>
+ #include <cstring>
+@@ -100,8 +101,10 @@ SP<ITexture> CHyprVKRenderer::blurFramebuffer(SP<IFramebuffer> source, float a,
+         m_currentRenderPass->endRendering();
+ 
+     m_currentCommandBuffer->changeLayout(source, //
+-                                         {.layout = VK_IMAGE_LAYOUT_GENERAL, .stageMask = VK_PIPELINE_STAGE_TRANSFER_BIT, .accessMask = VK_ACCESS_TRANSFER_WRITE_BIT},
+-                                         {.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, .stageMask = VK_PIPELINE_STAGE_TRANSFER_BIT, .accessMask = 0});
++                                         {.layout = VKFB(source)->m_lastKnownLayout, .stageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
++                                          .accessMask = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT},
++                                         {.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, .stageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
++                                          .accessMask = VK_ACCESS_SHADER_READ_BIT});
+ 
+     static auto PBLURSIZE   = CConfigValue<Hyprlang::INT>("decoration:blur:size");
+     static auto PBLURPASSES = CConfigValue<Hyprlang::INT>("decoration:blur:passes");
+@@ -117,8 +120,9 @@ SP<ITexture> CHyprVKRenderer::blurFramebuffer(SP<IFramebuffer> source, float a,
+ 
+     m_currentCommandBuffer->changeLayout(
+         source, //
+-        {.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, .stageMask = VK_PIPELINE_STAGE_TRANSFER_BIT, .accessMask = VK_ACCESS_TRANSFER_WRITE_BIT},
+-        {.layout = VK_IMAGE_LAYOUT_GENERAL, .stageMask = VK_PIPELINE_STAGE_TRANSFER_BIT, .accessMask = 0});
++        {.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, .stageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, .accessMask = VK_ACCESS_SHADER_READ_BIT},
++        {.layout = VK_IMAGE_LAYOUT_GENERAL, .stageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
++         .accessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT});
+ 
+     if (m_hasBoundFB)
+         m_currentRenderPass->beginRendering(m_currentCommandBuffer.lock(), m_hasBoundFB);
+@@ -214,7 +218,7 @@ void CHyprVKRenderer::bindFB(SP<IFramebuffer> fb) {
+     if (m_hasBoundFB) {
+         VK_CB_LABEL_BEGIN(m_currentCommandBuffer->vk(), "Switch FB")
+         m_currentRenderPass->endRendering();
+-        if (m_hasBoundFB == dc<CVKFramebuffer*>(m_renderData.pMonitor->resources()->m_blurFB.get())->fb())
++        if (m_hasBoundFB == dynamicPointerCast<CVKFramebuffer>(m_renderData.pMonitor->resources()->m_blurFB))
+             m_currentCommandBuffer->changeLayout(m_hasBoundFB, //
+                                                  {.layout = VK_IMAGE_LAYOUT_GENERAL, .stageMask = VK_PIPELINE_STAGE_TRANSFER_BIT, .accessMask = VK_ACCESS_TRANSFER_WRITE_BIT},
+                                                  {.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, .stageMask = VK_PIPELINE_STAGE_TRANSFER_BIT, .accessMask = 0});
+@@ -388,6 +392,15 @@ void CHyprVKRenderer::endRender(const std::function<void()>& renderingDoneCallba
+                                                  .accessMask = VK_ACCESS_SHADER_READ_BIT,
+                                              });
+ 
++    if (m_renderMode == RENDER_MODE_NORMAL)
++        m_currentCommandBuffer->changeLayout(m_renderData.mainFB,
++                                             {.layout = VKFB(m_renderData.mainFB)->m_lastKnownLayout,
++                                              .stageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
++                                              .accessMask = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT},
++                                             {.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
++                                              .stageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
++                                              .accessMask = VK_ACCESS_SHADER_READ_BIT});
++
+     g_pHyprVulkan->end();
+ 
+     if (m_renderMode == RENDER_MODE_NORMAL)
+@@ -435,6 +448,9 @@ void CHyprVKRenderer::endRender(const std::function<void()>& renderingDoneCallba
+         }
+     }
+ 
++    if (m_renderMode == RENDER_MODE_NORMAL)
++        m_renderData.pMonitor->resources()->retainMirrorFrame(m_renderData.mainFB);
++
+     m_currentBuffer        = nullptr;
+     m_renderData.currentFB = nullptr;
+     m_renderData.mainFB    = nullptr;
+@@ -443,9 +459,21 @@ void CHyprVKRenderer::endRender(const std::function<void()>& renderingDoneCallba
+     m_busy = false;
+ }
+ 
++static VkFormat supportedStencilFormat(VkPhysicalDevice physicalDevice) {
++    for (const auto format : {VK_FORMAT_D24_UNORM_S8_UINT, VK_FORMAT_D32_SFLOAT_S8_UINT}) {
++        VkFormatProperties properties{};
++        vkGetPhysicalDeviceFormatProperties(physicalDevice, format, &properties);
++        if (properties.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
++            return format;
++    }
++    throw std::runtime_error("No supported Vulkan depth/stencil attachment format");
++}
++
+ SP<ITexture> CHyprVKRenderer::createStencilTexture(const int width, const int height) {
+-    // VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT
+-    return makeShared<CVKTexture>(VK_FORMAT_D24_UNORM_S8_UINT, width, height);
++    const auto format = supportedStencilFormat(g_pHyprVulkan->device()->physicalDevice());
++    Log::logger->log(Log::DEBUG, "Selected Vulkan stencil format {}", static_cast<uint32_t>(format));
++    // Dynamic rendering does not currently attach this allocation as depth/stencil.
++    return makeShared<CVKTexture>(format, width, height);
+ }
+ 
+ SP<ITexture> CHyprVKRenderer::createTexture(bool opaque) {
+@@ -685,19 +713,6 @@ Vector2D CHyprVKRenderer::currentRBSize() {
+     return m_currentBuffer && m_currentBuffer->dmabuf().size.x > 0 && m_currentBuffer->dmabuf().size.y > 0 ? m_currentBuffer->dmabuf().size : m_currentRenderbufferSize;
+ }
+ 
+-SP<CVKBorderGradientUBO> CHyprVKRenderer::getGradientForWindow(PHLWINDOWREF window) {
+-    std::erase_if(m_borderGradients, [](const auto& it) { return !it.first; });
+-    if (!window)
+-        return nullptr;
+-
+-    if (m_borderGradients.contains(window))
+-        return m_borderGradients[window];
+-
+-    auto gradient             = makeShared<CVKBorderGradientUBO>(g_pHyprVulkan->device(), m_currentRenderPass->borderPipeline()->layout()->descriptorSets()[0]);
+-    m_borderGradients[window] = gradient;
+-    return gradient;
+-}
+-
+ SP<CVkPipelineLayout> CHyprVKRenderer::ensurePipelineLayout(CVkPipelineLayout::KEY key) {
+     const auto pipeline = std::ranges::find_if(m_pipelineLayouts, [key](const auto layout) { return layout->key() == key; });
+     if (pipeline != m_pipelineLayouts.end()) {
+diff --git a/src/render/VKRenderer.hpp b/src/render/VKRenderer.hpp
+index fd719cc7..f05b85d4 100644
+--- a/src/render/VKRenderer.hpp
++++ b/src/render/VKRenderer.hpp
+@@ -65,7 +65,6 @@ namespace Render::VK {
+ 
+         void                                             bindPipeline(WP<CVkPipeline> pipeline);
+         Vector2D                                         currentRBSize();
+-        SP<CVKBorderGradientUBO>                         getGradientForWindow(PHLWINDOWREF window);
+ 
+         void                                             setTexBarriers(SP<ITexture> tex);
+ 
+@@ -89,7 +88,6 @@ namespace Render::VK {
+         WP<CVkPipeline>                                  m_currentPipeline;
+         WP<CHyprVkCommandBuffer>                         m_currentCommandBuffer;
+ 
+-        std::map<PHLWINDOWREF, SP<CVKBorderGradientUBO>> m_borderGradients;
+ 
+         std::vector<SP<ITexture>>                        m_needBarriers;
+ 
+diff --git a/src/render/shaders/glsl/vk_shadow.frag b/src/render/shaders/glsl/vk_shadow.frag
+index 6558d327..146b79d5 100644
+--- a/src/render/shaders/glsl/vk_shadow.frag
++++ b/src/render/shaders/glsl/vk_shadow.frag
+@@ -33,23 +33,42 @@ data;
+ 
+ layout(location = 0) out vec4 fragColor;
+ void main() {
+-    fragColor = getShadow(data.v_color, v_texcoord, data.rounding.radius, data.rounding.power, float2vec(data.rounding.topLeft), float2vec(data.rounding.fullSize), data.range,
+-                          data.shadowPower, data.bottomRight
++    vec4 shadowColor = data.v_color;
+ #if USE_CM
+-                          ,
+-                          data.cm.sourceTF, data.cm.targetTF, float33TOmat3(data.cm.convertMatrix), float2vec(data.cm.srcTFRange), float2vec(data.cm.dstTFRange)
++    // The shared helper expects an already-converted, unpremultiplied color.
++    shadowColor = doColorManagement(vec4(data.v_color.rgb, 1.0), 1.0, data.cm.sourceTF, data.cm.targetTF,
++                                    float33TOmat3(data.cm.convertMatrix), float2vec(data.cm.srcTFRange), float2vec(data.cm.dstTFRange)
+ #if USE_TONEMAP || USE_SDR_MOD
+-                                                                                                                                       ,
+-                          float33TOmat3(data.targetPrimaries.xyz)
++                                    , float33TOmat3(data.targetPrimaries.xyz)
+ #endif
+ #if USE_TONEMAP
+-                              ,
+-                          data.tonemap.maxLuminance, data.tonemap.dstMaxLuminance, data.tonemap.dstRefLuminance, data.cm.srcRefLuminance
++                                    , data.tonemap.maxLuminance, data.tonemap.dstMaxLuminance,
++                                    data.tonemap.dstRefLuminance, data.cm.srcRefLuminance
+ #endif
+ #if USE_SDR_MOD
+-                          ,
+-                          data.targetPrimaries.sdrSaturation, data.targetPrimaries.sdrBrightnessMultiplier
++                                    , data.targetPrimaries.sdrSaturation, data.targetPrimaries.sdrBrightnessMultiplier
+ #endif
++    );
++    shadowColor.a = data.v_color.a;
++#endif
++#if USE_ROUNDING
++    // Vulkan's existing push data stores range + round; getShadow adds range itself.
++    float radius = max(0.0, data.rounding.radius - data.range);
++    float power = data.rounding.power;
++    vec2 topLeft = float2vec(data.rounding.topLeft);
++    vec2 fullSize = float2vec(data.rounding.fullSize);
++#else
++    float radius = 0.0;
++    float power = 2.0;
++    vec2 topLeft = vec2(0.0);
++    vec2 fullSize = data.bottomRight;
++#endif
++    // The WIP Vulkan push data has no actual window cutout geometry. Preserve
++    // its previous no-cutout semantics instead of inventing window coordinates.
++    fragColor = getShadow(shadowColor, data.v_color, v_texcoord, radius, power, topLeft, fullSize,
++                          data.range, data.shadowPower, data.bottomRight, vec2(-1.0), vec2(-1.0), 0.0
++#if USE_CM
++                          , data.cm.targetTF
+ #endif
+     );
+-}
+\ No newline at end of file
++}
+diff --git a/src/render/shaders/glsl/vk_tex.frag b/src/render/shaders/glsl/vk_tex.frag
+index ae190f31..193f4319 100644
+--- a/src/render/shaders/glsl/vk_tex.frag
++++ b/src/render/shaders/glsl/vk_tex.frag
+@@ -60,7 +60,7 @@ void main() {
+ 
+ #if USE_CM
+     mat3 convertMatrix = float33TOmat3(data.cm.convertMatrix);
+-    pixColor           = doColorManagement(pixColor, data.cm.sourceTF, data.cm.targetTF, convertMatrix, float2vec(data.cm.srcTFRange), float2vec(data.cm.dstTFRange)
++    pixColor           = doColorManagement(pixColor, 1.0, data.cm.sourceTF, data.cm.targetTF, convertMatrix, float2vec(data.cm.srcTFRange), float2vec(data.cm.dstTFRange)
+ #if USE_TONEMAP || USE_SDR_MOD
+                                                                                                                                  ,
+                                  float33TOmat3(data.targetPrimaries.xyz)
+diff --git a/src/render/vulkan/BlurPass.cpp b/src/render/vulkan/BlurPass.cpp
+index 0f4c0dc2..66f8354b 100644
+--- a/src/render/vulkan/BlurPass.cpp
++++ b/src/render/vulkan/BlurPass.cpp
+@@ -47,8 +47,10 @@ int CVKBlurPass::passes() {
+ 
+ static void beginRendering(WP<CHyprVkCommandBuffer> cb, WP<CVKFramebuffer> target) {
+     cb->changeLayout(target, //
+-                     {.layout = target->m_lastKnownLayout, .stageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, .accessMask = VK_ACCESS_TRANSFER_WRITE_BIT},
+-                     {.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, .stageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, .accessMask = 0});
++                     {.layout = target->m_lastKnownLayout, .stageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
++                      .accessMask = target->m_lastKnownLayout == VK_IMAGE_LAYOUT_UNDEFINED ? 0U : VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT},
++                     {.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, .stageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
++                      .accessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT});
+ 
+     VkRenderingAttachmentInfo attachment = {
+         .sType       = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO,
+@@ -85,8 +87,9 @@ static void endRendering(WP<CHyprVkCommandBuffer> cb, WP<CVKFramebuffer> target)
+     vkCmdEndRendering(cb->vk());
+ 
+     cb->changeLayout(target, //
+-                     {.layout = target->m_lastKnownLayout, .stageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, .accessMask = VK_ACCESS_TRANSFER_WRITE_BIT},
+-                     {.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, .stageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, .accessMask = 0});
++                     {.layout = target->m_lastKnownLayout, .stageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
++                      .accessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT},
++                     {.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, .stageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, .accessMask = VK_ACCESS_SHADER_READ_BIT});
+ }
+ 
+ SP<Render::ITexture> CVKBlurPass::blurTexture(SP<ITexture> tex, SP<IFramebuffer> first, SP<IFramebuffer> second, float a, const CRegion& damage) {
+diff --git a/src/render/vulkan/BorderGradientUBO.hpp b/src/render/vulkan/BorderGradientUBO.hpp
+index 4c20aa99..fe74f97c 100644
+--- a/src/render/vulkan/BorderGradientUBO.hpp
++++ b/src/render/vulkan/BorderGradientUBO.hpp
+@@ -14,9 +14,9 @@ namespace Render::VK {
+         VkDescriptorSet ds();
+ 
+       private:
+-        VkDescriptorSet       m_desctiptorSet;
++        VkDescriptorSet       m_desctiptorSet = VK_NULL_HANDLE;
+         WP<CVKDescriptorPool> m_dsPool;
+-        VkBuffer              m_buffer;
+-        VkDeviceMemory        m_bufferMemory;
++        VkBuffer              m_buffer = VK_NULL_HANDLE;
++        VkDeviceMemory        m_bufferMemory = VK_NULL_HANDLE;
+     };
+ }
+\ No newline at end of file
+diff --git a/src/render/vulkan/CommandBuffer.cpp b/src/render/vulkan/CommandBuffer.cpp
+index 0aff898a..4a744a08 100644
+--- a/src/render/vulkan/CommandBuffer.cpp
++++ b/src/render/vulkan/CommandBuffer.cpp
+@@ -1,4 +1,5 @@
+ #include "CommandBuffer.hpp"
++#include "BorderGradientUBO.hpp"
+ #include "../../macros.hpp"
+ #include "debug/log/Logger.hpp"
+ #include "render/vulkan/DeviceUser.hpp"
+@@ -143,7 +144,12 @@ void CHyprVkCommandBuffer::useBlurPass(SP<CVKBlurPass> bp) {
+     m_usedBlurPass = bp;
+ }
+ 
++void CHyprVkCommandBuffer::useGradient(SP<CVKBorderGradientUBO> gradient) {
++    m_usedGradients.push_back(gradient);
++}
++
+ void CHyprVkCommandBuffer::resetUsedResources() {
++    m_usedGradients.clear();
+     m_usedRenderPass.reset();
+     m_usedBlurPass.reset();
+     m_usedTextures.clear();
+diff --git a/src/render/vulkan/CommandBuffer.hpp b/src/render/vulkan/CommandBuffer.hpp
+index 5cb6be7e..fb82ca59 100644
+--- a/src/render/vulkan/CommandBuffer.hpp
++++ b/src/render/vulkan/CommandBuffer.hpp
+@@ -14,6 +14,7 @@ namespace Render::VK {
+ 
+     class CHyprVKRenderer;
+     class CHyprVkFramebuffer;
++    class CVKBorderGradientUBO;
+ 
+     class CHyprVkCommandBuffer : public IDeviceUser {
+       public:
+@@ -37,6 +38,7 @@ namespace Render::VK {
+         void            useFB(SP<CHyprVkFramebuffer> fb);
+         void            useRenderPass(SP<CVkRenderPass> rp);
+         void            useBlurPass(SP<CVKBlurPass> bp);
++        void            useGradient(SP<CVKBorderGradientUBO> gradient);
+ 
+         void            resetUsedResources();
+ 
+@@ -50,6 +52,7 @@ namespace Render::VK {
+         SP<CHyprVkFramebuffer>    m_usedFB;
+         SP<CVkRenderPass>         m_usedRenderPass;
+         SP<CVKBlurPass>           m_usedBlurPass;
++        std::vector<SP<CVKBorderGradientUBO>> m_usedGradients;
+ 
+         // friend class CHyprVKRenderer;
+         // friend class CHyprVulkanImpl;
+diff --git a/src/render/vulkan/Device.cpp b/src/render/vulkan/Device.cpp
+index 71739526..a9aa4ac4 100644
+--- a/src/render/vulkan/Device.cpp
++++ b/src/render/vulkan/Device.cpp
+@@ -334,8 +334,8 @@ bool CHyprVulkanDevice::getModifiers(SVkFormatProps& props, const size_t modifie
+ 
+     vkGetPhysicalDeviceFormatProperties2(m_physicalDevice, props.format.vkFormat, &formatProps);
+ 
+-    props.dmabuf.renderModifiers.resize(modProps.drmFormatModifierCount);
+-    props.dmabuf.textureModifiers.resize(modProps.drmFormatModifierCount);
++    props.dmabuf.renderModifiers.reserve(modProps.drmFormatModifierCount);
++    props.dmabuf.textureModifiers.reserve(modProps.drmFormatModifierCount);
+ 
+     bool found = false;
+     for (const auto& mod : drmFormatModifierProperties) {
+diff --git a/src/render/vulkan/Framebuffer.cpp b/src/render/vulkan/Framebuffer.cpp
+index 5e3efa56..19bb0895 100644
+--- a/src/render/vulkan/Framebuffer.cpp
++++ b/src/render/vulkan/Framebuffer.cpp
+@@ -145,7 +145,7 @@ bool CVKFramebuffer::internalAlloc(int w, int h, uint32_t fmt) {
+         m_FB->m_initialized = true;
+     }
+     m_fbAllocated = true;
+-    return m_FB;
++    return bool(m_FB);
+ };
+ 
+ void CVKFramebuffer::setTexture(SP<ITexture> tex) {
+diff --git a/src/render/vulkan/RenderPass.cpp b/src/render/vulkan/RenderPass.cpp
+index 9db8ee60..d7358dd7 100644
+--- a/src/render/vulkan/RenderPass.cpp
++++ b/src/render/vulkan/RenderPass.cpp
+@@ -58,13 +58,13 @@ void CVkRenderPass::beginRendering(SP<CHyprVkCommandBuffer> cb, SP<CVKFramebuffe
+     cb->changeLayout(target, //
+                      {
+                          .layout     = target->m_lastKnownLayout,
+-                         .stageMask  = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+-                         .accessMask = VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT,
++                         .stageMask  = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
++                         .accessMask = target->m_lastKnownLayout == VK_IMAGE_LAYOUT_UNDEFINED ? 0U : VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT,
+                      },
+                      {
+                          .layout     = VK_IMAGE_LAYOUT_GENERAL,
+-                         .stageMask  = VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT,
+-                         .accessMask = 0,
++                         .stageMask  = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
++                         .accessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+                      });
+ 
+     VkRenderingAttachmentInfo attachment = {
+@@ -104,8 +104,10 @@ void CVkRenderPass::endRendering() {
+     vkCmdEndRendering(m_cmdBuffer->vk());
+ 
+     m_cmdBuffer->changeLayout(m_targetFB, //
+-                              {.layout = m_targetFB->m_lastKnownLayout, .stageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, .accessMask = VK_ACCESS_TRANSFER_WRITE_BIT},
+-                              {.layout = VK_IMAGE_LAYOUT_GENERAL, .stageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, .accessMask = 0});
++                              {.layout = m_targetFB->m_lastKnownLayout, .stageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
++                               .accessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT},
++                              {.layout = VK_IMAGE_LAYOUT_GENERAL, .stageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
++                               .accessMask = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT});
+     VK_CB_LABEL_END(m_cmdBuffer->vk())
+     VK_CB_LABEL_END(m_cmdBuffer->vk())
+     m_targetFB.reset();
+diff --git a/src/render/vulkan/Shaders.cpp b/src/render/vulkan/Shaders.cpp
+index be1f3e34..3b6afd86 100644
+--- a/src/render/vulkan/Shaders.cpp
++++ b/src/render/vulkan/Shaders.cpp
+@@ -51,7 +51,8 @@ static int getShaderDataSize(ePreparedFragmentShader frag, uint8_t features) {
+             return sizeof(SVkFragShaderData) + (features & SH_FEAT_ROUNDING ? sizeof(SRounding) : 0) + (features & SH_FEAT_CM ? sizeof(SShaderCM) : 0) +
+                 (features & SH_FEAT_TONEMAP ? sizeof(SShaderTonemap) : 0) + (features & SH_FEAT_TONEMAP || features & SH_FEAT_SDR_MOD ? sizeof(SShaderTargetPrimaries) : 0);
+         case SH_FRAG_BORDER1:
+-            return sizeof(SVkBorderShaderData) + (features & SH_FEAT_ROUNDING ? sizeof(SRounding) : 0) + (features & SH_FEAT_CM ? sizeof(SShaderCM) : 0) +
++            // The border shader needs full geometry even when its radius is zero.
++            return sizeof(SVkBorderShaderData) + sizeof(SRounding) + (features & SH_FEAT_CM ? sizeof(SShaderCM) : 0) +
+                 (features & SH_FEAT_TONEMAP ? sizeof(SShaderTonemap) : 0) + (features & SH_FEAT_TONEMAP || features & SH_FEAT_SDR_MOD ? sizeof(SShaderTargetPrimaries) : 0);
+         case SH_FRAG_GLITCH: return 0; // unsupported
+         default: UNREACHABLE();
+diff --git a/src/render/vulkan/VKElementRenderer.cpp b/src/render/vulkan/VKElementRenderer.cpp
+index 95bd5b22..f3d5c38b 100644
+--- a/src/render/vulkan/VKElementRenderer.cpp
++++ b/src/render/vulkan/VKElementRenderer.cpp
+@@ -106,10 +106,9 @@ void CVKElementRenderer::draw(WP<CBorderPassElement> element, const CRegion& dam
+     vkCmdPushConstants(cb->vk(), layout->vk(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(vertData), &vertData);
+     vkCmdPushConstants(cb->vk(), layout->vk(), VK_SHADER_STAGE_FRAGMENT_BIT, sizeof(vertData), sizeof(fragData), &fragData);
+     int featuresOffset = sizeof(vertData) + sizeof(fragData);
+-    if (usedFeatures & SH_FEAT_ROUNDING) {
+-        vkCmdPushConstants(cb->vk(), layout->vk(), VK_SHADER_STAGE_FRAGMENT_BIT, featuresOffset, sizeof(roundingData), &roundingData);
+-        featuresOffset += sizeof(roundingData);
+-    }
++    // vk_border.frag always declares/uses SRounding for border geometry, including square corners.
++    vkCmdPushConstants(cb->vk(), layout->vk(), VK_SHADER_STAGE_FRAGMENT_BIT, featuresOffset, sizeof(roundingData), &roundingData);
++    featuresOffset += sizeof(roundingData);
+     if (usedFeatures & SH_FEAT_CM) {
+         vkCmdPushConstants(cb->vk(), layout->vk(), VK_SHADER_STAGE_FRAGMENT_BIT, featuresOffset, sizeof(cmData), &cmData);
+         featuresOffset += sizeof(cmData);
+@@ -123,12 +122,14 @@ void CVKElementRenderer::draw(WP<CBorderPassElement> element, const CRegion& dam
+         featuresOffset += sizeof(primariesData);
+     }
+ 
+-    auto ubo = m_renderer->getGradientForWindow(data.window);
+-    if (ubo) {
+-        auto ds = ubo->ds();
+-        vkCmdBindDescriptorSets(cb->vk(), VK_PIPELINE_BIND_POINT_GRAPHICS, layout->vk(), 0, 1, &ds, 0, nullptr);
+-        ubo->update(gradientData);
+-    }
++    // Windowless error overlays also require a gradient descriptor. Each draw
++    // owns immutable data until its command buffer has completed on the GPU.
++    auto ubo = makeShared<CVKBorderGradientUBO>(g_pHyprVulkan->device(), layout->descriptorSets()[0]);
++    RASSERT(ubo->ds() != VK_NULL_HANDLE, "Could not allocate Vulkan border gradient descriptor");
++    ubo->update(gradientData);
++    cb->useGradient(ubo);
++    const auto ds = ubo->ds();
++    vkCmdBindDescriptorSets(cb->vk(), VK_PIPELINE_BIND_POINT_GRAPHICS, layout->vk(), 0, 1, &ds, 0, nullptr);
+ 
+     CRegion clipBox = m_renderData.damage.copy().intersect(newBox);
+     clipBox.subtract(element->m_data.box.copy().expand(-scaledBorderSize - round));
+@@ -241,45 +242,7 @@ void CVKElementRenderer::draw(WP<CRectPassElement> element, const CRegion& damag
+ 
+ void CVKElementRenderer::draw(WP<CShadowPassElement> element, const CRegion& damage) {
+     VK_CB_LABEL_BEGIN(m_renderer->m_currentCommandBuffer->vk(), "Shadow element")
+-    auto&            m_renderData        = m_renderer->m_renderData;
+-    static auto      PSHADOWIGNOREWINDOW = CConfigValue<Hyprlang::INT>("decoration:shadow:ignore_window");
+-    SP<IFramebuffer> mirrorFB;
+-    SP<IFramebuffer> mirrorSwapFB;
+-    if (*PSHADOWIGNOREWINDOW) {
+-        mirrorFB     = m_renderData.pMonitor->resources()->getUnusedWorkBuffer();
+-        mirrorSwapFB = m_renderData.pMonitor->resources()->getUnusedWorkBuffer();
+-        if (m_renderer->m_hasBoundFB)
+-            m_renderer->m_currentRenderPass->endRendering();
+-        m_renderer->m_currentCommandBuffer->changeLayout(
+-            mirrorFB, //
+-            {.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, .stageMask = VK_PIPELINE_STAGE_TRANSFER_BIT, .accessMask = VK_ACCESS_TRANSFER_WRITE_BIT},
+-            {.layout = VK_IMAGE_LAYOUT_GENERAL, .stageMask = VK_PIPELINE_STAGE_TRANSFER_BIT, .accessMask = 0});
+-        m_renderer->m_currentCommandBuffer->changeLayout(
+-            mirrorSwapFB, //
+-            {.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, .stageMask = VK_PIPELINE_STAGE_TRANSFER_BIT, .accessMask = VK_ACCESS_TRANSFER_WRITE_BIT},
+-            {.layout = VK_IMAGE_LAYOUT_GENERAL, .stageMask = VK_PIPELINE_STAGE_TRANSFER_BIT, .accessMask = 0});
+-
+-        if (m_renderer->m_hasBoundFB)
+-            m_renderer->m_currentRenderPass->beginRendering(m_renderer->m_currentCommandBuffer.lock(), m_renderer->m_hasBoundFB);
+-    }
+-
+-    element->m_data.deco->render(m_renderData.pMonitor.lock(), element->m_data.a);
+-
+-    if (*PSHADOWIGNOREWINDOW) {
+-        if (m_renderer->m_hasBoundFB)
+-            m_renderer->m_currentRenderPass->endRendering();
+-        m_renderer->m_currentCommandBuffer->changeLayout(
+-            mirrorFB, //
+-            {.layout = VK_IMAGE_LAYOUT_GENERAL, .stageMask = VK_PIPELINE_STAGE_TRANSFER_BIT, .accessMask = VK_ACCESS_TRANSFER_WRITE_BIT},
+-            {.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, .stageMask = VK_PIPELINE_STAGE_TRANSFER_BIT, .accessMask = 0});
+-        m_renderer->m_currentCommandBuffer->changeLayout(
+-            mirrorSwapFB, //
+-            {.layout = VK_IMAGE_LAYOUT_GENERAL, .stageMask = VK_PIPELINE_STAGE_TRANSFER_BIT, .accessMask = VK_ACCESS_TRANSFER_WRITE_BIT},
+-            {.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, .stageMask = VK_PIPELINE_STAGE_TRANSFER_BIT, .accessMask = 0});
+-
+-        if (m_renderer->m_hasBoundFB)
+-            m_renderer->m_currentRenderPass->beginRendering(m_renderer->m_currentCommandBuffer.lock(), m_renderer->m_hasBoundFB);
+-    }
++    element->m_data.deco->render(m_renderer->m_renderData.pMonitor.lock(), element->m_data.a);
+     VK_CB_LABEL_END(m_renderer->m_currentCommandBuffer->vk())
+ };
+ 
+@@ -290,7 +253,6 @@ void CVKElementRenderer::draw(WP<CInnerGlowPassElement> element, const CRegion&
+ void CVKElementRenderer::draw(WP<CTexPassElement> element, const CRegion& damage) {
+     auto&             m_renderData = m_renderer->m_renderData;
+     static const auto PCM          = CConfigValue<Hyprlang::INT>("render:cm_enabled");
+-    const auto        sdrEOTF      = NTransferFunction::fromConfig();
+ 
+     auto              discardOpacity = element->m_data.ignoreAlpha.has_value() ? *element->m_data.ignoreAlpha : element->m_data.discardOpacity;
+     auto              discardMode    = element->m_data.ignoreAlpha.has_value() ? (uint32_t)DISCARD_ALPHA : element->m_data.discardMode;
+@@ -389,11 +351,12 @@ void CVKElementRenderer::draw(WP<CTexPassElement> element, const CRegion& damage
+ 
+     const auto imageDescription = surface.valid() && surface->m_colorManagement.valid() ?
+         NColorManagement::CImageDescription::from(surface->m_colorManagement->imageDescription()) :
+-        (data.cmBackToSRGB ? data.cmBackToSRGBSource->m_imageDescription : NColorManagement::getDefaultImageDescription());
++        (data.cmBackToSRGB ? (data.tex->m_imageDescription ? data.tex->m_imageDescription : m_renderer->workBufferImageDescription()) : NColorManagement::getDefaultImageDescription());
+ 
+-    auto       chosenSdrEotf          = sdrEOTF != NTransferFunction::TF_SRGB ? NColorManagement::CM_TRANSFER_FUNCTION_GAMMA22 : NColorManagement::CM_TRANSFER_FUNCTION_SRGB;
+-    const auto targetImageDescription = data.cmBackToSRGB ? NColorManagement::CImageDescription::from(NColorManagement::SImageDescription{.transferFunction = chosenSdrEotf}) :
+-                                                            m_renderData.pMonitor->m_imageDescription;
++    // Render into the framebuffer's declared color space, including sRGB screencopy targets.
++    const auto framebufferDescription = m_renderData.currentFB->imageDescription();
++    const auto targetImageDescription = framebufferDescription ? framebufferDescription :
++        (data.cmBackToSRGB ? NColorManagement::getDefaultImageDescription() : m_renderData.pMonitor->m_imageDescription);
+     const bool skipCM                 = !*PCM                                              /* CM unsupported or disabled */
+         || m_renderData.pMonitor->doesNoShaderCM()                                         /* no shader needed */
+         || (imageDescription->id() == targetImageDescription->id() && !data.cmBackToSRGB); /* Source and target have the same image description */
+diff --git a/src/render/vulkan/VKTexture.cpp b/src/render/vulkan/VKTexture.cpp
+index 2d451b53..34fdeeb5 100644
+--- a/src/render/vulkan/VKTexture.cpp
++++ b/src/render/vulkan/VKTexture.cpp
+@@ -122,17 +122,14 @@ CVKTexture::CVKTexture(uint32_t drmFormat, const Vector2D& size, bool keepDataCo
+         .sharingMode   = VK_SHARING_MODE_EXCLUSIVE,
+         .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+     };
++    const auto viewFormats = std::to_array({props->format.vkFormat, props->format.vkSrgbFormat});
++    VkImageFormatListCreateInfoKHR listInfo = {
++        .sType = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR,
++        .viewFormatCount = viewFormats.size(),
++        .pViewFormats = viewFormats.data(),
++    };
+     if (props->shm.canSrgb) {
+         imgInfo.flags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
+-        const auto                     viewFormats = std::to_array({
+-            props->format.vkFormat,
+-            props->format.vkSrgbFormat,
+-        });
+-        VkImageFormatListCreateInfoKHR listInfo    = {
+-            .sType           = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR,
+-            .viewFormatCount = viewFormats.size(),
+-            .pViewFormats    = viewFormats.data(),
+-        };
+         imgInfo.pNext = &listInfo;
+     }
+ 
+@@ -234,18 +231,14 @@ CVKTexture::CVKTexture(const Aquamarine::SDMABUFAttrs& attrs, bool opaque, VkIma
+         .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+     };
+ 
++    const auto viewFormats = std::to_array({props.format.vkFormat, props.format.vkSrgbFormat});
++    VkImageFormatListCreateInfoKHR listInfo = {
++        .sType = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR,
++        .viewFormatCount = viewFormats.size(),
++        .pViewFormats = viewFormats.data(),
++    };
+     if (mod->canSrgb) {
+         imgInfo.flags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
+-
+-        VkFormat viewFormats[] = {
+-            props.format.vkFormat,
+-            props.format.vkSrgbFormat,
+-        };
+-        VkImageFormatListCreateInfoKHR listInfo = {
+-            .sType           = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR,
+-            .viewFormatCount = sizeof(viewFormats) / sizeof(viewFormats[0]),
+-            .pViewFormats    = viewFormats,
+-        };
+         modInfo.pNext = &listInfo;
+     }
+ 
+diff --git a/src/render/vulkan/Vulkan.cpp b/src/render/vulkan/Vulkan.cpp
+index a2c3f81d..ac1d7268 100644
+--- a/src/render/vulkan/Vulkan.cpp
++++ b/src/render/vulkan/Vulkan.cpp
+@@ -14,6 +14,9 @@
+ #include <hyprutils/memory/SharedPtr.hpp>
+ #include <sys/stat.h>
+ #include <cstdint>
++#include <cstdlib>
++#include <cstdio>
++#include <string_view>
+ #include <string>
+ #include <sys/sysmacros.h>
+ #include <vector>
+@@ -69,6 +72,13 @@ static VKAPI_ATTR VkBool32 debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT
+     }
+ 
+     Log::logger->log(level, message);
++    // Private diagnostic: stop on the first invalid command before the ICD can execute it.
++    const auto* abortOnValidation = std::getenv("HYPRFLOW_TEST_VALIDATION_ABORT");
++    if (severity == VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT && abortOnValidation && std::string_view(abortOnValidation) == "1") {
++        std::fprintf(stderr, "HYPRFLOW_TEST_VALIDATION_ABORT: %s\n", debugData->pMessage);
++        std::fflush(stderr);
++        std::abort();
++    }
+ 
+     return false;
+ }
+@@ -124,7 +134,9 @@ CHyprVulkanImpl::CHyprVulkanImpl() {
+ 
+     std::vector<char*> enabledExtensions;
+ 
+-    const bool         hasDebug = ISDEBUG && hasExtension(extensions, VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
++    const auto*        validationAbort = std::getenv("HYPRFLOW_TEST_VALIDATION_ABORT");
++    const bool         forceDebug = validationAbort && std::string_view(validationAbort) == "1";
++    const bool         hasDebug = (ISDEBUG || forceDebug) && hasExtension(extensions, VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+     if (hasDebug)
+         enabledExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+ 
+@@ -176,6 +188,19 @@ CHyprVulkanImpl::CHyprVulkanImpl() {
+ CHyprVulkanImpl::~CHyprVulkanImpl() {
+     Log::logger->log(Log::DEBUG, "Destroying vulkan renderer");
+ 
++    // Device children must be released while the device and its parent instance
++    // remain alive; member destruction after this body would be too late.
++    if (m_device)
++        vkDeviceWaitIdle(m_device->vkDevice());
++    m_readTexturesCache.clear();
++    m_currentRenderCB.reset();
++    m_currentStageCB.reset();
++    m_commandBuffers.clear();
++    m_sharedBuffers.clear();
++    for (auto& pools : m_dsPools)
++        pools.clear();
++    m_device.reset();
++
+     if (m_debug != VK_NULL_HANDLE && m_proc.vkDestroyDebugUtilsMessengerEXT)
+         m_proc.vkDestroyDebugUtilsMessengerEXT(m_instance, m_debug, nullptr);
+ 
+@@ -364,6 +389,7 @@ bool CHyprVulkanImpl::submitStage() {
+ }
+ 
+ void CHyprVulkanImpl::end() {
++    const auto previousPoint = m_device->m_timelinePoint;
+     auto                      stage = endStage();
+ 
+     VkCommandBufferSubmitInfo stageInfo = {
+@@ -374,6 +400,7 @@ void CHyprVulkanImpl::end() {
+         .sType     = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
+         .semaphore = m_device->timelineSemaphore(),
+         .value     = stage->m_timelinePoint,
++        .stageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
+     };
+     VkSubmitInfo2 stageSubmit = {
+         .sType                    = VK_STRUCTURE_TYPE_SUBMIT_INFO_2,
+@@ -384,11 +411,11 @@ void CHyprVulkanImpl::end() {
+     };
+ 
+     VkSemaphoreSubmitInfo stageWait;
+-    if (m_lastStagePoint > 0) {
++    if (previousPoint > 0) {
+         stageWait = {
+             .sType     = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
+             .semaphore = m_device->timelineSemaphore(),
+-            .value     = m_lastStagePoint,
++            .value     = previousPoint,
+             .stageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
+         };
+ 
+@@ -403,8 +430,14 @@ void CHyprVulkanImpl::end() {
+ 
+     std::vector<VkSemaphoreSubmitInfo> waitSemaphores;
+     std::vector<VkSemaphoreSubmitInfo> signalSemaphores;
++    waitSemaphores.push_back({
++        .sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
++        .semaphore = m_device->timelineSemaphore(),
++        .value = stage->m_timelinePoint,
++        .stageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
++    });
+ 
+-    // TODO sync
++    // TODO external client sync
+     // waitSemaphores.push_back({
+     //     .sType     = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
+     //     .semaphore = m_waitSemaphore,
+@@ -421,7 +454,7 @@ void CHyprVulkanImpl::end() {
+         .sType     = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
+         .semaphore = m_device->timelineSemaphore(),
+         .value     = m_device->m_timelinePoint,
+-        // .stageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
++        .stageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
+     });
+ 
+     const std::array<VkCommandBufferSubmitInfo, 1> cmdBufferInfo{{{
+@@ -431,8 +464,8 @@ void CHyprVulkanImpl::end() {
+ 
+     const VkSubmitInfo2                            renderSubmit = {
+         .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO_2,
+-        // .waitSemaphoreInfoCount   = waitSemaphores.size(),
+-        // .pWaitSemaphoreInfos      = waitSemaphores.data(),
++        .waitSemaphoreInfoCount   = waitSemaphores.size(),
++        .pWaitSemaphoreInfos      = waitSemaphores.data(),
+         .commandBufferInfoCount   = cmdBufferInfo.size(),
+         .pCommandBufferInfos      = cmdBufferInfo.data(),
+         .signalSemaphoreInfoCount = signalSemaphores.size(),
+diff --git a/src/xwayland/XSurface.cpp b/src/xwayland/XSurface.cpp
+index 5c5f3b5c..fa5aa76f 100644
+--- a/src/xwayland/XSurface.cpp
++++ b/src/xwayland/XSurface.cpp
+@@ -78,7 +78,7 @@ void CXWaylandSurface::recheckSupportedProps() {
+ }
+ 
+ void CXWaylandSurface::ensureListeners() {
+-    bool connected = m_listeners.destroySurface;
++    bool connected = bool(m_listeners.destroySurface);
+ 
+     if (connected && !m_surface) {
+         m_listeners.destroySurface.reset();

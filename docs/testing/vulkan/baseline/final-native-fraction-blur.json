@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "scope": "Native Vulkan transparent-client blur with real output modeset and fractional scale changes, before loading Hyprflow",
+  "native_binary_sha256": "1e1ffac2f71cbba2180fffc3ca3701087cb359c24e5313e5dc0a17677d9fe30d",
+  "runtime_base": "b60bb19e8c8f5005a121714520acf41bd095e74b",
+  "qualification_abi_suffix": "_hyprflow_vulkan_qualification_v1",
+  "effective_configuration": {
+    "mode": [
+      1440,
+      900,
+      60
+    ],
+    "scale_sequence": [
+      1,
+      1.25,
+      1.5,
+      2,
+      1
+    ],
+    "transform": 0,
+    "bitdepth": 8,
+    "native_blur": true,
+    "rounding": 12,
+    "transparent_client_opacity": 0.8
+  },
+  "evidence_of_effective_values": "Native monitor apply logs confirm each physical mode, scale and normal transform.",
+  "checks": [
+    "native-only registry has no Hyprflow during controlled blur/modeset sequence",
+    "workspace 5/4 focus switches after each scale request",
+    "Lua REPL returns 42 after each request",
+    "transparent native blur remains alive",
+    "zero core/synchronization validation errors under first-error abort instrumentation",
+    "unchanged final 40ef candidate loaded only after native control, closed and usable"
+  ],
+  "native_repairs": [
+    {
+      "cause": "BlurPass helper was a second attachment LOAD path with no destination access dependency, independent of the common RenderPass helper.",
+      "fix": "Color-attachment read/write dependencies on blur attachment begin; color-output writes become fragment shader reads on finish, with matching input/restoration caller scopes."
+    },
+    {
+      "cause": "Output reconfiguration destroyed old framebuffer descriptors before the GPU had finished the preceding frame.",
+      "fix": "Wait for the Vulkan device before replacing monitor resources on mode/format/size changes. No per-frame wait added."
+    }
+  ],
+  "product_artifact_sha256": "40ef44a3c373a04693fe8972c4aa80186c16b6f4f8212cdf6557e4f7180db448",
+  "headers_or_api_layout_changed": false,
+  "validation": {
+    "core_errors": 0,
+    "synchronization_errors": 0,
+    "layer": "VK_LAYER_KHRONOS_validation",
+    "gpu_assisted": false,
+    "fail_fast_before_icd": true
+  },
+  "cleanup": "Control client closed; live owned session handed to parent for full matrix/input/lifecycle and final graceful-exit verification."
+}

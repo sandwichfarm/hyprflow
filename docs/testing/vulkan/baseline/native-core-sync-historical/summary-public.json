@@ -1,0 +1,146 @@
+{
+  "passed": true,
+  "native_only": true,
+  "renderer": "Vulkan",
+  "gpu": "AMD Radeon RX Vega / RADV",
+  "configuration_eotf": "default",
+  "checks": [
+    {
+      "name": "reload-1",
+      "pixel": [
+        33,
+        67,
+        106
+      ],
+      "sha256": "d0aeb829f9578f8470c0a76e218670ac74cfe37cb151e12a163adecdcb457a53",
+      "file": "reload-1.png"
+    },
+    {
+      "name": "reload-2",
+      "pixel": [
+        33,
+        67,
+        106
+      ],
+      "sha256": "33754a610ba8bd213e892a2e213be257624dc9813237e54cd42cb65953813d0b",
+      "file": "reload-2.png"
+    },
+    {
+      "name": "reload-3",
+      "pixel": [
+        33,
+        67,
+        106
+      ],
+      "sha256": "1d780806560bff680501d5b2da2c1bc1a0ef737fa7ede16b3f3b04867c35d1b4",
+      "file": "reload-3.png"
+    },
+    {
+      "name": "native-roundtrip-0",
+      "pixel": [
+        33,
+        67,
+        106
+      ],
+      "sha256": "d47b952ecab0eb31aaded2e8366cf5afae6b5925f19d1ba1f47c18af31142387",
+      "file": "native-roundtrip-0.png"
+    },
+    {
+      "name": "native-roundtrip-1",
+      "pixel": [
+        33,
+        67,
+        106
+      ],
+      "sha256": "2d3bb145bbc6ee7e90f7eab9a70363c2338180b30edb10c93d9c1720805f7871",
+      "file": "native-roundtrip-1.png"
+    },
+    {
+      "name": "native-roundtrip-2",
+      "pixel": [
+        33,
+        67,
+        106
+      ],
+      "sha256": "fcce637eeb961b5476b21e36564a695391314d4a9cf0da76987d354b1c04beca",
+      "file": "native-roundtrip-2.png"
+    },
+    {
+      "name": "native-roundtrip-3",
+      "pixel": [
+        33,
+        67,
+        106
+      ],
+      "sha256": "12a09b1fc494555454a42a3c0f3f153a4e14c1f37e707dad053e0bb5f310b5fd",
+      "file": "native-roundtrip-3.png"
+    },
+    {
+      "name": "native-roundtrip-4",
+      "pixel": [
+        33,
+        67,
+        106
+      ],
+      "sha256": "9c2e7087ae9e2e67fb0dcb2e2c948f374c857dc253633a13b3ae4e4dfba88be5",
+      "file": "native-roundtrip-4.png"
+    },
+    {
+      "name": "native-roundtrip-5",
+      "pixel": [
+        33,
+        67,
+        106
+      ],
+      "sha256": "068990407431a2620ffecd9acbc149077543f6d8dc9ca24d464060279c4a72cd",
+      "file": "native-roundtrip-5.png"
+    },
+    {
+      "name": "native-roundtrip-6",
+      "pixel": [
+        33,
+        67,
+        106
+      ],
+      "sha256": "a99428a48bb6d1b0c3da58b587bc6e439aa941d533ae5470ecc9b52ade48b9c8",
+      "file": "native-roundtrip-6.png"
+    },
+    {
+      "name": "native-roundtrip-7",
+      "pixel": [
+        33,
+        67,
+        106
+      ],
+      "sha256": "fa5fa6b8e695f84e505672b658a4d1cdfb8781e3795a758068154661285e0486",
+      "file": "native-roundtrip-7.png"
+    },
+    {
+      "name": "native-roundtrip-8",
+      "pixel": [
+        33,
+        67,
+        106
+      ],
+      "sha256": "9945a1e686b469810ea4512c320e61c91a19a07b0e455a4fb2de1f3e49bb7160",
+      "file": "native-roundtrip-8.png"
+    },
+    {
+      "name": "native-roundtrip-9",
+      "pixel": [
+        33,
+        67,
+        106
+      ],
+      "sha256": "82f55cd402c9725c60abe2dd54d890e7e92055af6ed92b0fff3dbb5ab007c2de",
+      "file": "native-roundtrip-9.png"
+    }
+  ],
+  "validation_errors": [],
+  "runtime_binary_sha256": "2441773c45d8ff282dda5be0e32b263964bf73e6bc9ba1ab1b21d4da4450865a",
+  "validation_error_positive_control": true,
+  "validation_layer_loaded": true,
+  "plugins": "no plugins loaded",
+  "repl": 42,
+  "scope": "Normal-orientation, default SDR EOTF, core and synchronization validation, no Hyprflow plugin loaded"
+}

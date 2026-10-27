@@ -12,6 +12,9 @@
 #include <hyprland/src/debug/log/Logger.hpp>
 #include <lua.hpp>
 #include <memory>
+#ifdef HYPRFLOW_VULKAN
+#include <hyprland/src/protocols/SessionLock.hpp>
+#endif
 
 namespace {
 HANDLE handle;
@@ -40,6 +43,12 @@ class FlowPass : public IPassElement {
     explicit FlowPass(PHLMONITOR output) : monitor(output) {}
     std::vector<UP<IPassElement>> draw() override {
         if (flow && serial == generation && !g_pSessionLockManager->isSessionLocked()) {
+#ifdef HYPRFLOW_VULKAN
+            if (monitor->m_transform != WL_OUTPUT_TRANSFORM_NORMAL) {
+                flow->failed = true;
+                return {};
+            }
+#endif
             try {
                 flow->render(appearanceConfig->read());
             } catch (const std::exception &error) {
@@ -80,6 +89,11 @@ SDispatchResult action(const std::string &name, const std::string &argument) {
             flow->close(name == "accept");
         return {};
     }
+#ifdef HYPRFLOW_VULKAN
+    const auto output = flow ? flow->monitor : Desktop::focusState()->monitor();
+    if (output && output->m_transform != WL_OUTPUT_TRANSFORM_NORMAL)
+        return {.success = false, .error = "hyprflow: Vulkan navigation requires an unrotated output"};
+#endif
     if (name == "toggle" && flow) {
         openingModifiers = 0;
         flow->toggle();
@@ -171,8 +185,13 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE pluginHandle) {
     handle = pluginHandle;
     if (std::string(__hyprland_api_get_hash()) != __hyprland_api_get_client_hash())
         throw std::runtime_error("hyprflow: headers do not match the running Hyprland ABI");
+#ifdef HYPRFLOW_VULKAN
+    if (g_pHyprRenderer->type() != Render::IHyprRenderer::RT_VK)
+        throw std::runtime_error("this experimental hyprflow build requires the Vulkan renderer");
+#else
     if (g_pHyprRenderer->type() != Render::IHyprRenderer::RT_GL)
         throw std::runtime_error("hyprflow requires the OpenGL renderer");
+#endif
     workspaceCount = makeShared<Config::Values::CIntValue>("plugin:hyprflow:workspace_count", "Number of default numeric workspace cards", 9,
                                                            Config::Values::SIntValueOptions{.min = 1, .max = 32});
     HyprlandAPI::addConfigValueV2(handle, workspaceCount);
@@ -193,6 +212,14 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE pluginHandle) {
     listeners.push_back(Event::bus()->m_events.render.pre.listen([](PHLMONITOR monitor) {
         if (!flow || flow->monitor != monitor || flow->capturing)
             return;
+#ifdef HYPRFLOW_VULKAN
+        // Output transforms can change while the switcher is open. Close before
+        // capture or drawing reaches the unsupported native rotated-output path.
+        if (monitor->m_transform != WL_OUTPUT_TRANSFORM_NORMAL) {
+            reset();
+            return;
+        }
+#endif
         if (g_pSessionLockManager->isSessionLocked() || flow->finished || flow->failed) {
             reset();
             return;
@@ -218,7 +245,11 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE pluginHandle) {
         if (flow && flow->monitor == monitor)
             reset();
     }));
+#ifdef HYPRFLOW_VULKAN
+    listeners.push_back(PROTO::sessionLock->m_events.newLock.listen([](const auto &) { reset(); }));
+#else
     listeners.push_back(g_pSessionLockManager->m_events.lock.listen([]() { reset(); }));
+#endif
     listeners.push_back(Event::bus()->m_events.config.reloaded.listen([]() { appearanceConfig->read(); }));
     registerInput();
     return {"hyprflow", "Classic Cover Flow workspace navigation", "hyprflow contributors", "0.1.0"};

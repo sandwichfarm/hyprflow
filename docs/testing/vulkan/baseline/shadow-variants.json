@@ -1,0 +1,127 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "name": "shadow-0000",
+      "features": {
+        "ROUNDING": 0,
+        "CM": 0,
+        "TONEMAP": 0,
+        "SDR_MOD": 0,
+        "RGBA": 1
+      },
+      "passed": true,
+      "diagnostics": "shadow-0000.frag\n"
+    },
+    {
+      "name": "shadow-0100",
+      "features": {
+        "ROUNDING": 0,
+        "CM": 1,
+        "TONEMAP": 0,
+        "SDR_MOD": 0,
+        "RGBA": 1
+      },
+      "passed": true,
+      "diagnostics": "shadow-0100.frag\nWARNING: shadow-0100.frag:289: '' : all default precisions are highp; use precision statements to quiet warning, e.g.:\n         \"precision mediump int; precision highp float;\" \n\n"
+    },
+    {
+      "name": "shadow-0101",
+      "features": {
+        "ROUNDING": 0,
+        "CM": 1,
+        "TONEMAP": 0,
+        "SDR_MOD": 1,
+        "RGBA": 1
+      },
+      "passed": true,
+      "diagnostics": "shadow-0101.frag\nWARNING: shadow-0101.frag:289: '' : all default precisions are highp; use precision statements to quiet warning, e.g.:\n         \"precision mediump int; precision highp float;\" \n\n"
+    },
+    {
+      "name": "shadow-0110",
+      "features": {
+        "ROUNDING": 0,
+        "CM": 1,
+        "TONEMAP": 1,
+        "SDR_MOD": 0,
+        "RGBA": 1
+      },
+      "passed": true,
+      "diagnostics": "shadow-0110.frag\nWARNING: shadow-0110.frag:289: '' : all default precisions are highp; use precision statements to quiet warning, e.g.:\n         \"precision mediump int; precision highp float;\" \n\n"
+    },
+    {
+      "name": "shadow-0111",
+      "features": {
+        "ROUNDING": 0,
+        "CM": 1,
+        "TONEMAP": 1,
+        "SDR_MOD": 1,
+        "RGBA": 1
+      },
+      "passed": true,
+      "diagnostics": "shadow-0111.frag\nWARNING: shadow-0111.frag:289: '' : all default precisions are highp; use precision statements to quiet warning, e.g.:\n         \"precision mediump int; precision highp float;\" \n\n"
+    },
+    {
+      "name": "shadow-1000",
+      "features": {
+        "ROUNDING": 1,
+        "CM": 0,
+        "TONEMAP": 0,
+        "SDR_MOD": 0,
+        "RGBA": 1
+      },
+      "passed": true,
+      "diagnostics": "shadow-1000.frag\n"
+    },
+    {
+      "name": "shadow-1100",
+      "features": {
+        "ROUNDING": 1,
+        "CM": 1,
+        "TONEMAP": 0,
+        "SDR_MOD": 0,
+        "RGBA": 1
+      },
+      "passed": true,
+      "diagnostics": "shadow-1100.frag\nWARNING: shadow-1100.frag:289: '' : all default precisions are highp; use precision statements to quiet warning, e.g.:\n         \"precision mediump int; precision highp float;\" \n\n"
+    },
+    {
+      "name": "shadow-1101",
+      "features": {
+        "ROUNDING": 1,
+        "CM": 1,
+        "TONEMAP": 0,
+        "SDR_MOD": 1,
+        "RGBA": 1
+      },
+      "passed": true,
+      "diagnostics": "shadow-1101.frag\nWARNING: shadow-1101.frag:289: '' : all default precisions are highp; use precision statements to quiet warning, e.g.:\n         \"precision mediump int; precision highp float;\" \n\n"
+    },
+    {
+      "name": "shadow-1110",
+      "features": {
+        "ROUNDING": 1,
+        "CM": 1,
+        "TONEMAP": 1,
+        "SDR_MOD": 0,
+        "RGBA": 1
+      },
+      "passed": true,
+      "diagnostics": "shadow-1110.frag\nWARNING: shadow-1110.frag:289: '' : all default precisions are highp; use precision statements to quiet warning, e.g.:\n         \"precision mediump int; precision highp float;\" \n\n"
+    },
+    {
+      "name": "shadow-1111",
+      "features": {
+        "ROUNDING": 1,
+        "CM": 1,
+        "TONEMAP": 1,
+        "SDR_MOD": 1,
+        "RGBA": 1
+      },
+      "passed": true,
+      "diagnostics": "shadow-1111.frag\nWARNING: shadow-1111.frag:289: '' : all default precisions are highp; use precision statements to quiet warning, e.g.:\n         \"precision mediump int; precision highp float;\" \n\n"
+    }
+  ],
+  "shader_sha256": "42ad2114e25f5487c5937858b2867d76fa695566fdda36ec0ec5d237528fdd21",
+  "diagnostic_paths_sanitized": true
+}

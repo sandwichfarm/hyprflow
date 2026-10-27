@@ -19,13 +19,20 @@ struct Quad {
     float borderAngle = 0;
 };
 
-// Owns GL objects only. All draw calls run inside the compositor's GL pass.
+// Owns resources for the selected build backend; draws only inside that compositor render pass.
 class FlowRenderer {
   public:
+    FlowRenderer() = default;
+    FlowRenderer(const FlowRenderer &) = delete;
+    FlowRenderer &operator=(const FlowRenderer &) = delete;
     ~FlowRenderer();
     void draw(const std::vector<Quad> &quads, int width, int height);
 
   private:
+#ifdef HYPRFLOW_VULKAN
+    struct VulkanState;
+    VulkanState *vulkan = nullptr;
+#endif
     void initialize();
     GLuint blurredTexture(const Quad &quad, int width, int height);
     GLuint program = 0, buffer = 0, vao = 0, blurSampler = 0;

@@ -36,6 +36,7 @@ class LifecycleProof:
         self.started = time.monotonic()
         self.probe = None
         self.process = None
+        self.keyboard = None
         self.original_focus = None
         self.input_log = self.output / "received.bin"
         self.evidence = {"passed": False, "pid": self.state["pid"], "start_time": self.state["start_time"],
@@ -105,7 +106,8 @@ class LifecycleProof:
         )
         deadline = time.monotonic() + 5
         while time.monotonic() < deadline:
-            client = next((item for item in self.query("clients") if item["class"] == "hyprflow-lifecycle-probe"), None)
+            client = next((item for item in self.query("clients")
+                           if item["class"] == "hyprflow-lifecycle-probe" and item["pid"] == self.process.pid), None)
             if client and ready.exists():
                 self.probe = client["address"]
                 break
@@ -128,7 +130,7 @@ class LifecycleProof:
     def keyboard_restored(self):
         require(self.query("activewindow").get("address") == self.probe, "Compositor window focus was not restored")
         before = self.input_log.read_bytes()
-        KEYBOARD["send_key"](self.directory, "Z")
+        KEYBOARD["send_key"](self.directory, "Z", self.keyboard)
         deadline = time.monotonic() + 1
         while time.monotonic() < deadline and self.input_log.read_bytes() == before:
             time.sleep(.01)
@@ -274,7 +276,13 @@ class LifecycleProof:
         if self.original_focus:
             self.control("dispatch", f'hl.dsp.focus({{ window="address:{self.original_focus}" }})')
         if self.process:
-            self.process.wait(timeout=5)
+            try:
+                self.process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                # This exact owned fixture process can outlive a failed compositor close.
+                self.process.terminate()
+                self.process.wait(timeout=3)
+                self.evidence["probe_terminated_during_cleanup"] = True
         self.evidence["final_status"] = self.status()
         self.evidence["final_workspace"] = self.query("activeworkspace")["id"]
         self.evidence["final_submap"] = self.control("submap").stdout.strip()
@@ -318,8 +326,9 @@ def main():
     parser.add_argument("--sha256", required=True, help="Expected SHA-256 of the reviewed and loaded plugin")
     proof = LifecycleProof(parser.parse_args())
     try:
-        with HELPER["isolated_input"](proof.state) as receipt:
+        with HELPER["isolated_input"](proof.state) as receipt, KEYBOARD["keyboard"](proof.directory) as connection:
             proof.evidence["input_isolation"] = receipt
+            proof.keyboard = connection
             proof.run()
     except Exception as error:
         proof.evidence["passed"] = False

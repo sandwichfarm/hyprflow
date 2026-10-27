@@ -28,12 +28,15 @@ def main():
     ready = log.with_suffix(".ready")
     ready.unlink(missing_ok=True)
     control = HELPER["control"]
-    send_key = lambda key: KEYBOARD["send_key"](args.directory, key)
+    connection = None
+    send_key = lambda key: KEYBOARD["send_key"](args.directory, key, connection)
     evidence = {"pid": state["pid"], "checks": []}
     isolation = ExitStack()
     address = None
     try:
         evidence["input_isolation"] = isolation.enter_context(HELPER["isolated_input"](state))
+        # Keep a physical-keyboard-like device alive through exit animations and focus restoration.
+        connection = isolation.enter_context(KEYBOARD["keyboard"](args.directory))
         assert not PROOF["status"](state)["open"], "Input proof must start with flow closed"
         control(state, "dispatch", "hl.dsp.focus({ workspace = 4 })")
         subprocess.Popen(
