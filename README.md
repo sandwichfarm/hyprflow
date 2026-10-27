@@ -128,6 +128,10 @@ the flow opened. Releasing Tab or an arrow alone keeps it open. The existing
 Lua press bindings work without release bindings; see the
 [cycling example and details](docs/configuration.md#select-on-release).
 
+`plugin.hyprflow.include_empty_workspaces` defaults to **true**. Set it to `false`
+to omit empty workspaces and numeric placeholders. The workspace list updates when
+coverflow opens; if no eligible workspace has windows, it stays closed.
+
 Size, spacing, and borders update while the flow is open. Cards follow the workspace aspect ratio. The appearance controls are:
 
 | Option | Default | Meaning |
@@ -179,6 +183,10 @@ python3 scripts/verify-input.py "$session_dir" artifacts/input-proof
 python3 scripts/capture-stress.py "$session_dir" artifacts/stress --sha256 "$(sha256sum build/hyprflow.so | cut -d' ' -f1)"
 python3 scripts/verify-lifecycle.py "$session_dir" artifacts/lifecycle --sha256 "$(sha256sum build/hyprflow.so | cut -d' ' -f1)"
 ```
+
+To verify workspace filtering, load the build in a fresh nested session without
+fixtures, then run `python3 scripts/verify-workspaces.py "$session_dir"`. The proof
+creates and closes its own windows and restores the nested configuration afterward.
 
 The proof harness uses real Wayland virtual-keyboard events, compositor state,
 screenshots, and an optional `wf-recorder` recording. It needs the installed

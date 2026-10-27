@@ -16,7 +16,7 @@ struct Card {
 
 class Flow {
   public:
-    explicit Flow(PHLMONITOR monitor, int workspaceCount);
+    explicit Flow(PHLMONITOR monitor, int workspaceCount, bool includeEmptyWorkspaces);
     ~Flow();
     void preRender(bool workspaceOverlay);
     void render(const FlowAppearance &appearance);
@@ -31,6 +31,8 @@ class Flow {
 
   private:
     std::vector<Card> cards;
+    // The source desktop can be absent from the selectable cards.
+    Card original;
     Spring focus, openness;
     size_t origin = 0, anchor = 0;
     bool closing = false, committing = false, exitStarted = false;

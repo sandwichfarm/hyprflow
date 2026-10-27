@@ -7,6 +7,7 @@ end
 
 hl.config({ plugin = { hyprflow = {
     workspace_count = 9,
+    include_empty_workspaces = true,
     -- Accept when the modifiers held on opening are released.
     select_on_release = false,
     workspace_scale = 1.0,
