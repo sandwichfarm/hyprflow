@@ -1,6 +1,13 @@
 [repository]
 name = "hyprflow"
 authors = ["sandwich.farm"]
+# Each supported Hyprland release builds from the last plugin commit qualified against it.
+commit_pins = [
+    ["36b2e0cfe0c6094dbc47bd42a437431315bb3087", "16db68f0916a205af352fb8d12b60f862c933ebf"], # 0.56.0
+    ["5c9377c15f85c50648f35ca5a213754f95b93ca0", "16db68f0916a205af352fb8d12b60f862c933ebf"], # 0.56.1
+    ["efb50993780079460b0cbed1363e2166a2de1d9f", "16db68f0916a205af352fb8d12b60f862c933ebf"], # 0.56.2
+    ["0aa6745f705f2c4b0a5004eb019ef76e5bbdb426", "16db68f0916a205af352fb8d12b60f862c933ebf"], # 0.57.0
+]
 
 [hyprflow]
 description = "Classic Cover Flow workspace navigation for Hyprland"
