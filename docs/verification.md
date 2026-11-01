@@ -18,15 +18,17 @@ software-cursor lock, the supported scanout blocker, while it is open. Named
 workspaces have no numeric ID in 0.57; their cards receive stable negative IDs
 before filtering, so they still sort first, as they did in 0.56.
 
-Each release passed lifecycle (20 checks), input, appearance (28 checks),
-select-on-release, and workspace filtering (4 checks). Each also rejected the
-other release's build at load time while staying usable. The 0.57.0 compositor
-was built from the release tag and selected with `nested-session.py --compositor`.
-The render matrix stopped after 14 checks on both releases, at its headless
-second-output step. That step needs the headless-capable allocator described in
-[render qualification](render-qualification.md), and an unmodified `main` build
-stops at the same point on this host. The 0.56.0 and 0.56.1 targets were
-compile-checked only. See the [receipts](../artifacts/hyprland-0.57/build.json).
+Hyprland 0.56.0, 0.56.1, 0.56.2, and 0.57.0 each passed lifecycle (20 checks),
+input, appearance (28 checks), select-on-release, workspace filtering (4 checks),
+and the render matrix (25 checks). Each compositor was built from its release tag
+(0.56.2 is the Arch package) and selected with `nested-session.py --compositor`;
+0.56.0 and 0.56.1 ran clean builds of the hyprpm-pinned commit. Each release also
+rejected another release's build at load time and stayed usable. The matrix's
+headless second output needs an allocator, so those runs loaded the repository's
+test-only Aquamarine patch from [docs/testing/vulkan](testing/vulkan/PREPARE.md)
+through the session's `LD_LIBRARY_PATH` and `HYPRFLOW_TEST_RENDER_NODE`; with stock
+Aquamarine the matrix stops at that step after 14 checks. See the
+[receipts](../artifacts/hyprland-0.57/build.json).
 
 Proof harness changes:
 

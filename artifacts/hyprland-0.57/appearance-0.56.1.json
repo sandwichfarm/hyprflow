@@ -1,0 +1,873 @@
+{
+  "passed": true,
+  "phase": "appearance",
+  "artifact_sha256": "a7112ac81ada4a4f5fb3c595932ea4cbf1a730367b1ef2f791c95124e32720a2",
+  "runtime_identity_sha256": "c534e816baa8bceb0d9f04c96a9bb4b4243f00bcb3313a241dfe5cb2c975434d",
+  "checks": [
+    {
+      "name": "all_appearance_options_registered",
+      "passed": true
+    },
+    {
+      "name": "default_cancel_restores_workspace",
+      "passed": true
+    },
+    {
+      "name": "native_workspace_aspect",
+      "passed": true,
+      "bounds": [
+        431,
+        171,
+        849,
+        405
+      ],
+      "measured": 1.7863247863247864,
+      "expected": 1.7777777777777777
+    },
+    {
+      "name": "workspace_scale_updates_open_flow",
+      "passed": true,
+      "measured_bounds": {
+        "0.7": [
+          494,
+          206,
+          786,
+          370
+        ],
+        "1.2": [
+          389,
+          147,
+          891,
+          429
+        ]
+      },
+      "width_ratio": 1.7191780821917808,
+      "height_ratio": 1.7195121951219512
+    },
+    {
+      "name": "workspace_spread_updates_open_flow",
+      "passed": true,
+      "measured": {
+        "0.05": {
+          "orange": [
+            180,
+            200
+          ],
+          "green": [
+            200,
+            431
+          ],
+          "spacing": 20
+        },
+        "0.3": {
+          "orange": [
+            75,
+            200
+          ],
+          "green": [
+            200,
+            431
+          ],
+          "spacing": 125
+        }
+      },
+      "expected_difference": 104.39999999999999
+    },
+    {
+      "name": "solid_border_width",
+      "passed": true,
+      "thin": [
+        171,
+        172
+      ],
+      "thick": [
+        171,
+        178
+      ]
+    },
+    {
+      "name": "border_alpha",
+      "passed": true,
+      "sample": [
+        246,
+        119,
+        115
+      ]
+    },
+    {
+      "name": "multicolor_border_and_angle",
+      "passed": true,
+      "horizontal": [
+        [
+          194,
+          75,
+          111
+        ],
+        [
+          84,
+          73,
+          207
+        ]
+      ],
+      "vertical": [
+        [
+          251,
+          25,
+          30
+        ],
+        [
+          251,
+          25,
+          30
+        ]
+      ]
+    },
+    {
+      "name": "gradient_3_stops",
+      "passed": true,
+      "samples": [
+        [
+          248,
+          74,
+          3
+        ],
+        [
+          0,
+          255,
+          17
+        ],
+        [
+          0,
+          73,
+          244
+        ]
+      ]
+    },
+    {
+      "name": "gradient_10_stops",
+      "passed": true,
+      "samples": [
+        [
+          255,
+          0,
+          0
+        ],
+        [
+          0,
+          255,
+          0
+        ],
+        [
+          0,
+          0,
+          255
+        ]
+      ]
+    },
+    {
+      "name": "native_angle_equivalence",
+      "passed": true,
+      "angles": [
+        "45.9deg",
+        "45deg"
+      ]
+    },
+    {
+      "name": "native_angle_equivalence",
+      "passed": true,
+      "angles": [
+        "-45deg",
+        "315deg"
+      ]
+    },
+    {
+      "name": "rgb_rgba_argb_color_equivalence",
+      "passed": true
+    },
+    {
+      "name": "border_current_focus_precedence_and_inheritance",
+      "passed": true,
+      "current_blue_pixels": 4715
+    },
+    {
+      "name": "zero_border_width_restores_defaults",
+      "passed": true
+    },
+    {
+      "name": "background_opacity",
+      "passed": true,
+      "opacity": 0.25,
+      "pixel": [
+        178,
+        178,
+        174
+      ]
+    },
+    {
+      "name": "background_opacity",
+      "passed": true,
+      "opacity": 0.75,
+      "pixel": [
+        59,
+        59,
+        58
+      ]
+    },
+    {
+      "name": "background_opacity",
+      "passed": true,
+      "opacity": 1,
+      "pixel": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "desktop_overlay_origin_and_tint_alpha",
+      "passed": true
+    },
+    {
+      "name": "reflections_labels_and_vertical_center",
+      "passed": true
+    },
+    {
+      "name": "invalid_effects_retain_last_valid_pixels",
+      "passed": true,
+      "cases": 16
+    },
+    {
+      "name": "invalid_configuration_reload_while_closed",
+      "passed": true,
+      "diagnosed_options": [
+        "workspace_scale",
+        "border_color"
+      ],
+      "flow_open": false,
+      "native_rejections": [],
+      "plugin_rejections": [
+        "border_color",
+        "workspace_scale"
+      ]
+    },
+    {
+      "name": "documented_lua_configuration_loads",
+      "passed": true,
+      "file": "config/hyprflow.lua",
+      "sha256": "4d40f3674d0e8dde313a2b1d1fb4fc99e30a8f0639364fb540b3c0a0a945fbc4",
+      "options": {
+        "workspace_scale": "float: 1.000000\nset: true",
+        "workspace_spread": "float: 0.180000\nset: true",
+        "border_width": "int: 0\nset: true",
+        "border_color": "str: rgba(ffffffff)\nset: true",
+        "border_color_current": "str: \nset: true",
+        "border_color_focus": "str: \nset: true"
+      }
+    },
+    {
+      "name": "custom_configuration_reload_while_open",
+      "passed": true
+    },
+    {
+      "name": "custom_configuration_unload_reload_three_cycles",
+      "passed": true
+    },
+    {
+      "name": "custom_configuration_accept_cancel_cleanup",
+      "passed": true
+    },
+    {
+      "name": "appearance_and_blur_survive_reload",
+      "passed": true,
+      "settings": {
+        "workspace_overlay": 1,
+        "background_opacity": 0.3,
+        "background_color": "rgb(182030)",
+        "background_blur": 16,
+        "reflection_opacity": 0.2,
+        "show_labels": 0,
+        "center_y": 0.5
+      }
+    },
+    {
+      "name": "background_blur_preserves_sharp_cards",
+      "passed": true,
+      "sharp_edge_energy": 6.545333403010034,
+      "blurred_edge_energy": 0.3964691332218506
+    }
+  ],
+  "frames": [
+    {
+      "file": "default-closed.png",
+      "sha256": "99fda2b1083dda1e32111a5c5f652ce84999861fd941a0d5d70bc25451238711",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "default-4.png",
+      "sha256": "768308068f51e994696c61729add7f9e01dfeeb7fd29e3a56b7da27af07eb165",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "default-1.png",
+      "sha256": "a2e9b7b116cadb6d8ed066f83da973685866688eebd534b22c5e490c1e6e9c8f",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "default-7.png",
+      "sha256": "f5be3361b1e0d831d720230bea9fe27dd82563743c81e0d5fa0d673337a98ab3",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "default-cancelled.png",
+      "sha256": "99fda2b1083dda1e32111a5c5f652ce84999861fd941a0d5d70bc25451238711",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "aspect-native.png",
+      "sha256": "768308068f51e994696c61729add7f9e01dfeeb7fd29e3a56b7da27af07eb165",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "scale-0.7.png",
+      "sha256": "3397d25bc7baf742ae7cf9fe708e55db921d51f22d292b9904af74a1d296b06f",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "scale-1.2.png",
+      "sha256": "17752eb3a69b9055353d4ca991443ef8298805fadc7821f854f33e6e86060bab",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "spread-0.05.png",
+      "sha256": "c455cfb3ec895d934efa7ff99aad74a320ca04779b4be72fb1e6d1c62215deac",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "spread-0.3.png",
+      "sha256": "3d74167214c825fabb3f0bcd735e62238d5dce004b58dc270344418fbda485ac",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-solid-2.png",
+      "sha256": "6577dc12825432b678ff2b87d8e7ffe9096e92546b0533b27bd767628d6f0b6b",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-solid-8.png",
+      "sha256": "6ca097c34b56faf227de8672719b8578fac4824f756fef21ecc7c297e7cd02b6",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-alpha.png",
+      "sha256": "fc9b08ffbf34600f8ebac4ef6aa09d2718bcea514fe70f027ab039577736524d",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-gradient-0.png",
+      "sha256": "69442e30865ea0939022ab2ccc40dbe3b7185b93f409ba9de4c3163f8bd3804a",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-gradient-90.png",
+      "sha256": "4ea546556a9066e2d4d1752895a4eecffdb1a0e97210c74fef52d5a3296396a2",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-gradient-3-stops.png",
+      "sha256": "bb2bf2be0dc57ad966d2d4d98ae8bf2de73144ffb626121d9344071c8ec8c694",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-gradient-10-stops.png",
+      "sha256": "b7979000aef15a245041207fe0ef48a177570a8e42b7e57b41ddbc6a746eafd8",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-angle-45.9deg.png",
+      "sha256": "68c9700d748393c5e17d078c13686d77ef4f4296b995fde7b9cd7bca2aa8765d",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-angle-45deg.png",
+      "sha256": "68c9700d748393c5e17d078c13686d77ef4f4296b995fde7b9cd7bca2aa8765d",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-angle--45deg.png",
+      "sha256": "713c53b3ac944b5fd18faf5985e7a6782130b15d75bbda976e546067398ac249",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-angle-315deg.png",
+      "sha256": "713c53b3ac944b5fd18faf5985e7a6782130b15d75bbda976e546067398ac249",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-color-notation-0.png",
+      "sha256": "6ca097c34b56faf227de8672719b8578fac4824f756fef21ecc7c297e7cd02b6",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-color-notation-1.png",
+      "sha256": "6ca097c34b56faf227de8672719b8578fac4824f756fef21ecc7c297e7cd02b6",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-color-notation-2.png",
+      "sha256": "6ca097c34b56faf227de8672719b8578fac4824f756fef21ecc7c297e7cd02b6",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-focus-over-current.png",
+      "sha256": "23fd8b2f629dc061f1deb65320c51dc82bd426f342ef7eba6b3580bd6a9ef7df",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-current-and-focus.png",
+      "sha256": "6e36ae4921842d7efed2a095bed6c0a1453745154c117633c651180fbbdf80a4",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-focus-inherits-base.png",
+      "sha256": "b613f147d364af7cb4c6a308cda2d595daf1363b494f105f927434bfe65e9125",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-current-inherits-priority.png",
+      "sha256": "8c485f06c1c8ecf575fa4ea3f14c46f51bef0c5e36d9827135eda659d8b5e7b4",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-inherit-base.png",
+      "sha256": "6ca097c34b56faf227de8672719b8578fac4824f756fef21ecc7c297e7cd02b6",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "border-disabled.png",
+      "sha256": "768308068f51e994696c61729add7f9e01dfeeb7fd29e3a56b7da27af07eb165",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "solid-stage.png",
+      "sha256": "768308068f51e994696c61729add7f9e01dfeeb7fd29e3a56b7da27af07eb165",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "desktop-overlay.png",
+      "sha256": "05f19b6fba612248a427f2bb3dc34afe9b7fa2aa5109615df6ec4e9551eaeb3a",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "overlay-selection-seven.png",
+      "sha256": "e12995df3fceec4dd52e525be071f2428e65811e0a74a1d228f5835dbf2daa8f",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "opacity-0.25.png",
+      "sha256": "3f331c2f0d616271a1071540347a4143b6d2e50b7cad1e6704416dea771a3981",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "opacity-0.75.png",
+      "sha256": "71cf688290601c100d00799ad97bc991b2af58dbc8719adc2a1c91d3c0e2e4fe",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "opacity-1.png",
+      "sha256": "768308068f51e994696c61729add7f9e01dfeeb7fd29e3a56b7da27af07eb165",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "background-color-alpha.png",
+      "sha256": "0e96ee29d6c04a32ef175b3e78c56407c52d8b4657cd4fae9f4f4cb3c52e653d",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "solid-color-alpha.png",
+      "sha256": "ed812e2578c26336e120f48fdf55187de78195034b796f6f88d7536e78dd1c81",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "reflections-labels-on.png",
+      "sha256": "768308068f51e994696c61729add7f9e01dfeeb7fd29e3a56b7da27af07eb165",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "reflections-labels-off.png",
+      "sha256": "66305538e994997e70e237069ee3aadecd601adfa41fb84f1640df91bc8a5beb",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "labels-only.png",
+      "sha256": "b79aaf68b878594bfadde282cd9654777cc4a8bb838c1aca1e7a67634dc8bf03",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "reflections-strong.png",
+      "sha256": "799042e7c2d45b73d8a95cc7e8b11125af01b4994f18857dd357260aff691dbe",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "center-half.png",
+      "sha256": "98d3470b583daf1019f94b02279467b1a53b37abde5363d48b4f3c2867fcc0b3",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "effects-last-valid.png",
+      "sha256": "d95f6c2be34a31ac31935d33c82bf6f05370d9c0065c715876b7e11d91fb777b",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "rejected-background_opacity-0.png",
+      "sha256": "d95f6c2be34a31ac31935d33c82bf6f05370d9c0065c715876b7e11d91fb777b",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "rejected-background_opacity-1.png",
+      "sha256": "d95f6c2be34a31ac31935d33c82bf6f05370d9c0065c715876b7e11d91fb777b",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "rejected-background_opacity-2.png",
+      "sha256": "d95f6c2be34a31ac31935d33c82bf6f05370d9c0065c715876b7e11d91fb777b",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "rejected-background_blur-0.png",
+      "sha256": "d95f6c2be34a31ac31935d33c82bf6f05370d9c0065c715876b7e11d91fb777b",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "rejected-background_blur-1.png",
+      "sha256": "d95f6c2be34a31ac31935d33c82bf6f05370d9c0065c715876b7e11d91fb777b",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "rejected-background_blur-2.png",
+      "sha256": "d95f6c2be34a31ac31935d33c82bf6f05370d9c0065c715876b7e11d91fb777b",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "rejected-reflection_opacity-0.png",
+      "sha256": "d95f6c2be34a31ac31935d33c82bf6f05370d9c0065c715876b7e11d91fb777b",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "rejected-reflection_opacity-1.png",
+      "sha256": "d95f6c2be34a31ac31935d33c82bf6f05370d9c0065c715876b7e11d91fb777b",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "rejected-center_y-0.png",
+      "sha256": "d95f6c2be34a31ac31935d33c82bf6f05370d9c0065c715876b7e11d91fb777b",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "rejected-center_y-1.png",
+      "sha256": "d95f6c2be34a31ac31935d33c82bf6f05370d9c0065c715876b7e11d91fb777b",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "rejected-workspace_overlay-0.png",
+      "sha256": "d95f6c2be34a31ac31935d33c82bf6f05370d9c0065c715876b7e11d91fb777b",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "rejected-workspace_overlay-1.png",
+      "sha256": "d95f6c2be34a31ac31935d33c82bf6f05370d9c0065c715876b7e11d91fb777b",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "rejected-show_labels-0.png",
+      "sha256": "d95f6c2be34a31ac31935d33c82bf6f05370d9c0065c715876b7e11d91fb777b",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "rejected-show_labels-1.png",
+      "sha256": "d95f6c2be34a31ac31935d33c82bf6f05370d9c0065c715876b7e11d91fb777b",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "rejected-background_color-0.png",
+      "sha256": "d95f6c2be34a31ac31935d33c82bf6f05370d9c0065c715876b7e11d91fb777b",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "rejected-background_color-1.png",
+      "sha256": "d95f6c2be34a31ac31935d33c82bf6f05370d9c0065c715876b7e11d91fb777b",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "reload-configured.png",
+      "sha256": "246db957cafbd8dd7443171dd26356de779f40f20e8d995127020a8ecca9b351",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "reload-configured-repeat.png",
+      "sha256": "246db957cafbd8dd7443171dd26356de779f40f20e8d995127020a8ecca9b351",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "reload-plugin-1.png",
+      "sha256": "246db957cafbd8dd7443171dd26356de779f40f20e8d995127020a8ecca9b351",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "reload-plugin-2.png",
+      "sha256": "246db957cafbd8dd7443171dd26356de779f40f20e8d995127020a8ecca9b351",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "reload-plugin-3.png",
+      "sha256": "246db957cafbd8dd7443171dd26356de779f40f20e8d995127020a8ecca9b351",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "custom-accepted.png",
+      "sha256": "5a6deb899df613689a9534db2122dcf1239c9e6c016097677956bf648b96ea96",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "custom-cancelled.png",
+      "sha256": "99fda2b1083dda1e32111a5c5f652ce84999861fd941a0d5d70bc25451238711",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "blur-zero.png",
+      "sha256": "bfa5eccaa499a614619a447aca07aea4370f12dd3eafd4c718f85a6f15d79979",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "blur-sixteen.png",
+      "sha256": "6e3a114c41e5fbc5ab0d9fe11c35f4b7e6ac23db926ffd466073dc0da73db644",
+      "size": [
+        1280,
+        720
+      ]
+    }
+  ],
+  "artifact_mapping_verified": true,
+  "input_isolation": {
+    "device": "wl_keyboard",
+    "nested_only": true,
+    "present": true,
+    "disabled_during_proof": true,
+    "restored": true
+  },
+  "fixture_layout": {
+    "gaps_out": 0,
+    "rounding": 0
+  },
+  "cursor_isolation": "Owned nested config; restored on exit",
+  "duration_seconds": 84.634,
+  "final_status": {
+    "open": false
+  },
+  "final_workspace": 4,
+  "configerrors": "",
+  "owned_config_restored": true
+}
