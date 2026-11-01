@@ -1,14 +1,16 @@
 #pragma once
 #include "FlowRenderer.hpp"
+#include "CompositorCompat.hpp"
 #include <hyprland/src/render/Framebuffer.hpp>
 #include <hyprland/src/desktop/DesktopTypes.hpp>
 #include <hyprland/src/helpers/time/Time.hpp>
+#include <memory>
 #include <string>
 
 namespace Hyprflow {
 struct FlowAppearance;
 struct Card {
-    WORKSPACEID id;
+    Compat::WorkspaceNumber id = 0;
     std::string name;
     PHLWORKSPACE workspace;
     SP<Render::IFramebuffer> framebuffer;
@@ -36,7 +38,7 @@ class Flow {
     Spring focus, openness;
     size_t origin = 0, anchor = 0;
     bool closing = false, committing = false, exitStarted = false;
-    bool previousScanoutBlock = false;
+    std::unique_ptr<Compat::ScanoutBlock> scanoutBlock;
     std::string previousSubmap;
     PHLWINDOWREF previousFocus;
     Time::steady_tp lastFrame;

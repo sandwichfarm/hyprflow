@@ -246,11 +246,15 @@ nonfinite angles, and more than ten stops are not applied. The previous valid
 value remains effective. Hyprflow logs a rejection and posts a notification once
 per changed invalid value. Restoring a valid value resets that suppression.
 
-Hyprland 0.56.2’s Lua plugin path drops registered bounds and string validators.
+Hyprland 0.56’s Lua plugin path drops registered bounds and string validators.
 Consequently, `hl.config()` can return success and `getoption` can show an invalid
 raw value even though Hyprflow rejects applying it. Validation therefore also
 runs at the plugin’s rendering boundary and after config-file reloads; it does
-not depend on host validation or mutate the host’s config registry. See the
+not depend on host validation or mutate the host’s config registry.
+
+Hyprland 0.57 enforces those validators itself. An invalid value is reported in
+`hyprctl configerrors` and never replaces the previous value, so Hyprflow’s own
+rejection diagnostic does not appear; the retained appearance is the same. See the
 [upstream conversion path](https://github.com/hyprwm/Hyprland/blob/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/lua/types/LuaConfigUtils.cpp).
 
 ### Tests
@@ -312,6 +316,6 @@ The lifecycle test now compares state before and after retargeting inside one
 Lua callback. Separate IPC observations could straddle a normal render tick and
 misidentify spring progression as a discontinuity.
 
-Runtime qualification remains Hyprland 0.56.2/OpenGL at scale 1. Other compositor
+Runtime qualification covers Hyprland 0.56.2 and 0.57.0/OpenGL at scale 1. Other compositor
 ABIs, HDR, rotated/fractionally scaled outputs, and interactions with other
 plugins were not added to the qualification scope by this change.

@@ -144,11 +144,13 @@ class ConfigurationProof:
 
     def prime_fixtures(self):
         require(not self.status()["open"], "Fixture priming requires closed flow")
+        # A parked session receives frames at the parent's render_unfocused rate (15 Hz by default).
+        # Give each fixture several of those frames to apply a pending resize and redraw.
         for selected in range(1, 8):
             self.control("dispatch", f"hl.dsp.focus({{ workspace = {selected} }})")
-            time.sleep(.15)
+            time.sleep(.4)
         self.control("dispatch", "hl.dsp.focus({ workspace = 4 })")
-        time.sleep(.2)
+        time.sleep(.5)
 
     def default_frames(self):
         self.reset()
@@ -403,23 +405,36 @@ class ConfigurationProof:
         self.reset()
         config = Path(self.state["directory"]) / "nested.lua"
         original = config.read_bytes()
-        prefixes = [f"[hyprflow] rejected {key}:" for key in ("workspace_scale", "border_color")]
+        keys = ("workspace_scale", "border_color")
+        prefixes = {key: f"[hyprflow] rejected {key}:" for key in keys}
         before_log = self.control("rollinglog")
+        before = {key: self.control("getoption", "plugin:hyprflow:" + key) for key in keys}
         try:
             config.write_bytes(original + b'\nhl.config({plugin={hyprflow={workspace_scale=0.09,border_color="bad-color"}}})\n')
             self.control("reload")
+            # Hyprland 0.57 enforces the registered validators and rejects the value natively,
+            # keeping the last good option; 0.56 stores it and the plugin rejects it when applying.
+            # Read errors first: on 0.57 a later Lua evaluation replaces the reported list.
+            errors = self.control("configerrors")
             require(not self.status()["open"], "Config reload unexpectedly opened flow")
+            native = {key for key in keys if f"plugin.hyprflow.{key}" in errors}
+            for key in native:
+                require(self.control("getoption", "plugin:hyprflow:" + key) == before[key],
+                        f"Native rejection replaced the last good {key} value")
+            pending = [prefixes[key] for key in keys if key not in native]
             deadline = time.monotonic() + 5
-            while time.monotonic() < deadline:
+            diagnostics = before_log
+            while pending and time.monotonic() < deadline:
                 # The disk log can remain buffered while the compositor is idle.
                 diagnostics = self.control("rollinglog")
-                if all(diagnostics.count(prefix) > before_log.count(prefix) for prefix in prefixes):
+                if all(diagnostics.count(prefix) > before_log.count(prefix) for prefix in pending):
                     break
                 time.sleep(.1)
-            require(all(diagnostics.count(prefix) > before_log.count(prefix) for prefix in prefixes),
-                    "Closed config reload failed to report fresh rejected-appearance diagnostics")
+            require(all(diagnostics.count(prefix) > before_log.count(prefix) for prefix in pending),
+                    f"Closed config reload failed to report fresh rejected-appearance diagnostics; config errors: {errors!r}")
             self.control("dismissnotify", "-1")
-            self.record("invalid_configuration_reload_while_closed", diagnosed_options=["workspace_scale", "border_color"], flow_open=False)
+            self.record("invalid_configuration_reload_while_closed", diagnosed_options=list(keys), flow_open=False,
+                        native_rejections=sorted(native), plugin_rejections=sorted(set(keys) - native))
         finally:
             config.write_bytes(original)
             self.control("reload")

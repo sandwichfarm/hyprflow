@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "checks": [
+    "default false leaves flow open",
+    "Tab release with Super held leaves flow open",
+    "cycling and reverse cycling accept on opening modifier release",
+    "multi-modifier chord waits for last opening modifier",
+    "quick release commits pending destination",
+    "Escape while modifier held cancels without release overriding",
+    "explicit toggle disarms automatic acceptance",
+    "explicit accept still works",
+    "unmodified opening does not arm on later modifiers",
+    "lock state does not arm selection",
+    "failed jump clears release state",
+    "unload while armed removes listeners and restores submap"
+  ]
+}

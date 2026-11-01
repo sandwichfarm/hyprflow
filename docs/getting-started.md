@@ -4,7 +4,7 @@ Hyprflow is a native Hyprland plugin. It presents your workspaces as a Cover Flo
 
 ## Install with hyprpm
 
-The supported target is **Hyprland 0.56.2 with the OpenGL renderer**. Other compositor revisions and Vulkan are not qualified. Check your session with `hyprctl version`.
+Supported targets are **Hyprland 0.56.x and 0.57.0 with the OpenGL renderer**. Other compositor revisions and Vulkan are not qualified. Check your session with `hyprctl version`.
 
 Use [Hyprland's plugin manager](https://wiki.hypr.land/Plugins/Using-Plugins/#hyprpm) from a terminal inside your Hyprland session:
 
@@ -118,15 +118,15 @@ python3 scripts/nested-session.py fixtures "$session_dir"
 python3 scripts/nested-session.py ctl "$session_dir" plugin load "$PWD/build/hyprflow.so"
 ```
 
-Switch to host workspace **5**, focus the unpinned nested window, and press **F10**, then **Left / Right** or **1–7**. **Return** activates the selection; **Escape** returns to the original workspace.
+Switch to host workspace **16**, focus the unpinned nested window, and press **F10**, then **Left / Right** or **1–7**. **Return** activates the selection; **Escape** returns to the original workspace.
 
 ```sh
 python3 scripts/nested-session.py ctl "$session_dir" repl 'return hl.plugin.hyprflow.status()'
 python3 scripts/nested-session.py stop "$session_dir"
 ```
 
-The helper targets only the nested instance. Launch and placement stay on host workspace 5 without taking focus or pinning.
-Stopping restores owned geometry within workspace 5 and exits the recorded compositor process.
+The helper targets only the nested instance. Launch and placement stay on host workspace 16 without taking focus or pinning.
+Stopping restores owned geometry within workspace 16 and exits the recorded compositor process.
 Hidden Wayland windows can stop receiving frames; use a supported headless output for background automation.
 
 ## Load a manual build

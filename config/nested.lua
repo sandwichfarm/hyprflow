@@ -10,6 +10,8 @@ hl.config({
         disable_splash_rendering = true,
         disable_autoreload = true,
         disable_hyprland_guiutils_check = true,
+        -- The harness starts Hyprland directly; its timed warning would differ between proof frames.
+        disable_watchdog_warning = true,
     },
     debug = { disable_logs = false },
     ecosystem = { no_update_news = true, no_donation_nag = true },

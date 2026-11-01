@@ -6,11 +6,11 @@ it cannot establish the cause of that person's crash.
 
 ## Supported scopes
 
-The ordinary build targets **Hyprland 0.56.2/OpenGL**. The experimental Vulkan
+The ordinary build targets **Hyprland 0.56.x and 0.57.0/OpenGL**. The experimental Vulkan
 build targets upstream [Vulkan WIP #13272](https://github.com/hyprwm/Hyprland/pull/13272)
 at `b60bb19e8c8f5005a121714520acf41bd095e74b`, with the isolated runtime repairs
-in the [preparation recipe](testing/vulkan/PREPARE.md). Release 0.56.2 has no
-Vulkan renderer implementation. Removing Hyprflow's OpenGL guard alone would
+in the [preparation recipe](testing/vulkan/PREPARE.md). Releases 0.56.x and 0.57.0
+have no Vulkan renderer implementation. Removing Hyprflow's OpenGL guard alone would
 not provide Vulkan rendering.
 
 The Vulkan build uses real Vulkan pipelines and captured workspace textures.
@@ -95,8 +95,10 @@ artifact_sha=$(sha256sum "$artifact" | cut -d' ' -f1)
 ```
 
 For interactive runs, `nested-session.py start` opens silently on host workspace
-**5**, unpinned and without taking focus. `place` and `stop` keep that confinement.
-A hidden Wayland window can stop receiving frame callbacks. For background runs,
+**16**, unpinned and without taking focus. `place` and `stop` keep that confinement.
+The window is launched with the `render_unfocused` rule, so the parent keeps sending
+frame callbacks at `misc:render_unfocused_fps` while it stays hidden. Without that rule,
+a hidden Wayland window stops receiving frame callbacks. For background runs,
 use a headless-capable allocator; the AMD test runtime's preparation recipe
 includes the explicit render-node selection and strict headless setup.
 Do not create extra Wayland outputs after the launch rule expires; the matrix

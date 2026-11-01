@@ -76,6 +76,16 @@ class WorkspaceProof:
         self.processes.append(process)
         self.wait(lambda: any(c["class"] == name for c in json.loads(self.ctl("-j", "clients"))))
 
+    def active_card_id(self):
+        active = json.loads(self.ctl("-j", "activeworkspace"))
+        if "id" in active:
+            return active["id"]
+        # Hyprland 0.57 reports no ID for named workspaces; the flow's origin is its card ID.
+        self.action("toggle")
+        origin = self.status()["origin"]
+        self.close()
+        return origin
+
     def reject(self, workspace):
         result = self.action("jump", workspace, check=False)
         require("workspace is absent" in result, f"Empty workspace {workspace} was navigable: {result}")
@@ -89,10 +99,10 @@ class WorkspaceProof:
         self.fixture(2, "hyprflow-filter-two")
         self.fixture(12, "hyprflow-filter-twelve")
         self.fixture("name:populated", "hyprflow-filter-named")
-        named_id = json.loads(self.ctl("-j", "activeworkspace"))["id"]
+        named_id = self.active_card_id()
         self.ctl("eval", 'hl.workspace_rule({workspace="name:empty",persistent=true})')
         self.focus("name:empty")
-        empty_named_id = json.loads(self.ctl("-j", "activeworkspace"))["id"]
+        empty_named_id = self.active_card_id()
         self.focus(2)
         self.action("jump", 9)
         self.settled(9)

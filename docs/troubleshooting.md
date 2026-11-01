@@ -8,7 +8,7 @@ Check `hyprpm list` for a failed build or disabled plugin, then run
 `hyprpm enable hyprflow` and `hyprpm reload`. Confirm loading with
 `hyprctl plugin list` and inspect `hyprctl configerrors`.
 
-Hyprflow targets Hyprland **0.56.2 / OpenGL**. The manifest skips older
+Hyprflow targets Hyprland **0.56.x and 0.57.0 / OpenGL**. The manifest skips older
 compositor revisions. Newer versions may need plugin changes even when hyprpm
 can prepare their headers. Do not bypass the plugin's API hash check.
 

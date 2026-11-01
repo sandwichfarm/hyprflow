@@ -3,63 +3,71 @@
 #include "Capture.hpp"
 #include "CompositorCompat.hpp"
 #include <hyprland/src/render/Renderer.hpp>
-#include <hyprland/src/desktop/Workspace.hpp>
 #include <hyprland/src/desktop/state/FocusState.hpp>
-#include <hyprland/src/managers/KeybindManager.hpp>
 #include <algorithm>
 #include <numeric>
 #include <format>
 
 namespace Hyprflow {
-namespace {
-void submap(const std::string &name) {
-    g_pKeybindManager->m_dispatchers.at("submap")(name.empty() ? "reset" : name);
-}
-} // namespace
 
 Flow::Flow(PHLMONITOR output, int workspaceCount, bool includeEmptyWorkspaces) : monitor(output), lastFrame(Time::steadyNow()) {
     auto workspaces = Compat::workspaces();
-    for (int id = 1; includeEmptyWorkspaces && id <= workspaceCount; ++id) {
-        const auto found = std::ranges::find_if(workspaces, [id](const auto &w) { return w->m_id == id; });
+    // Named workspaces sort before numbered ones, as Hyprland 0.56's negative IDs did. Hyprland 0.57
+    // has no numeric ID for them, so they receive stable negative IDs for this flow.
+    std::vector<PHLWORKSPACE> unnumbered;
+    const auto cardID = [&](const PHLWORKSPACE &workspace) -> Compat::WorkspaceNumber {
+        if (const auto id = Compat::workspaceNumber(workspace).or_else([&] { return Compat::namedWorkspaceID(workspace); }))
+            return *id;
+        auto found = std::ranges::find(unnumbered, workspace);
+        if (found == unnumbered.end())
+            found = unnumbered.insert(unnumbered.end(), workspace);
+        return -static_cast<Compat::WorkspaceNumber>(std::distance(unnumbered.begin(), found) + 1);
+    };
+    // Assign those IDs before filtering, so a workspace keeps its ID whether or not empty ones are shown.
+    for (const auto &workspace : workspaces) {
+        if (!Compat::workspaceSpecial(workspace))
+            cardID(workspace);
+    }
+    for (Compat::WorkspaceNumber id = 1; includeEmptyWorkspaces && id <= workspaceCount; ++id) {
+        const auto found = std::ranges::find_if(workspaces, [id](const auto &w) { return Compat::workspaceNumber(w) == id; });
         if (found != workspaces.end() && (*found)->m_monitor != monitor)
             continue;
         cards.push_back({id, std::to_string(id), found == workspaces.end() ? nullptr : *found, {}});
     }
     for (const auto &workspace : workspaces) {
-        if (workspace->m_monitor != monitor || workspace->m_isSpecialWorkspace || workspace->inert())
+        if (workspace->m_monitor != monitor || Compat::workspaceSpecial(workspace) || Compat::workspaceGone(workspace))
             continue;
         if (!includeEmptyWorkspaces && Compat::windowCount(workspace) == 0)
             continue;
-        auto found = std::ranges::find_if(cards, [&](const Card &card) { return card.id == workspace->m_id; });
+        auto found = std::ranges::find_if(cards, [&](const Card &card) { return card.workspace == workspace; });
         if (found == cards.end())
-            cards.push_back({workspace->m_id, workspace->m_name, workspace, {}});
+            cards.push_back({cardID(workspace), Compat::workspaceName(workspace), workspace, {}});
         else
-            found->name = workspace->m_name;
+            found->name = Compat::workspaceName(workspace);
     }
     std::ranges::sort(cards, {}, &Card::id);
     if (cards.empty())
         throw std::runtime_error("hyprflow: no nonempty workspaces on the focused monitor");
-    original = {monitor->m_activeWorkspace->m_id, monitor->m_activeWorkspace->m_name, monitor->m_activeWorkspace, {}};
+    original = {cardID(monitor->m_activeWorkspace), Compat::workspaceName(monitor->m_activeWorkspace), monitor->m_activeWorkspace, {}};
     const auto selected = std::ranges::find_if(cards, [&](const Card &card) { return card.workspace == monitor->m_activeWorkspace; });
     origin = anchor = std::distance(cards.begin(), selected);
     // If the source is empty, start at the next populated workspace (or the last one).
     const auto next = std::ranges::lower_bound(cards, original.id, {}, &Card::id);
     focus.value = focus.target = selected != cards.end() ? origin : std::min<size_t>(std::distance(cards.begin(), next), cards.size() - 1);
     openness.target = 1;
-    previousSubmap = g_pKeybindManager->getCurrentSubmap().name;
+    previousSubmap = Compat::currentSubmap();
     previousFocus = Desktop::focusState()->window();
-    previousScanoutBlock = g_pHyprRenderer->m_directScanoutBlocked;
-    g_pHyprRenderer->m_directScanoutBlocked = true;
-    submap("hyprflow");
+    scanoutBlock = std::make_unique<Compat::ScanoutBlock>(monitor);
+    Compat::setSubmap("hyprflow");
     Desktop::focusState()->rawSurfaceFocus(nullptr, nullptr);
     g_pHyprRenderer->damageMonitor(monitor);
 }
 
 Flow::~Flow() {
-    submap(previousSubmap);
+    Compat::setSubmap(previousSubmap);
     if (!finished && previousFocus)
         Desktop::focusState()->fullWindowFocus(previousFocus.lock(), Desktop::FOCUS_REASON_KEYBIND);
-    g_pHyprRenderer->m_directScanoutBlocked = previousScanoutBlock;
+    scanoutBlock.reset();
     g_pHyprRenderer->damageMonitor(monitor);
 }
 
@@ -120,7 +128,7 @@ void Flow::refresh(bool workspaceOverlay) {
             card.framebuffer.reset();
             continue;
         }
-        if (card.workspace && card.workspace->inert())
+        if (card.workspace && Compat::workspaceGone(card.workspace))
             card.workspace.reset();
         if (!card.framebuffer || i == nearest || (workspaceOverlay && i == origin)) {
             if (!captureWorkspace(monitor, card.workspace, card.framebuffer)) {
@@ -143,13 +151,16 @@ void Flow::refresh(bool workspaceOverlay) {
 void Flow::finish() {
     finished = true;
     auto &card = committing ? cards[static_cast<size_t>(focus.target)] : original;
+    PHLWORKSPACE created;
     if (committing && !card.workspace)
-        card.workspace = Compat::create(card.id, monitor->m_id, card.name);
+        card.workspace = created = Compat::create(card.id, monitor, card.name);
     if (card.workspace && card.workspace != monitor->m_activeWorkspace) {
         auto old = monitor->m_activeWorkspace;
         monitor->changeWorkspace(card.workspace, false, true, false);
         Compat::stopWorkspaceAnimations(old, card.workspace);
     }
+    // Hyprland 0.57 announces a new workspace only after it has been placed.
+    Compat::workspaceReady(created);
     if (!committing && previousFocus)
         Desktop::focusState()->fullWindowFocus(previousFocus.lock(), Desktop::FOCUS_REASON_KEYBIND);
     else if (card.workspace)
