@@ -6,15 +6,17 @@
       "hyprland_commit": "36b2e0cfe0c6094dbc47bd42a437431315bb3087",
       "commits": 7625,
       "warnings": 0,
-      "runtime_proof": false,
-      "artifact_sha256": "1f8969ea19df1fdae745107c99a65f40ccdbcd9e5a7894c3f6eca8d738334ba3"
+      "runtime_proof": true,
+      "artifact_sha256": "1f8969ea19df1fdae745107c99a65f40ccdbcd9e5a7894c3f6eca8d738334ba3",
+      "compositor": "built from the release tag against the installed dependencies"
     },
     "0.56.1": {
       "hyprland_commit": "5c9377c15f85c50648f35ca5a213754f95b93ca0",
       "commits": 7643,
       "warnings": 0,
-      "runtime_proof": false,
-      "artifact_sha256": "4dbbd62308da47797d7b05cc5c3978fafe89b547c15b83cc00d0cc4111f173fb"
+      "runtime_proof": true,
+      "artifact_sha256": "4dbbd62308da47797d7b05cc5c3978fafe89b547c15b83cc00d0cc4111f173fb",
+      "compositor": "built from the release tag against the installed dependencies"
     },
     "0.56.2": {
       "hyprland_commit": "efb50993780079460b0cbed1363e2166a2de1d9f",
@@ -38,13 +40,21 @@
     }
   },
   "runtime_proofs_each_release": {
+    "releases": [
+      "0.56.0",
+      "0.56.1",
+      "0.56.2",
+      "0.57.0"
+    ],
     "lifecycle": "20/20",
     "input": "passed",
     "appearance": "28/28",
     "select_on_release": "passed",
     "workspace_filtering": "4/4",
-    "foreign_build_rejection": "3/3 attempts rejected at load (undefined symbols of the other release), compositor kept running",
-    "render_matrix": "14 of 25 before the headless second-output step; see render-matrix-*.json"
+    "foreign_build_rejection": "3/3 attempts rejected at load, compositor kept running",
+    "render_matrix": "25/25; its headless second output used the repository's test-only aquamarine render-node patch (docs/testing/vulkan) on the AMD render node"
   },
-  "environment": "nested Wayland sessions parked on host workspace 16 with render_unfocused, 1280x720, scale 1, OpenGL"
+  "environment": "nested Wayland sessions parked on host workspace 16 with render_unfocused, 1280x720, scale 1, OpenGL",
+  "pinned_commit": "16db68f0916a205af352fb8d12b60f862c933ebf",
+  "note": "0.56.0 and 0.56.1 proofs used clean builds of the pinned commit."
 }

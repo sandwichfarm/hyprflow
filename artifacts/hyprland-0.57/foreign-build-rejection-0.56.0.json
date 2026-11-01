@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "artifact_sha256": "85830be12d4a307b8b03b9f3f4ec5f76adadf884fb837947def91e4ea4a2d4be",
+  "attempts": [
+    {
+      "exit_code": 0,
+      "reason": "could not be loaded"
+    },
+    {
+      "exit_code": 0,
+      "reason": "could not be loaded"
+    },
+    {
+      "exit_code": 0,
+      "reason": "could not be loaded"
+    }
+  ],
+  "runtime_survived": true,
+  "read_retries": []
+}
