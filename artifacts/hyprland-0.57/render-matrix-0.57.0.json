@@ -1,0 +1,21 @@
+{
+  "passed": false,
+  "checks_passed": [
+    "scale-1-transform-0",
+    "scale-1.25-transform-0",
+    "scale-1.5-transform-0",
+    "scale-2-transform-0",
+    "scale-1-transform-1",
+    "scale-1-transform-2",
+    "scale-1-transform-3",
+    "scale-1-transform-4",
+    "scale-1.25-transform-1",
+    "scale-and-rotation-change-while-open",
+    "color-wide-8-forced-False",
+    "color-srgb-10-forced-False",
+    "color-hdr-10-forced-False",
+    "color-hdr-10-forced-True"
+  ],
+  "stopped_at": "cross-monitor-exclusion-and-active-output-removal",
+  "reason": "the headless second output stays 0x0 without the headless-capable allocator from docs/testing/vulkan; an unmodified main build stops at the same step on this host"
+}

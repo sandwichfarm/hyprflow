@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "checks": [
+    "default includes numeric placeholders and empty named workspaces",
+    "filter excludes empty persistent/named/placeholders; navigation skips gaps and clamps",
+    "empty origin excluded; next/last populated selection, cancel and accept",
+    "all-empty stays closed; re-enable and reload restore placeholders"
+  ]
+}

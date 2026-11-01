@@ -23,9 +23,9 @@ the [animation specification](docs/design-spec.md).
 
 ## Install with hyprpm
 
-The stable target is **Hyprland 0.56.2 with the OpenGL renderer**. A separate
+Stable targets are **Hyprland 0.56.x and 0.57.0 with the OpenGL renderer**. A separate
 [experimental Vulkan build and qualification](docs/render-qualification.md) uses
-an isolated, patched upstream WIP runtime; release 0.56.2 itself has no Vulkan renderer. Install
+an isolated, patched upstream WIP runtime; releases 0.56.x and 0.57.0 have no Vulkan renderer. Install
 using Hyprland's plugin manager from a terminal in your Hyprland session:
 
 ```sh
@@ -59,10 +59,12 @@ make test
 
 The artifact is `build/hyprflow.so`. The build uses C++23, the installed Hyprland
 development headers and their dependencies, Lua 5.4, EGL, GLES, and Pango/Cairo.
-No libraries are downloaded or vendored. The current target is **Hyprland 0.56.2
-with the OpenGL renderer**. Experimental Vulkan support requires the exact
-runtime and separate build described in the [qualification guide](docs/render-qualification.md).
-Other compositor ABIs and unpatched Vulkan runtimes are not qualified.
+No libraries are downloaded or vendored. One source tree builds against
+**Hyprland 0.56.0–0.56.2 and 0.57.0 with the OpenGL renderer**; it selects the
+matching compositor API from the headers it is compiled against. Experimental
+Vulkan support requires the exact runtime and separate build described in the
+[qualification guide](docs/render-qualification.md). Other compositor ABIs and
+unpatched Vulkan runtimes are not qualified.
 
 ## Try it in a nested session
 

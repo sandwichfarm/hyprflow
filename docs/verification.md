@@ -4,6 +4,44 @@ See [rendering and configuration qualification](render-qualification.md) for the
 output matrix, ABI-rejection fix, and experimental AMD Vulkan path. The evidence below
 records the earlier release and appearance qualifications.
 
+## Hyprland 0.57.0 support
+
+Verified November 1, 2026. One source tree builds for Hyprland 0.56.0, 0.56.1,
+0.56.2, and 0.57.0 (`0aa6745f705f2c4b0a5004eb019ef76e5bbdb426`), with no compiler
+warnings. The experimental Vulkan build still compiles against its patched WIP
+headers. `src/CompositorCompat.hpp` detects 0.57 from the headers being compiled
+against and covers its API changes: relocated window and workspace headers,
+variant workspace IDs, per-frame renderer state in a render context,
+context-aware pass elements, keyboard modifier masks, and submap actions.
+Hyprland 0.57 has no global direct-scanout block, so the flow takes a per-monitor
+software-cursor lock, the supported scanout blocker, while it is open. Named
+workspaces have no numeric ID in 0.57; their cards receive stable negative IDs
+before filtering, so they still sort first, as they did in 0.56.
+
+Each release passed lifecycle (20 checks), input, appearance (28 checks),
+select-on-release, and workspace filtering (4 checks). Each also rejected the
+other release's build at load time while staying usable. The 0.57.0 compositor
+was built from the release tag and selected with `nested-session.py --compositor`.
+The render matrix stopped after 14 checks on both releases, at its headless
+second-output step. That step needs the headless-capable allocator described in
+[render qualification](render-qualification.md), and an unmodified `main` build
+stops at the same point on this host. The 0.56.0 and 0.56.1 targets were
+compile-checked only. See the [receipts](../artifacts/hyprland-0.57/build.json).
+
+Proof harness changes:
+
+- Parked nested windows launch with `render_unfocused`, so the parent keeps sending
+  frame callbacks while they stay hidden on host workspace 16.
+- Fixture priming waits for several of those 15 Hz frames. Shorter waits could
+  capture a calibration terminal before its resize redraw.
+- The nested configuration disables the timed watchdog warning, which differed
+  between proof frames.
+- Hyprland 0.57 enforces registered plugin validators. The reload proof accepts
+  that native rejection, or Hyprflow's own diagnostic on 0.56, and reads
+  `configerrors` before any later Lua evaluation can replace it.
+- The workspace proof reads named-workspace card IDs from the flow when 0.57's
+  IPC reports no numeric ID.
+
 ## Workspace appearance update
 
 Verified October 9, 2026, against Hyprland 0.56.2 in an owned nested

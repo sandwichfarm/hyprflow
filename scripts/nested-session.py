@@ -108,7 +108,8 @@ with (folder / "compositor.log").open("w") as log:
     os.execve(command[0], command, env)
 ''')
     command = "exec " + shlex.join([sys.executable, str(launcher), str(folder)])
-    expression = 'hl.exec_cmd(' + json.dumps(command) + ', {workspace="16 silent", no_focus=true, float=true})'
+    # render_unfocused keeps frame callbacks (misc:render_unfocused_fps) flowing to the parked window.
+    expression = 'hl.exec_cmd(' + json.dumps(command) + ', {workspace="16 silent", no_focus=true, float=true, render_unfocused=true})'
     host_control(signature, "eval", expression)
     for _ in range(100):
         process = folder / "process.json"

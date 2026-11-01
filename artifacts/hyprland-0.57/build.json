@@ -1,0 +1,50 @@
+{
+  "base_commit": "316f6f604f01e302259af2e4c087f25549da4edf",
+  "compiler": "g++ (GCC) 16.2.1 20260810",
+  "targets": {
+    "0.56.0": {
+      "hyprland_commit": "36b2e0cfe0c6094dbc47bd42a437431315bb3087",
+      "commits": 7625,
+      "warnings": 0,
+      "runtime_proof": false,
+      "artifact_sha256": "1f8969ea19df1fdae745107c99a65f40ccdbcd9e5a7894c3f6eca8d738334ba3"
+    },
+    "0.56.1": {
+      "hyprland_commit": "5c9377c15f85c50648f35ca5a213754f95b93ca0",
+      "commits": 7643,
+      "warnings": 0,
+      "runtime_proof": false,
+      "artifact_sha256": "4dbbd62308da47797d7b05cc5c3978fafe89b547c15b83cc00d0cc4111f173fb"
+    },
+    "0.56.2": {
+      "hyprland_commit": "efb50993780079460b0cbed1363e2166a2de1d9f",
+      "commits": 7661,
+      "warnings": 0,
+      "runtime_proof": true,
+      "artifact_sha256": "8ce594a72b194598d8e99b645fe460bc3360e93826cf087f15ac2e5f04f946fd"
+    },
+    "0.57.0": {
+      "hyprland_commit": "0aa6745f705f2c4b0a5004eb019ef76e5bbdb426",
+      "commits": 7978,
+      "warnings": 0,
+      "runtime_proof": true,
+      "headers": "make installheaders from the v0.57.0 tag with hyprutils 0.14.3 and hyprland-protocols 0.8.0",
+      "artifact_sha256": "a85d16af9e0df315cb7c8d0e78b61c098e5370105951eac01bd2480ee240b656"
+    },
+    "vulkan-wip-b60bb19": {
+      "warnings": 0,
+      "runtime_proof": false,
+      "note": "VULKAN=1 compile check against the patched WIP headers from docs/testing/vulkan"
+    }
+  },
+  "runtime_proofs_each_release": {
+    "lifecycle": "20/20",
+    "input": "passed",
+    "appearance": "28/28",
+    "select_on_release": "passed",
+    "workspace_filtering": "4/4",
+    "foreign_build_rejection": "3/3 attempts rejected at load (undefined symbols of the other release), compositor kept running",
+    "render_matrix": "14 of 25 before the headless second-output step; see render-matrix-*.json"
+  },
+  "environment": "nested Wayland sessions parked on host workspace 16 with render_unfocused, 1280x720, scale 1, OpenGL"
+}

@@ -1,5 +1,6 @@
 #include "Flow.hpp"
 #include "Config.hpp"
+#include "CompositorCompat.hpp"
 #include <hyprland/src/plugins/PluginAPI.hpp>
 #include <hyprland/src/render/Renderer.hpp>
 #include <hyprland/src/render/pass/PassElement.hpp>
@@ -30,10 +31,16 @@ uint64_t generation = 0;
 void reset() {
     openingModifiers = 0;
     modifierListeners.clear();
-    g_pHyprRenderer->m_renderPass.removeAllOfType("HyprflowPass");
+    Hyprflow::Compat::renderPass().removeAllOfType("HyprflowPass");
     auto released = std::move(flow);
     ++generation;
 }
+
+#if HYPRFLOW_HYPRLAND_057
+#define HYPRFLOW_PASS_CONTEXT Render::CRenderContext &
+#else
+#define HYPRFLOW_PASS_CONTEXT
+#endif
 
 class FlowPass : public IPassElement {
     uint64_t serial = generation;
@@ -41,7 +48,7 @@ class FlowPass : public IPassElement {
 
   public:
     explicit FlowPass(PHLMONITOR output) : monitor(output) {}
-    std::vector<UP<IPassElement>> draw() override {
+    std::vector<UP<IPassElement>> draw(HYPRFLOW_PASS_CONTEXT) override {
         if (flow && serial == generation && !g_pSessionLockManager->isSessionLocked()) {
 #ifdef HYPRFLOW_VULKAN
             if (monitor->m_transform != WL_OUTPUT_TRANSFORM_NORMAL) {
@@ -58,10 +65,10 @@ class FlowPass : public IPassElement {
         }
         return {};
     }
-    bool needsLiveBlur() override {
+    bool needsLiveBlur(HYPRFLOW_PASS_CONTEXT) override {
         return false;
     }
-    bool needsPrecomputeBlur() override {
+    bool needsPrecomputeBlur(HYPRFLOW_PASS_CONTEXT) override {
         return false;
     }
     const char *passName() override {
@@ -70,10 +77,10 @@ class FlowPass : public IPassElement {
     ePassElementType type() override {
         return EK_CUSTOM;
     }
-    std::optional<CBox> boundingBox() override {
+    std::optional<CBox> boundingBox(HYPRFLOW_PASS_CONTEXT) override {
         return CBox{{}, monitor->m_size};
     }
-    CRegion opaqueRegion() override {
+    CRegion opaqueRegion(HYPRFLOW_PASS_CONTEXT) override {
         return CBox{{}, monitor->m_size};
     }
 };
@@ -107,11 +114,11 @@ SDispatchResult action(const std::string &name, const std::string &argument) {
                 return {.success = false, .error = "hyprflow: no usable focused monitor"};
             flow = std::make_unique<Hyprflow::Flow>(monitor, std::clamp<int>(workspaceCount->value(), 1, 32), includeEmptyWorkspaces->value());
             // Track the opening chord, not later navigation modifiers or lock keys.
-            openingModifiers = selectOnRelease->value() ? g_pInputManager->getModsFromAllKBs() & ~(HL_MODIFIER_CAPS | HL_MODIFIER_MOD2) : 0;
+            openingModifiers = selectOnRelease->value() ? Hyprflow::Compat::heldModifiers() : 0;
             if (openingModifiers) {
                 for (const auto &keyboard : g_pInputManager->m_keyboards) {
                     modifierListeners.push_back(keyboard->m_keyboardEvents.modifiers.listen([](IKeyboard::SModifiersEvent) {
-                        if (flow && openingModifiers && !(g_pInputManager->getModsFromAllKBs() & openingModifiers) &&
+                        if (flow && openingModifiers && !(Hyprflow::Compat::heldModifiers() & openingModifiers) &&
                             !g_pSessionLockManager->isSessionLocked()) {
                             openingModifiers = 0;
                             flow->close(true);
@@ -233,6 +240,16 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE pluginHandle) {
             reset();
         }
     }));
+#if HYPRFLOW_HYPRLAND_057
+    listeners.push_back(Event::bus()->m_events.render.stage.listen([](const Event::SRenderStageEvent &event) {
+        if (!flow || flow->capturing || event.stage != RENDER_LAST_MOMENT || g_pSessionLockManager->isSessionLocked())
+            return;
+        if (event.monitor != flow->monitor || !event.context)
+            return;
+        Render::IHyprRenderer::addPassElement(event.context->get(), makeUnique<FlowPass>(flow->monitor));
+        g_pHyprRenderer->damageMonitor(flow->monitor);
+    }));
+#else
     listeners.push_back(Event::bus()->m_events.render.stage.listen([](eRenderStage stage) {
         if (!flow || flow->capturing || stage != RENDER_LAST_MOMENT || g_pSessionLockManager->isSessionLocked())
             return;
@@ -241,6 +258,7 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE pluginHandle) {
         g_pHyprRenderer->m_renderPass.add(makeUnique<FlowPass>(flow->monitor));
         g_pHyprRenderer->damageMonitor(flow->monitor);
     }));
+#endif
     listeners.push_back(Event::bus()->m_events.monitor.removed.listen([](PHLMONITOR monitor) {
         if (flow && flow->monitor == monitor)
             reset();
