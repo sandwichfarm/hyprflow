@@ -45,6 +45,45 @@ to your Hyprland Lua configuration. **Super + Tab** opens the flow;
 **Left / Right** browse, **Return** activates, and **Escape** cancels.
 The guide also covers startup loading, updating, and removing the plugin.
 
+## Omarchy
+
+Omarchy runs a standard Hyprland session, so install Hyprflow with the hyprpm
+commands above. It is a native compositor plugin, not an Omarchy shell plugin,
+so don't use `omarchy plugin add`. These steps target Omarchy releases with Lua
+configuration (`~/.config/hypr/*.lua`). Check `hyprctl version` against the
+supported Hyprland release first.
+
+Load hyprpm plugins at login by adding this to `~/.config/hypr/autostart.lua`:
+
+```lua
+o.exec_on_start("hyprpm reload -n")
+```
+
+Omarchy binds **Super + Tab** to "Next workspace". In
+`~/.config/hypr/bindings.lua`, use `o.rebind` so that Hyprflow replaces it and
+the binding is listed in `omarchy menu keybindings`. **Super + Shift + Tab**
+still moves to the previous workspace.
+
+```lua
+o.rebind("SUPER + TAB", "Hyprflow", function() hl.plugin.hyprflow.toggle() end)
+hl.define_submap("hyprflow", function()
+    hl.bind("Left", function() hl.plugin.hyprflow.left() end, { repeating = true })
+    hl.bind("Right", function() hl.plugin.hyprflow.right() end, { repeating = true })
+    hl.bind("Return", function() hl.plugin.hyprflow.accept() end)
+    hl.bind("Escape", function() hl.plugin.hyprflow.cancel() end)
+    hl.bind("SUPER + Tab", function() hl.plugin.hyprflow.toggle() end)
+    for index = 1, 9 do
+        hl.bind(tostring(index), function() hl.plugin.hyprflow.jump(index) end)
+    end
+    hl.bind("catchall", function() end)
+end)
+```
+
+Run `hyprctl reload` and check `hyprctl configerrors`. The supplied
+[config/hyprflow.lua](config/hyprflow.lua) also binds **Super + Alt +
+Left / Right**, which Omarchy uses to move windows between groups. If you use
+that file, call `hl.unbind` on those keys first or pick other bindings.
+
 ## Build from source (development)
 
 Build against the headers matching the compositor that will load the plugin.
